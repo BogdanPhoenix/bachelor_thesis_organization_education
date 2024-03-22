@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        transaction:
+          jta:
+            platform: org.jboss.narayana.jta
+        format_sql: true
+        hbm2ddl:
+          auto: create
+    show-sql: false
+
+logging:
+  file:
+    name: ./logs/organization_education.log
+
+application:
+  url:
+    main: /organization-education
