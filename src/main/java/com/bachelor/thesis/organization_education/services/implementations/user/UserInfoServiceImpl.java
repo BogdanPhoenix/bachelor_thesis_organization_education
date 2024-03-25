@@ -2,6 +2,7 @@ package com.bachelor.thesis.organization_education.services.implementations.user
 
 import com.bachelor.thesis.organization_education.dto.user.User;
 import com.bachelor.thesis.organization_education.dto.user.UserInfo;
+import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.repositories.user.UserInfoRepository;
 import com.bachelor.thesis.organization_education.requests.abstract_type.Request;
 import com.bachelor.thesis.organization_education.requests.user.UserInfoRequest;
@@ -38,6 +39,12 @@ public class UserInfoServiceImpl extends CrudServiceAbstract<UserInfo, UserInfoR
                 .firstName(infoRequest.getFirstName())
                 .lastName(infoRequest.getLastName())
                 .build();
+    }
+
+    @Override
+    protected UserInfo getEntity(@NonNull Request request) throws NotFindEntityInDataBaseException {
+        return findEntity(request)
+                .orElseThrow(() -> new NotFindEntityInDataBaseException("Unable to find user information."));
     }
 
     @Override

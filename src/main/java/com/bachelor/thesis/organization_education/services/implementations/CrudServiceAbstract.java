@@ -56,12 +56,12 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     }
 
     private void updateEnabled(Request request, boolean value) throws NotFindEntityInDataBaseException {
-        var entity = findEntity(request)
-                .orElseThrow(() -> new NotFindEntityInDataBaseException("User could not be found"));
+        var entity = getEntity(request);
         entity.setEnabled(value);
         repository.save(entity);
     }
 
     protected abstract T createEntity(@NonNull Request request);
+    protected abstract T getEntity(@NonNull Request request) throws NotFindEntityInDataBaseException;
     protected abstract Optional<T> findEntity(@NonNull Request request);
 }

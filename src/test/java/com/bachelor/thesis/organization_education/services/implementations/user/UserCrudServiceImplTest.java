@@ -96,8 +96,9 @@ class UserCrudServiceImplTest {
     @Test
     @DisplayName("Check for the NotFindEntityInDataBaseException exception when searching for a registered user in the database.")
     void testFindAuthenticatedUserThrowNotFindEntityInDataBaseException() {
+        UserRequest request = new UserRequest();
         when(serviceMock.findEntity(any(Request.class))).thenReturn(Optional.empty());
         doCallRealMethod().when(serviceMock).findAuthenticatedUser(any(UserRequest.class));
-        assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.findAuthenticatedUser(new UserRequest()));
+        assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.findAuthenticatedUser(request));
     }
 }

@@ -42,8 +42,8 @@ public class User extends BaseTableInfo implements UserDetails {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToOne(mappedBy = "user", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private transient UserInfo infoUser;
+    @OneToOne(mappedBy = "user", cascade = {MERGE, REMOVE, REFRESH, DETACH})
+    private UserInfo infoUser;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

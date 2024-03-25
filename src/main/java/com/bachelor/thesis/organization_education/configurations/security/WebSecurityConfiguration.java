@@ -32,6 +32,8 @@ public class WebSecurityConfiguration {
 
     private static final String[] WHITE_LIST = {
             DEFAULT_URL,
+            DEFAULT_URL + "/register",
+            DEFAULT_URL + "/register/verifyEmail",
             DEFAULT_URL + "/signout",
             DEFAULT_URL + "/signin"
     };

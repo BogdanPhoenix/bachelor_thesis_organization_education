@@ -31,7 +31,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     public void onApplicationEvent(RegistrationCompleteEvent event) {
         try {
             var username = event.getRegisteredResponse().getUsername();
-            var url = event.getApplicationUrl() + "/register/verifyEmail?token=" + event.getRegisteredResponse().getAccessToken();
+            var url = event.getApplicationUrl() + "/verifyEmail?token=" + event.getRegisteredResponse().getAccessToken();
             sendVerificationEmail(url, username);
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new MailException(e.getMessage());

@@ -1,8 +1,7 @@
 package com.bachelor.thesis.organization_education.exceptions.handler;
 
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.exceptions.EmptyRequestException;
-import com.bachelor.thesis.organization_education.exceptions.InvalidInputDataException;
+import com.bachelor.thesis.organization_education.exceptions.MailException;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,11 +14,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class Handler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({
+            MailException.class,
             DuplicateException.class,
             NullPointerException.class,
-            EmptyRequestException.class,
             IllegalStateException.class,
-            InvalidInputDataException.class,
             NotFindEntityInDataBaseException.class
     })
     public ResponseEntity<Object> handleDuplicateException(Exception ex, WebRequest request){

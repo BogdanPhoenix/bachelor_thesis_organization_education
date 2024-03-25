@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 public class UserCrudServiceImpl extends CrudServiceAbstract<User, UserRepository> implements UserCrudService {
@@ -74,8 +75,47 @@ public class UserCrudServiceImpl extends CrudServiceAbstract<User, UserRepositor
     }
 
     @Override
+    public void enable(@NonNull Request request) throws NotFindEntityInDataBaseException {
+        super.enable(request);
+        actionOnUserInfo(request, userInfoService::enable);
+    }
+
+    @Override
+    public void disable(@NonNull Request request) throws NotFindEntityInDataBaseException {
+        super.disable(request);
+        actionOnUserInfo(request, userInfoService::disable);
+    }
+
+    private void actionOnUserInfo(Request request, @NonNull Consumer<Request> activationMethod) {
+        var user = getEntity(request);
+        var userInfo = user.getInfoUser();
+        var infoRequest = UserInfoRequest.builder()
+                .firstName(userInfo.getFirstName())
+                .lastName(userInfo.getLastName())
+                .build();
+
+        activationMethod.accept(infoRequest);
+    }
+
+    @Override
+    protected User getEntity(@NonNull Request request) throws NotFindEntityInDataBaseException {
+        return findEntity(request)
+                .orElseThrow(() -> new NotFindEntityInDataBaseException("User could not be found"));
+    }
+
+    @Override
     protected Optional<User> findEntity(@NonNull Request request) {
-        var userRequest = (UserRequest) request;
+        UserRequest userRequest;
+
+        if(request instanceof RegistrationRequest registrationRequest) {
+            userRequest = UserRequest.builder()
+                    .username(registrationRequest.getUsername())
+                    .build();
+        }
+        else {
+            userRequest = (UserRequest) request;
+        }
+
         return repository.findByUsername(
                 userRequest.getUsername()
         );

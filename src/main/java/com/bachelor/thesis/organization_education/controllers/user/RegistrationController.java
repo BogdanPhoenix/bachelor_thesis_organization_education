@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,28 +20,25 @@ public class RegistrationController {
     private final ApplicationEventPublisher publisher;
 
     @PostMapping
-    public String registerUser(
+    public ResponseEntity<String> registerUser(
             @RequestBody @Valid RegistrationRequest registrationRequest,
             BindingResult bindingResult,
             final HttpServletRequest request
     ) {
         if(bindingResult.hasErrors()) {
-            return "Error";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         var response = service.registration(registrationRequest);
-        publisher.publishEvent(new RegistrationCompleteEvent(response, applicationUrl(request)));
+        var URL = request.getRequestURL().toString();
+        publisher.publishEvent(new RegistrationCompleteEvent(response, URL));
 
-        return "Success! Please, check your email for to complete your registration";
+        return ResponseEntity.ok("Success! Please, check your email for to complete your registration");
     }
 
     @GetMapping("/verifyEmail")
-    public String verifyEmail(@RequestParam("token") String token) {
+    public ResponseEntity<String> verifyEmail(@RequestParam("token") String token) {
         service.verifyEmail(token);
-        return "Email verified successfully. Now you can login to your account";
-    }
-
-    private String applicationUrl(HttpServletRequest request) {
-        return String.format("https://%s:%s%s", request.getServerName(), request.getServerPort(), request.getContextPath());
+        return ResponseEntity.ok("Email verified successfully. Now you can login to your account");
     }
 }

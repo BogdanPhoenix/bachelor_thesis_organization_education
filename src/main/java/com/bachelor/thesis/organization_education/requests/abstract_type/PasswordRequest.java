@@ -3,8 +3,10 @@ package com.bachelor.thesis.organization_education.requests.abstract_type;
 import com.bachelor.thesis.organization_education.annotations.PasswordMatches;
 import com.bachelor.thesis.organization_education.annotations.ValidPassword;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -19,11 +21,12 @@ import lombok.experimental.SuperBuilder;
 @PasswordMatches(message = "The passwords you provided do not match.")
 public abstract class PasswordRequest extends Request {
     @NotNull
-    @NotEmpty
+    @NotBlank
     @ValidPassword
+    @Size(min = 8)
     private String password;
     @NotNull
-    @NotEmpty
+    @NotBlank
     private String matchingPassword;
 
     @Override

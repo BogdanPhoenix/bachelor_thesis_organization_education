@@ -2,7 +2,6 @@ package com.bachelor.thesis.organization_education.services.implementations;
 
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.mockito.Mock;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -79,7 +78,7 @@ class CrudServiceAbstractTest {
     @Test
     @DisplayName("Check for an exception when the request to activate an entity failed to find the entity.")
     void testEnableEntityThrowsNotFindEntityInDataBaseException() {
-        when(serviceMock.findEntity(requestMock)).thenReturn(Optional.empty());
+        when(serviceMock.getEntity(requestMock)).thenThrow(NotFindEntityInDataBaseException.class);
 
         doCallRealMethod()
                 .when(serviceMock)
@@ -91,7 +90,7 @@ class CrudServiceAbstractTest {
     @Test
     @DisplayName("Check for an exception when the request to deactivate an entity failed to find the entity.")
     void testDisableEntityThrowsNotFindEntityInDataBaseException() {
-        when(serviceMock.findEntity(requestMock)).thenReturn(Optional.empty());
+        when(serviceMock.getEntity(requestMock)).thenThrow(NotFindEntityInDataBaseException.class);
 
         doCallRealMethod()
                 .when(serviceMock)

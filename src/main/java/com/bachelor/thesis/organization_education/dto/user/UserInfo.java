@@ -2,6 +2,7 @@ package com.bachelor.thesis.organization_education.dto.user;
 
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.responces.user.UserInfoResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -39,6 +40,15 @@ public class UserInfo extends BaseTableInfo {
 
     @Override
     public Response getResponse() {
-        return null;
+        return UserInfoResponse.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
+    }
+
+    @Override
+    public void onPrePersist(){
+        super.onPrePersist();
+        this.setEnabled(false);
     }
 }
