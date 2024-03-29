@@ -20,7 +20,7 @@ import static com.bachelor.thesis.organization_education.enums.Permission.*;
 @RequiredArgsConstructor
 public enum Role {
     EMPTY("", "", Set.of()),
-    SYSTEM_ADMIN(
+    ADMIN(
             "Адміністратор системи",
             "System administrator",
             Set.of(SYSTEM_ADMIN_READ, SYSTEM_ADMIN_UPDATE, SYSTEM_ADMIN_CREATE, SYSTEM_ADMIN_DELETE)

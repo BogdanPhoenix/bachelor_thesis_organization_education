@@ -9,6 +9,32 @@ spring:
         hbm2ddl:
           auto: create
     show-sql: false
+  profiles:
+    active: production
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://${keycloak.domain}/realms/${keycloak.realm}
+
+jwt:
+  auth:
+    converter:
+      resource-id: authenticationClientId
+
+keycloak:
+  realm: spring-boot-keycloak
+  domain: localhost:8081
+  adminClientId: admin-cli
+  adminClientSecret:
+  client: authenticationClientId
+  urls:
+    auth: http://${keycloak.domain}
+
+server:
+  port: 8181
+  servlet:
+    context-path: /organization-education
 
 logging:
   file:
@@ -17,3 +43,7 @@ logging:
 application:
   url:
     main: /organization-education
+
+springdoc:
+  swagger-ui:
+    path: /swagger

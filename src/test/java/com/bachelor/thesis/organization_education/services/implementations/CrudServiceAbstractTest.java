@@ -52,7 +52,7 @@ class CrudServiceAbstractTest {
         FieldUtils.writeField(serviceMock, "repository", repositoryMock, true);
         Response response = UserResponse.builder()
                 .username("username@gmail.com")
-                .role(Role.SYSTEM_ADMIN)
+                .role(Role.ADMIN)
                 .build();
 
         when(repositoryMock.save(any(BaseTableInfo.class))).thenReturn(tableInfoMock);

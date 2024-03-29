@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @WebAppConfiguration
-public class RegistrationControllerTest {
+class RegistrationControllerTest {
     private static final String URI = "http://localhost:8080/organization-education/register";
 
     @Autowired
@@ -72,7 +72,7 @@ public class RegistrationControllerTest {
                 .username("username@gmail.com")
                 .password("Qwertyuiop123!@#")
                 .matchingPassword("Qwertyuiop123!@#")
-                .role(Role.SYSTEM_ADMIN)
+                .role(Role.ADMIN)
                 .firstName("First Name")
                 .lastName("Last Name")
                 .build();

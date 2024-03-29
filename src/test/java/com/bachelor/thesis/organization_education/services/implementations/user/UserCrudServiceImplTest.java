@@ -33,7 +33,7 @@ class UserCrudServiceImplTest {
             .username("username@gmail.com")
             .password("qwertyuiop[]")
             .matchingPassword("qwertyuiop[]")
-            .role(Role.SYSTEM_ADMIN)
+            .role(Role.ADMIN)
             .firstName("firstName")
             .lastName("lastName")
             .build();

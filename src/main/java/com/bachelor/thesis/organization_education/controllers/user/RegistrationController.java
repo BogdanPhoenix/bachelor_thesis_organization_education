@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${application.url.main}/register")
+@RequestMapping("/register")
 public class RegistrationController {
     private final UserService service;
     private final ApplicationEventPublisher publisher;
@@ -30,8 +30,8 @@ public class RegistrationController {
         }
 
         var response = service.registration(registrationRequest);
-        var URL = request.getRequestURL().toString();
-        publisher.publishEvent(new RegistrationCompleteEvent(response, URL));
+        var requestURL = request.getRequestURL().toString();
+        publisher.publishEvent(new RegistrationCompleteEvent(response, requestURL));
 
         return ResponseEntity.ok("Success! Please, check your email for to complete your registration");
     }

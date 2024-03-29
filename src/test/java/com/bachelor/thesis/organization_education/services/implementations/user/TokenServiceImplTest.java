@@ -34,7 +34,7 @@ class TokenServiceImplTest {
     private static final User USER = User.builder()
             .username("username@gmail.com")
             .password("qwertyuiop[]123!@#")
-            .role(Role.SYSTEM_ADMIN)
+            .role(Role.ADMIN)
             .build();
 
     @InjectMocks

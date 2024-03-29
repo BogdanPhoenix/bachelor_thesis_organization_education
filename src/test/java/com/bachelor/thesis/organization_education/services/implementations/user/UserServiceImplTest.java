@@ -32,7 +32,7 @@ class UserServiceImplTest {
             .username("test@gmail.com")
             .password("queryTy4iop$")
             .matchingPassword("queryTy4iop$")
-            .role(Role.SYSTEM_ADMIN)
+            .role(Role.ADMIN)
             .firstName("Ivan")
             .lastName("Ivan")
             .build();
