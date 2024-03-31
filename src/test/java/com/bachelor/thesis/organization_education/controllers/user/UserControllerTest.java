@@ -1,14 +1,10 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
 import com.bachelor.thesis.organization_education.enums.Role;
-import com.bachelor.thesis.organization_education.events.RegistrationCompleteEvent;
 import com.bachelor.thesis.organization_education.requests.user.RegistrationRequest;
-import com.bachelor.thesis.organization_education.responces.user.RegisteredResponse;
-import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +15,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationListener;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,20 +30,11 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @WebAppConfiguration
-class RegistrationControllerTest {
-    private static final String URI = "http://localhost:8080/organization-education/register";
+class UserControllerTest {
+    private static final String URI = "http://localhost:8181/organization-education/users/register";
 
     @Autowired
     private WebApplicationContext webApplicationContext;
-
-    @MockBean
-    private UserService userServiceMock;
-    @MockBean
-    private ApplicationEventPublisher applicationEventPublisherMock;
-    @MockBean
-    private HttpServletRequest httpServletRequestMock;
-    @MockBean
-    private ApplicationListener<RegistrationCompleteEvent> applicationListenerMock;
 
     private MockMvc mockMvc;
 
@@ -163,10 +148,6 @@ class RegistrationControllerTest {
     @DisplayName("Checking the controller for correct user registration in the system.")
     void testRegistrationCorrect() throws Exception {
         when(bindingResultMock.hasErrors()).thenReturn(false);
-        when(userServiceMock.registration(any(RegistrationRequest.class))).thenReturn(new RegisteredResponse("", ""));
-        when(httpServletRequestMock.getRequestURL()).thenReturn(new StringBuffer());
-        doNothing().when(applicationListenerMock).onApplicationEvent(any(RegistrationCompleteEvent.class));
-        doNothing().when(applicationEventPublisherMock).publishEvent(any());
 
         mockMvc.perform(MockMvcRequestBuilders.post(URI)
                         .contentType(MediaType.APPLICATION_JSON)

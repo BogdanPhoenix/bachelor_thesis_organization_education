@@ -15,18 +15,18 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://${keycloak.domain}/realms/${keycloak.realm}
+          issuer-uri: ${keycloak.urls.auth}/realms/${keycloak.realm}
 
 jwt:
   auth:
     converter:
-      resource-id: authenticationClientId
+      resource-id: ${keycloak.client}
 
 keycloak:
   realm: spring-boot-keycloak
   domain: localhost:8081
   adminClientId: admin-cli
-  adminClientSecret:
+  adminClientSecret: 
   client: authenticationClientId
   urls:
     auth: http://${keycloak.domain}
@@ -39,11 +39,3 @@ server:
 logging:
   file:
     name: ./logs/organization_education.log
-
-application:
-  url:
-    main: /organization-education
-
-springdoc:
-  swagger-ui:
-    path: /swagger

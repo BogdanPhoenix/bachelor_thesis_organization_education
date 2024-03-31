@@ -31,4 +31,14 @@ public class UserRegistrationResponse extends Response {
                 firstName.isBlank() ||
                 lastName.isBlank();
     }
+
+    public static @NonNull UserRegistrationResponse empty() {
+        return Response
+                .initEmpty(builder())
+                .username("")
+                .role(Role.EMPTY)
+                .firstName("")
+                .lastName("")
+                .build();
+    }
 }

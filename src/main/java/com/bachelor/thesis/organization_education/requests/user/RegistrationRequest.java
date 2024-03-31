@@ -2,7 +2,6 @@ package com.bachelor.thesis.organization_education.requests.user;
 
 import com.bachelor.thesis.organization_education.annotations.ValidEmail;
 import com.bachelor.thesis.organization_education.annotations.ValidNameUser;
-import com.bachelor.thesis.organization_education.enums.PatternTemplate;
 import com.bachelor.thesis.organization_education.enums.Role;
 import com.bachelor.thesis.organization_education.requests.abstract_type.PasswordRequest;
 import jakarta.validation.constraints.*;
@@ -20,13 +19,7 @@ public class RegistrationRequest extends PasswordRequest {
     @NotNull
     @NotBlank(message = "The email should not be empty or contain only one space.")
     @Size(min = 3, max = 255, message = "Email should be between 3 and 255 characters")
-    @ValidEmail(message = """
-            The email address you provided: "%s" has not been validated. It must comply with the following rules:
-                - The main body must contain only letters (uppercase or lowercase) of the Latin alphabet, numbers, or the symbols '_', '.', '+', or '-'.
-                - The '@' symbol must be followed by at least one character, which can be a letter (uppercase or lowercase) of the Latin alphabet, a number, or a dash.
-                - The dot (.) in the domain must be followed by at least one character, which can be a letter (uppercase or lowercase) of the Latin alphabet, a number, a dash or a period.
-            Your email address should look like: "username@domain.domain_zone"
-            """)
+    @ValidEmail
     private String username;
 
     @NotNull

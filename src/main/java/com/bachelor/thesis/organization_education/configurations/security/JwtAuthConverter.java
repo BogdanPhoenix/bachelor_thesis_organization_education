@@ -1,5 +1,6 @@
 package com.bachelor.thesis.organization_education.configurations.security;
 
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 
 @Component
 public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+    private static final String REALM_NAME = "roles";
 
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
@@ -25,9 +27,11 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
 
     @Override
-    public AbstractAuthenticationToken convert(Jwt jwt) {
+    public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
+        var jwtConvert = jwtGrantedAuthoritiesConverter.convert(jwt);
+
         Collection<GrantedAuthority> authorities = Stream.concat(
-                jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
+                jwtConvert.stream(),
                 extractResourceRoles(jwt).stream()).collect(Collectors.toSet());
         return new JwtAuthenticationToken(jwt, authorities, getPrincipalClaimName(jwt));
     }
@@ -38,28 +42,25 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     }
 
     private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
-
-        Map<String, Object> realmAccess = jwt.getClaim("realm_access");
-        Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
+        Map<String, Collection<String>> realmAccess = jwt.getClaim("realm_access");
+        Map<String, Map<String, Collection<String>>> resourceAccess = jwt.getClaim("resource_access");
 
         Collection<String> allRoles = new ArrayList<>();
-        Collection<String> resourceRoles;
-        Collection<String> realmRoles ;
 
         if(resourceAccess != null && resourceAccess.get("account") != null){
-            Map<String,Object> account =  (Map<String,Object>) resourceAccess.get("account");
-            if(account.containsKey("roles") ){
-                resourceRoles = (Collection<String>) account.get("roles");
+            Map<String, Collection<String>> account =  resourceAccess.get("account");
+            if(account.containsKey(REALM_NAME) ){
+                Collection<String> resourceRoles = account.get(REALM_NAME);
                 allRoles.addAll(resourceRoles);
             }
         }
 
-        if(realmAccess != null && realmAccess.containsKey("roles")){
-            realmRoles = (Collection<String>) realmAccess.get("roles");
+        if(realmAccess != null && realmAccess.containsKey(REALM_NAME)){
+            Collection<String> realmRoles = realmAccess.get(REALM_NAME);
             allRoles.addAll(realmRoles);
         }
-        if (allRoles.isEmpty() || !Objects.equals(resourceId,jwt.getClaim("azp")) ) {
 
+        if (allRoles.isEmpty() || !Objects.equals(resourceId,jwt.getClaim("azp")) ) {
             return Set.of();
         }
 

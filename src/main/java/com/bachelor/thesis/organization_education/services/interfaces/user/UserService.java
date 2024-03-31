@@ -1,40 +1,40 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
+import com.bachelor.thesis.organization_education.responces.user.UserRegistrationResponse;
 import lombok.NonNull;
-import io.jsonwebtoken.JwtException;
-import com.bachelor.thesis.organization_education.responces.user.TokenResponse;
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.user.RegistrationRequest;
-import com.bachelor.thesis.organization_education.responces.user.RegisteredResponse;
-import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
+import org.keycloak.representations.idm.UserRepresentation;
+
+import java.util.UUID;
 
 public interface UserService {
     /**
      * Handles the registration process for a new user based on the provided registration request.
      *
      * @param request the registration request containing user information.
-     * @return JWT token and registered user data.
-     * @throws DuplicateException if the user already exists in the system.
-     * @throws NullPointerException if null was passed to the request.
+     * @return registered user data.
      */
-    RegisteredResponse registration(@NonNull RegistrationRequest request) throws DuplicateException, NullPointerException;
+    UserRegistrationResponse registration(@NonNull RegistrationRequest request);
 
     /**
-     * Updates the authentication token for the user based on the existing JWT signature.
+     * Method for returning information about a user by their UUID.
      *
-     * @param token a JWT token that identifies the user and gives permission to interact with his or her data.
-     * @throws JwtException if the JWT signature does not match the locally computed signature or the JWT signature has expired.
-     * @throws IllegalArgumentException if the JWT string is null or empty or only whitespace.
-     * @throws NotFindEntityInDataBaseException if the user by the specified JWT signature could not be found.
+     * @param userId the user's UUID on the server.
+     * @return
      */
-    TokenResponse refreshToken(@NonNull String token) throws JwtException, IllegalArgumentException, NotFindEntityInDataBaseException;
+    UserRepresentation getUserById(String userId);
 
     /**
-     * Verifies user confirmation using the JWT signature that was sent to the email.
+     * Method for deleting a user account from the system by its UUID.
      *
-     * @param token a JWT token that identifies the user and authorizes the activation of user data.
-     * @throws NotFindEntityInDataBaseException if the JWT signature was not found in the database or if the user was not found in the database.
-     * @throws JwtException if the JWT signature has expired or when the JWT signature is no longer active.
+     * @param userId the user's UUID on the server.
      */
-    void verifyEmail(@NonNull String token) throws NotFindEntityInDataBaseException, JwtException;
+    void deleteUserById(String userId);
+
+    /**
+     * Method for sending a request to update user data.
+     *
+     * @param userId the user's UUID on the server.
+     */
+    void updatePassword(String userId);
 }
