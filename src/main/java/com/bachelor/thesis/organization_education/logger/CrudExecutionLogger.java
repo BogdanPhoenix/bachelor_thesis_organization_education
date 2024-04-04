@@ -22,7 +22,7 @@ public class CrudExecutionLogger {
         log.info("Input to the {}.{}{} method", className, methodName, methodArgs);
     }
 
-    @After("")
+    @After("execution(* com.bachelor.thesis.organization_education.services.implementations.CrudServiceAbstract(..))")
     public void afterMethodExecution(JoinPoint joinPoint) {
         initData(joinPoint);
         log.info("Exiting the {}.{}{} method", className, methodName, methodArgs);

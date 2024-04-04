@@ -13,7 +13,6 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -34,7 +33,7 @@ public class KeycloakOAuth2UserService implements OAuth2UserService<OidcUserRequ
         Collection<? extends GrantedAuthority> authorities =
                 extract(accessToken, clientId).stream()
                         .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+                        .toList();
 
         authorities = authoritiesMapper.mapAuthorities(authorities);
 

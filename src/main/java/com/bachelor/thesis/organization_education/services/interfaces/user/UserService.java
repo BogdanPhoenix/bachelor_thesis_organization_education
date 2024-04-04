@@ -5,8 +5,6 @@ import lombok.NonNull;
 import com.bachelor.thesis.organization_education.requests.user.RegistrationRequest;
 import org.keycloak.representations.idm.UserRepresentation;
 
-import java.util.UUID;
-
 public interface UserService {
     /**
      * Handles the registration process for a new user based on the provided registration request.
@@ -20,7 +18,7 @@ public interface UserService {
      * Method for returning information about a user by their UUID.
      *
      * @param userId the user's UUID on the server.
-     * @return
+     * @return user data.
      */
     UserRepresentation getUserById(String userId);
 

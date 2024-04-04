@@ -1,4 +1,9 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/keycloak
+    username: keycloak
+    password: keycloak
+    driver-class-name: org.postgresql.Driver
   jpa:
     properties:
       hibernate:
@@ -26,7 +31,7 @@ keycloak:
   realm: spring-boot-keycloak
   domain: localhost:8081
   adminClientId: admin-cli
-  adminClientSecret: 
+  adminClientSecret:
   client: authenticationClientId
   urls:
     auth: http://${keycloak.domain}

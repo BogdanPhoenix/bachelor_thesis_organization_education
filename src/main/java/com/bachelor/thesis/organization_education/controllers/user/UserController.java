@@ -6,6 +6,8 @@ import com.bachelor.thesis.organization_education.services.interfaces.user.UserS
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -21,15 +23,20 @@ public class UserController {
     private final UserService service;
 
     @PostMapping("/register")
-    public UserRegistrationResponse registerUser(
+    public ResponseEntity<UserRegistrationResponse> registerUser(
             @RequestBody @Valid RegistrationRequest registrationRequest,
             BindingResult bindingResult
     ) {
         if(bindingResult.hasErrors()) {
-            return UserRegistrationResponse.empty();
+            return ResponseEntity
+                    .badRequest()
+                    .body(UserRegistrationResponse.empty());
         }
 
-        return service.registration(registrationRequest);
+        var response = service.registration(registrationRequest);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @GetMapping

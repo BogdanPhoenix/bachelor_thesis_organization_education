@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @WebAppConfiguration
 class UserControllerTest {
-    private static final String URI = "http://localhost:8181/organization-education/users/register";
+    private static final String URI_REGISTER = "/users/register";
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -68,7 +69,7 @@ class UserControllerTest {
     @DisplayName("Checking the controller and validating the wrong username passed by the user.")
     void testValidUserName(String value) throws Exception {
         request.setUsername(value);
-        accessToServerBadRequest();
+        postRequestToServer(MockMvcResultMatchers.status().isBadRequest());
     }
 
     private static @NonNull Stream<Arguments> usernameValues() {
@@ -89,7 +90,7 @@ class UserControllerTest {
     @DisplayName("Checking the controller and validating the wrong password transmitted by the user.")
     void testValidPassword(String value) throws Exception {
         request.setPassword(value);
-        accessToServerBadRequest();
+        postRequestToServer(MockMvcResultMatchers.status().isBadRequest());
     }
 
     private static @NonNull Stream<Arguments> passwordValues() {
@@ -107,7 +108,7 @@ class UserControllerTest {
     @DisplayName("Controller checking and validation when password and matchingPassword fields have different data.")
     void testMatchesPassword() throws Exception {
         request.setMatchingPassword("qWertyuiop123!@#");
-        accessToServerBadRequest();
+        postRequestToServer(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @ParameterizedTest
@@ -115,7 +116,7 @@ class UserControllerTest {
     @DisplayName("Checking the controller and validating the invalid firstName passed by the user.")
     void testValidFirstName(String value) throws Exception {
         request.setFirstName(value);
-        accessToServerBadRequest();
+        postRequestToServer(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @ParameterizedTest
@@ -123,7 +124,7 @@ class UserControllerTest {
     @DisplayName("Checking the controller and validating the invalid lastName passed by the user.")
     void testValidLastName(String value) throws Exception {
         request.setLastName(value);
-        accessToServerBadRequest();
+        postRequestToServer(MockMvcResultMatchers.status().isBadRequest());
     }
 
     private static @NonNull Stream<Arguments> firstAndLastNameValues() {
@@ -137,21 +138,17 @@ class UserControllerTest {
         );
     }
 
-    private void accessToServerBadRequest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(URI)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectWriter.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
     @Test
     @DisplayName("Checking the controller for correct user registration in the system.")
     void testRegistrationCorrect() throws Exception {
         when(bindingResultMock.hasErrors()).thenReturn(false);
+        postRequestToServer(MockMvcResultMatchers.status().isCreated());
+    }
 
-        mockMvc.perform(MockMvcRequestBuilders.post(URI)
+    private void postRequestToServer(ResultMatcher matcher) throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(URI_REGISTER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectWriter.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(matcher);
     }
 }

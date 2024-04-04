@@ -4,7 +4,6 @@ import com.bachelor.thesis.organization_education.annotations.PasswordMatches;
 import com.bachelor.thesis.organization_education.annotations.ValidPassword;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;

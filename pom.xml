@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.bachelor.thesis</groupId>
 	<artifactId>organization_education</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>organization_education</name>
 

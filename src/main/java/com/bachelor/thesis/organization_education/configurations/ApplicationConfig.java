@@ -14,9 +14,4 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public Dotenv dotenv() {
-        return Dotenv.configure().load();
-    }
 }
