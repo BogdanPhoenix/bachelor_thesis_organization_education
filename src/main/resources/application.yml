@@ -12,7 +12,7 @@ spring:
             platform: org.jboss.narayana.jta
         format_sql: true
         hbm2ddl:
-          auto: create
+          auto: update
     show-sql: false
   profiles:
     active: production
@@ -31,7 +31,7 @@ keycloak:
   realm: spring-boot-keycloak
   domain: localhost:8081
   adminClientId: admin-cli
-  adminClientSecret:
+  adminClientSecret: 
   client: authenticationClientId
   urls:
     auth: http://${keycloak.domain}

@@ -11,9 +11,12 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Role {
-    EMPTY,
-    ADMIN,
-    UNIVERSITY_ADMIN,
-    LECTURER,
-    STUDENT
+    EMPTY("", ""),
+    ADMIN("Admin", "Адміністратор"),
+    UNIVERSITY_ADMIN("University admin", "Адміністратор університету"),
+    LECTURER("Lecturer", "Викладач"),
+    STUDENT("Student", "Студент");
+
+    private final String enName;
+    private final String uaName;
 }

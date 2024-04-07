@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.bachelor.thesis.organization_education.enums.Role;
 import com.bachelor.thesis.organization_education.responces.user.UserResponse;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.abstract_type.Request;
@@ -52,7 +51,6 @@ class CrudServiceAbstractTest {
         FieldUtils.writeField(serviceMock, "repository", repositoryMock, true);
         Response response = UserResponse.builder()
                 .username("username@gmail.com")
-                .role(Role.ADMIN)
                 .build();
 
         when(repositoryMock.save(any(BaseTableInfo.class))).thenReturn(tableInfoMock);
