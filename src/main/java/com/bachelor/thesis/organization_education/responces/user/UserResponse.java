@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -14,18 +16,20 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class UserResponse extends Response {
+    private static final String EMPTY_TEMPLATE = "00000000-0000-0000-0000-000000000000";
+
     @NotNull
-    private String username;
+    private UUID userId;
 
     @Override
     public boolean isEmpty() {
-        return username.isBlank();
+        return userId == UUID.fromString(EMPTY_TEMPLATE);
     }
 
     public static @NonNull UserResponse empty() {
         return Response
                 .initEmpty(builder())
-                .username("")
+                .userId(UUID.fromString(EMPTY_TEMPLATE))
                 .build();
     }
 }

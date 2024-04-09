@@ -1,7 +1,12 @@
 package com.bachelor.thesis.organization_education.services.implementations.user;
 
+import com.bachelor.thesis.organization_education.dto.User;
+import com.bachelor.thesis.organization_education.enums.Role;
+import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
+import com.bachelor.thesis.organization_education.repositories.user.UserRepository;
+import com.bachelor.thesis.organization_education.requests.user.AuthRequest;
+import com.bachelor.thesis.organization_education.requests.user.RegistrationOtherUserRequest;
 import com.bachelor.thesis.organization_education.requests.user.RegistrationRequest;
-import com.bachelor.thesis.organization_education.responces.user.UserRegistrationResponse;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
@@ -11,79 +16,106 @@ import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final Keycloak keycloak;
+    private final RestTemplate keycloakRestTemplate;
+    private final UserRepository repository;
+
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String jwtIssuerURI;
+
+    @Value("${keycloak.client}")
+    private String clientId;
 
     @Value("${keycloak.realm}")
     private String realm;
 
     @Override
-    public UserRegistrationResponse registration(@NonNull RegistrationRequest request) {
+    public UserRepresentation registration(@NonNull RegistrationRequest request) throws UserCreatingException {
+        var reassembledRequest = RegistrationOtherUserRequest.builder()
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .matchingPassword(request.getMatchingPassword())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .role(Role.UNIVERSITY_ADMIN)
+                .build();
+
+        return registerAccountForAnotherUser(reassembledRequest, "");
+    }
+
+    @Override
+    public ResponseEntity<String> authorization(@NonNull AuthRequest authRequest) {
+        var requestBody = new LinkedMultiValueMap<String, String>();
+        requestBody.add("grant_type", "password");
+        requestBody.add("username", authRequest.getUsername());
+        requestBody.add("password", authRequest.getPassword());
+        requestBody.add("client_id", clientId);
+
+        return keycloakRestTemplate.postForEntity(
+                jwtIssuerURI + "/protocol/openid-connect/token",
+                requestBody,
+                String.class
+        );
+    }
+
+    @Override
+    public UserRepresentation registerAccountForAnotherUser(@NonNull RegistrationOtherUserRequest request, @NonNull String invitedUserId) throws UserCreatingException {
+        var userId = "";
         var user = getUserRepresentation(request);
         var usersResource = getUsersResource();
 
         try(Response response = usersResource.create(user)) {
             if(!Objects.equals(201, response.getStatus())) {
-                return UserRegistrationResponse.empty();
+                throw new UserCreatingException("The Identity Management server could not successfully create a user on its side. It returned an HTTP code " + response.getStatus());
             }
 
             var representationList = usersResource.searchByUsername(request.getUsername(), true);
+            var userRepresentation = representationList
+                    .stream()
+                    .filter(representation -> Objects.equals(false, representation.isEmailVerified()))
+                    .findFirst()
+                    .orElseThrow();
 
-            if(!CollectionUtils.isEmpty(representationList)){
-                UserRepresentation userRepresentation = representationList
-                        .stream()
-                        .filter(representation -> Objects.equals(false, representation.isEmailVerified()))
-                        .findFirst()
-                        .orElseThrow();
+            userId = userRepresentation.getId();
+            assignRole(userRepresentation.getId(), request.getRole().name());
+            emailVerification(userRepresentation.getId());
+            saveToDB(userRepresentation.getId(), invitedUserId);
 
-                assignRole(userRepresentation.getId(), request.getRole().name());
-                emailVerification(userRepresentation.getId());
+            return userRepresentation;
+        }
+        catch (Exception e) {
+            if(!userId.isBlank()) {
+                deleteUserById(userId);
             }
 
-            return UserRegistrationResponse.builder()
-                    .username(request.getUsername())
-                    .role(request.getRole())
-                    .firstName(request.getFirstName())
-                    .lastName(request.getLastName())
-                    .build();
+            throw new UserCreatingException(e.getMessage());
         }
     }
 
-    @Override
-    public UserRepresentation getUserById(String userId) {
-        return getUsersResource().get(userId).toRepresentation();
-    }
-
-    @Override
-    public void deleteUserById(String userId) {
-        getUsersResource().delete(userId);
-    }
-
-    private static @NonNull UserRepresentation getUserRepresentation(RegistrationRequest request) {
+    private static @NonNull UserRepresentation getUserRepresentation(RegistrationOtherUserRequest request) {
         var user = createUser(request);
         var credentialRepresentation = createCredentialRepresentation(request);
+        var list = new ArrayList<CredentialRepresentation>();
 
-        List<CredentialRepresentation> list = new ArrayList<>();
         list.add(credentialRepresentation);
         user.setCredentials(list);
 
         return user;
     }
 
-    private static @NonNull UserRepresentation createUser(RegistrationRequest request) {
+    private static @NonNull UserRepresentation createUser(@NonNull RegistrationOtherUserRequest request) {
         var user = new UserRepresentation();
 
         user.setEnabled(true);
@@ -96,7 +128,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private static @NonNull CredentialRepresentation createCredentialRepresentation(RegistrationRequest request) {
+    private static @NonNull CredentialRepresentation createCredentialRepresentation(@NonNull RegistrationOtherUserRequest request) {
         var credentialRepresentation = new CredentialRepresentation();
 
         credentialRepresentation.setValue(request.getPassword());
@@ -106,10 +138,21 @@ public class UserServiceImpl implements UserService {
         return credentialRepresentation;
     }
 
-    private UsersResource getUsersResource() {
+    private void assignRole(String userId, String roleName) {
+        var userResource = getUserResource(userId);
+        var rolesResource = getRolesResource();
+        var representation = rolesResource
+                .get(roleName)
+                .toRepresentation();
+        userResource.roles()
+                .realmLevel()
+                .add(Collections.singletonList(representation));
+    }
+
+    private RolesResource getRolesResource(){
         return keycloak
                 .realm(realm)
-                .users();
+                .roles();
     }
 
     private void emailVerification(String userId) {
@@ -117,28 +160,47 @@ public class UserServiceImpl implements UserService {
         usersResource.get(userId).sendVerifyEmail();
     }
 
-    private void assignRole(String userId, String roleName) {
-        UserResource userResource = getUserResource(userId);
-        RolesResource rolesResource = getRolesResource();
-        RoleRepresentation representation = rolesResource.get(roleName).toRepresentation();
-        userResource.roles().realmLevel().add(Collections.singletonList(representation));
+    void saveToDB(@NonNull String userId, @NonNull String inviteUserId) {
+        var requestAdd = User.builder()
+                .userId(UUID.fromString(userId))
+                .build();
+
+        if(!inviteUserId.isBlank()) {
+            requestAdd.setInvited(UUID.fromString(inviteUserId));
+        }
+
+        repository.save(requestAdd);
     }
 
-    private UserResource getUserResource(String userId) {
-        UsersResource usersResource = getUsersResource();
-        return usersResource.get(userId);
+    @Override
+    public void deleteUserById(String userId) {
+        getUsersResource().delete(userId);
+        repository.deleteByUserId(UUID.fromString(userId));
     }
 
-    private RolesResource getRolesResource(){
-        return keycloak.realm(realm)
-                .roles();
+    @Override
+    public UserRepresentation getUserById(String userId) {
+        return getUsersResource()
+                .get(userId)
+                .toRepresentation();
+    }
+
+    private UsersResource getUsersResource() {
+        return keycloak
+                .realm(realm)
+                .users();
     }
 
     @Override
     public void updatePassword(String userId) {
-        UserResource userResource = getUserResource(userId);
-        List<String> actions= new ArrayList<>();
+        var userResource = getUserResource(userId);
+        var actions= new ArrayList<String>();
         actions.add("UPDATE_PASSWORD");
         userResource.executeActionsEmail(actions);
+    }
+
+    private UserResource getUserResource(String userId) {
+        return getUsersResource()
+                .get(userId);
     }
 }

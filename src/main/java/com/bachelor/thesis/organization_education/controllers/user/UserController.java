@@ -1,13 +1,15 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
+import com.bachelor.thesis.organization_education.requests.user.AuthRequest;
+import com.bachelor.thesis.organization_education.requests.user.RegistrationOtherUserRequest;
 import com.bachelor.thesis.organization_education.requests.user.RegistrationRequest;
-import com.bachelor.thesis.organization_education.responces.user.UserRegistrationResponse;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -15,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,17 +26,53 @@ public class UserController {
     private final UserService service;
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegistrationResponse> registerUser(
+    public ResponseEntity<UserRepresentation> registerUser(
             @RequestBody @Valid RegistrationRequest registrationRequest,
             BindingResult bindingResult
     ) {
         if(bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest()
-                    .body(UserRegistrationResponse.empty());
+                    .body(new UserRepresentation());
         }
 
         var response = service.registration(registrationRequest);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<String> authorization(
+            @RequestBody @Valid AuthRequest authRequest,
+            BindingResult bindingResult
+    ) {
+        if(bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body("The data you provided contains errors.");
+        }
+
+        var response = service.authorization(authRequest);
+
+        if (!Objects.equals(HttpStatus.OK, response.getStatusCode())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
+        }
+        return ResponseEntity.ok(response.getBody());
+    }
+
+    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
+    @PostMapping("/register-other")
+    public ResponseEntity<UserRepresentation> registerAccountForAnotherUser(
+            @RequestBody @Valid RegistrationOtherUserRequest registrationRequest,
+            Principal principal,
+            BindingResult bindingResult
+    ) {
+        if(bindingResult.hasErrors()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new UserRepresentation());
+        }
+
+        var response = service.registerAccountForAnotherUser(registrationRequest, principal.getName());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
@@ -49,6 +88,12 @@ public class UserController {
         service.updatePassword(principal.getName());
     }
 
+    @DeleteMapping
+    public void deleteAccount(Principal principal) {
+        service.deleteUserById(principal.getName());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}")
     public void deleteUserById(@PathVariable String userId) {
         service.deleteUserById(userId);

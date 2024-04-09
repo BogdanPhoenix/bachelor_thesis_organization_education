@@ -28,7 +28,7 @@ public class File extends BaseTableInfo {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "record_id", nullable = false)
-    private Record record;
+    private ClassRecordings classRecordings;
 
     @NonNull
     @Column(name = "path_to_file", nullable = false, unique = true)

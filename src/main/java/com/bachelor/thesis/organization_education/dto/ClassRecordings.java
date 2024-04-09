@@ -24,10 +24,10 @@ import static jakarta.persistence.CascadeType.DETACH;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "records",
+@Table(name = "class_recordings",
         uniqueConstraints = @UniqueConstraint(columnNames = {"magazine_id", "class_topic"})
 )
-public class Record extends BaseTableInfo {
+public class ClassRecordings extends BaseTableInfo {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "magazine_id", nullable = false)

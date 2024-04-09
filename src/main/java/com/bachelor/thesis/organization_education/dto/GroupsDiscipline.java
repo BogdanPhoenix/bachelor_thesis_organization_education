@@ -46,7 +46,7 @@ public class GroupsDiscipline extends BaseTableInfo {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "magazine", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<Record> records;
+    private Set<ClassRecordings> classRecordings;
 
     @Override
     public Response getResponse() {

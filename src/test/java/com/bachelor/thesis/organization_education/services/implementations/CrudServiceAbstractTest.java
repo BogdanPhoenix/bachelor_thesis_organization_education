@@ -13,6 +13,8 @@ import com.bachelor.thesis.organization_education.responces.abstract_type.Respon
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
+import java.util.UUID;
+
 import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,7 +52,7 @@ class CrudServiceAbstractTest {
     void testAddValueCorrect() throws Exception {
         FieldUtils.writeField(serviceMock, "repository", repositoryMock, true);
         Response response = UserResponse.builder()
-                .username("username@gmail.com")
+                .userId(UUID.randomUUID())
                 .build();
 
         when(repositoryMock.save(any(BaseTableInfo.class))).thenReturn(tableInfoMock);

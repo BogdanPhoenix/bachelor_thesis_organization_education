@@ -25,7 +25,7 @@ public class StudentEvaluation extends BaseTableInfo {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "record_id", nullable = false)
-    private Record record;
+    private ClassRecordings classRecordings;
 
     @NonNull
     @ManyToOne

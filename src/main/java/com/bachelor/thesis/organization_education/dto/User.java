@@ -3,13 +3,13 @@ package com.bachelor.thesis.organization_education.dto;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.user.UserResponse;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Set;
+import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.DETACH;
@@ -27,15 +27,13 @@ import static jakarta.persistence.CascadeType.DETACH;
 @Table(name = "users")
 public class User extends BaseTableInfo {
     @NonNull
-    @NotBlank
-    @Column(name = "username", nullable = false, unique = true)
-    private String username;
+    @Column(name = "user_id", nullable = false, unique = true)
+    private UUID userId;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToOne
-    @JoinColumn(name = "invited")
-    private User invited;
+    @Column(name = "invited")
+    private UUID invited;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -61,7 +59,7 @@ public class User extends BaseTableInfo {
     public UserResponse getResponse() {
         var responseBuilder = UserResponse.builder();
         return super.responseBuilder(responseBuilder)
-                .username(this.username)
+                .userId(this.userId)
                 .build();
     }
 }

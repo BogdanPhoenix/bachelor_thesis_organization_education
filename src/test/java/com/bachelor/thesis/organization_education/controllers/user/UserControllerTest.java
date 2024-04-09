@@ -1,6 +1,5 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
-import com.bachelor.thesis.organization_education.enums.Role;
 import com.bachelor.thesis.organization_education.requests.user.RegistrationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -58,7 +57,6 @@ class UserControllerTest {
                 .username("username@gmail.com")
                 .password("Qwertyuiop123!@#")
                 .matchingPassword("Qwertyuiop123!@#")
-                .role(Role.ADMIN)
                 .firstName("First Name")
                 .lastName("Last Name")
                 .build();

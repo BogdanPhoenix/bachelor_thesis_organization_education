@@ -27,6 +27,11 @@ import java.util.*;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfiguration {
+    private static final String[] WHILE_LIST = {
+            "/users/register",
+            "/users/auth"
+    };
+
     private final JwtAuthConverter jwtAuthConverter;
     private final KeycloakLogoutHandler keycloakLogoutHandler;
 
@@ -51,7 +56,7 @@ public class WebSecurityConfiguration {
 
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> authorizeHttpRequestsCustomizer() {
         return request -> request
-                .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
+                .requestMatchers(HttpMethod.POST, WHILE_LIST).permitAll()
                 .anyRequest().authenticated();
     }
 
