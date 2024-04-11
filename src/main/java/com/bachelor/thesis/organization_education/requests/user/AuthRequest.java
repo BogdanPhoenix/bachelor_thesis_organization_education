@@ -2,6 +2,7 @@ package com.bachelor.thesis.organization_education.requests.user;
 
 import com.bachelor.thesis.organization_education.annotations.ValidEmail;
 import com.bachelor.thesis.organization_education.annotations.ValidPassword;
+import com.bachelor.thesis.organization_education.annotations.ValidRequestEmpty;
 import com.bachelor.thesis.organization_education.requests.abstract_type.Request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
+@ValidRequestEmpty
 public class AuthRequest extends Request {
     @NotNull
     @NotBlank(message = "The email should not be empty or contain only one space.")

@@ -1,6 +1,6 @@
 package com.bachelor.thesis.organization_education.dto;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,9 +8,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.Set;
-
-import static jakarta.persistence.CascadeType.*;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -21,13 +19,19 @@ import static jakarta.persistence.CascadeType.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-@Table(name = "accreditation_levels")
-public class AccreditationLevel extends NameEntity {
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "accreditationLevel", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<University> universities;
+@EqualsAndHashCode(callSuper = false)
+@Table(name = "students",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"group_id", "user_id"})
+)
+public class Student extends BaseTableInfo {
+    @NonNull
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
+
+    @NonNull
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
     @Override
     public Response getResponse() {

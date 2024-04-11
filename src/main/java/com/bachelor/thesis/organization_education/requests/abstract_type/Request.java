@@ -1,6 +1,5 @@
 package com.bachelor.thesis.organization_education.requests.abstract_type;
 
-import com.bachelor.thesis.organization_education.annotations.ValidRequestEmpty;
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -15,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Validated
-@ValidRequestEmpty
 public abstract class Request {
     /**
      * Checks if the request is empty.

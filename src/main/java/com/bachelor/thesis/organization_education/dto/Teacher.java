@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -41,9 +42,8 @@ public class Teacher extends BaseTableInfo {
     private Faculty faculty;
 
     @NonNull
-    @OneToOne(cascade={MERGE, REMOVE, REFRESH, DETACH})
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
-    private User user;
+    @Column(name = "user_id", nullable = false, unique = true)
+    private UUID user;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

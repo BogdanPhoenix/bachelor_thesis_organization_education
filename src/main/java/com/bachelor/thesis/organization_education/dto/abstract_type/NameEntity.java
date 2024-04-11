@@ -1,5 +1,6 @@
 package com.bachelor.thesis.organization_education.dto.abstract_type;
 
+import com.bachelor.thesis.organization_education.responces.abstract_type.NameEntityResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
@@ -28,4 +29,11 @@ public abstract class NameEntity extends BaseTableInfo {
     @NotBlank
     @Column(name = "ua_name", nullable = false, unique = true)
     private String uaName;
+
+    protected <T extends NameEntityResponse.NameEntityResponseBuilder<?, ?>> T initResponse(@NonNull T builder) {
+        super.initResponse(builder);
+        builder.enName(enName)
+                .uaName(uaName);
+        return builder;
+    }
 }

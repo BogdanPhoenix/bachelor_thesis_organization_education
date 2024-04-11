@@ -8,6 +8,8 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -21,14 +23,13 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "files")
 public class File extends BaseTableInfo {
     @NonNull
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
     @NonNull
     @ManyToOne
     @JoinColumn(name = "record_id", nullable = false)
-    private ClassRecordings classRecordings;
+    private ClassRecording classRecording;
 
     @NonNull
     @Column(name = "path_to_file", nullable = false, unique = true)

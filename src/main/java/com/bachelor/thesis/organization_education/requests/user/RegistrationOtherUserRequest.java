@@ -1,5 +1,6 @@
 package com.bachelor.thesis.organization_education.requests.user;
 
+import com.bachelor.thesis.organization_education.annotations.ValidRequestEmpty;
 import com.bachelor.thesis.organization_education.enums.Role;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -15,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@ValidRequestEmpty
 public class RegistrationOtherUserRequest extends RegistrationRequest {
     @NotNull
     private Role role;

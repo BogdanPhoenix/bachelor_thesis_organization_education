@@ -35,7 +35,7 @@ public abstract class BaseTableInfo {
 
     public abstract Response getResponse();
 
-    protected <T extends Response.ResponseBuilder<?, ?>> T responseBuilder(@NonNull T builder){
+    protected <T extends Response.ResponseBuilder<?, ?>> T initResponse(@NonNull T builder){
         builder.id(this.id)
                 .createDate(this.createDate)
                 .updateDate(this.updateDate);

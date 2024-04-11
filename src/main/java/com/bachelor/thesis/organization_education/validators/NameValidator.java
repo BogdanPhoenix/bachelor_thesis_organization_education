@@ -9,6 +9,6 @@ public class NameValidator implements ConstraintValidator<ValidNameUser, String>
     @Override
     public boolean isValid(String name, ConstraintValidatorContext constraintValidatorContext) {
         return name.toUpperCase()
-                .matches(PatternTemplate.NAME_USER.getValue());
+                .matches(PatternTemplate.USER_FIRST_AND_LAST_NAME.getValue());
     }
 }

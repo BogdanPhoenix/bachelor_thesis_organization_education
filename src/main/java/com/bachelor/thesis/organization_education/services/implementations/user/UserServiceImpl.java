@@ -1,9 +1,7 @@
 package com.bachelor.thesis.organization_education.services.implementations.user;
 
-import com.bachelor.thesis.organization_education.dto.User;
 import com.bachelor.thesis.organization_education.enums.Role;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
-import com.bachelor.thesis.organization_education.repositories.user.UserRepository;
 import com.bachelor.thesis.organization_education.requests.user.AuthRequest;
 import com.bachelor.thesis.organization_education.requests.user.RegistrationOtherUserRequest;
 import com.bachelor.thesis.organization_education.requests.user.RegistrationRequest;
@@ -30,7 +28,6 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private final Keycloak keycloak;
     private final RestTemplate keycloakRestTemplate;
-    private final UserRepository repository;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String jwtIssuerURI;
@@ -91,7 +88,6 @@ public class UserServiceImpl implements UserService {
             userId = userRepresentation.getId();
             assignRole(userRepresentation.getId(), request.getRole().name());
             emailVerification(userRepresentation.getId());
-            saveToDB(userRepresentation.getId(), invitedUserId);
 
             return userRepresentation;
         }
@@ -160,22 +156,9 @@ public class UserServiceImpl implements UserService {
         usersResource.get(userId).sendVerifyEmail();
     }
 
-    void saveToDB(@NonNull String userId, @NonNull String inviteUserId) {
-        var requestAdd = User.builder()
-                .userId(UUID.fromString(userId))
-                .build();
-
-        if(!inviteUserId.isBlank()) {
-            requestAdd.setInvited(UUID.fromString(inviteUserId));
-        }
-
-        repository.save(requestAdd);
-    }
-
     @Override
     public void deleteUserById(String userId) {
         getUsersResource().delete(userId);
-        repository.deleteByUserId(UUID.fromString(userId));
     }
 
     @Override

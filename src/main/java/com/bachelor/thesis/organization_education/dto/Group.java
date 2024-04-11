@@ -61,6 +61,11 @@ public class Group extends BaseTableInfo {
     @OneToMany(mappedBy = "group", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Set<Schedule> schedules;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "group", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
+    private Set<Student> students;
+
     @Override
     public Response getResponse() {
         return null;

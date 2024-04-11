@@ -8,6 +8,8 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -25,12 +27,11 @@ public class StudentEvaluation extends BaseTableInfo {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "record_id", nullable = false)
-    private ClassRecordings classRecordings;
+    private ClassRecording classRecording;
 
     @NonNull
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private User student;
+    @Column(name = "student_id", nullable = false)
+    private UUID studentId;
 
     @Column(name = "evaluation")
     private short evaluation;

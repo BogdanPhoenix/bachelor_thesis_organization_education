@@ -27,7 +27,7 @@ import static jakarta.persistence.CascadeType.DETACH;
 @Table(name = "class_recordings",
         uniqueConstraints = @UniqueConstraint(columnNames = {"magazine_id", "class_topic"})
 )
-public class ClassRecordings extends BaseTableInfo {
+public class ClassRecording extends BaseTableInfo {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "magazine_id", nullable = false)
@@ -45,12 +45,12 @@ public class ClassRecordings extends BaseTableInfo {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "record", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "classRecording", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Set<StudentEvaluation> studentEvaluations;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "record", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "classRecording", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Set<File> files;
 
     @Override
