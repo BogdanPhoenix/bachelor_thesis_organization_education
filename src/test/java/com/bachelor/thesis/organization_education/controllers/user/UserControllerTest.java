@@ -1,6 +1,6 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
-import com.bachelor.thesis.organization_education.requests.user.RegistrationRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;

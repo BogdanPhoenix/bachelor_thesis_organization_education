@@ -1,11 +1,15 @@
-package com.bachelor.thesis.organization_education.services.implementations;
+package com.bachelor.thesis.organization_education.services.implementations.crud;
 
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.repositories.NameEntityRepository;
-import com.bachelor.thesis.organization_education.requests.abstract_type.NameEntityRequest;
-import com.bachelor.thesis.organization_education.requests.abstract_type.Request;
+import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.NameEntityRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.NameEntityUpdateRequest;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import lombok.NonNull;
 
 import java.util.Optional;
@@ -28,15 +32,15 @@ public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends 
     }
 
     @Override
-    protected T getEntity(@NonNull Request request) throws NotFindEntityInDataBaseException {
+    public T getValue(@NonNull FindRequest request) throws NotFindEntityInDataBaseException {
         return findEntity(request)
                 .filter(BaseTableInfo::isEnabled)
                 .orElseThrow(() -> new NotFindEntityInDataBaseException("The query failed to find an entity in the table: " + tableName));
     }
 
     @Override
-    protected Optional<T> findEntity(@NonNull Request request) {
-        var nameEntityRequest = (NameEntityRequest) request;
+    protected Optional<T> findEntity(@NonNull FindRequest request) {
+        var nameEntityRequest = (UniversityFindRequest) request;
 
         return repository.findByEnNameOrUaName(
                 nameEntityRequest.getEnName(),
@@ -45,8 +49,8 @@ public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends 
     }
 
     @Override
-    protected void updateEntity(T entity, Request request) {
-        var nameEntityRequest = (NameEntityRequest) request;
+    protected void updateEntity(T entity, UpdateRequest request) {
+        var nameEntityRequest = (NameEntityUpdateRequest) request;
 
         if(!nameEntityRequest.getEnName().isBlank()) {
             entity.setEnName(nameEntityRequest.getEnName());

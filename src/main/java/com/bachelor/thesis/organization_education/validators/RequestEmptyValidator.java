@@ -1,7 +1,7 @@
 package com.bachelor.thesis.organization_education.validators;
 
 import com.bachelor.thesis.organization_education.annotations.ValidRequestEmpty;
-import com.bachelor.thesis.organization_education.requests.abstract_type.Request;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

@@ -1,7 +1,7 @@
 package com.bachelor.thesis.organization_education.dto;
 
 import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.responces.university.FacultyResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -11,7 +11,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.CascadeType.DETACH;
 
 @Entity
 @Getter
@@ -43,7 +42,11 @@ public class Faculty extends NameEntity {
     private Set<Group> groups;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public FacultyResponse getResponse() {
+        var responseBuilder = FacultyResponse.builder();
+        super.initResponse(responseBuilder);
+        return responseBuilder
+                .university(university.getResponse())
+                .build();
     }
 }

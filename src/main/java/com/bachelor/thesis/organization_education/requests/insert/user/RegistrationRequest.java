@@ -1,9 +1,10 @@
-package com.bachelor.thesis.organization_education.requests.user;
+package com.bachelor.thesis.organization_education.requests.insert.user;
 
 import com.bachelor.thesis.organization_education.annotations.ValidEmail;
 import com.bachelor.thesis.organization_education.annotations.ValidNameUser;
 import com.bachelor.thesis.organization_education.annotations.ValidRequestEmpty;
-import com.bachelor.thesis.organization_education.requests.abstract_type.PasswordRequest;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.PasswordRequest;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -41,5 +42,10 @@ public class RegistrationRequest extends PasswordRequest {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public FindRequest getFindRequest() {
+        return null;
     }
 }

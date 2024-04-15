@@ -1,7 +1,7 @@
-package com.bachelor.thesis.organization_education.requests.abstract_type;
+package com.bachelor.thesis.organization_education.requests.general.abstracts;
 
 import com.bachelor.thesis.organization_education.annotations.ValidNameEntity;
-import jakarta.persistence.MappedSuperclass;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEntityFindRequest;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -11,11 +11,10 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @ToString
 @SuperBuilder
-@MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public abstract class NameEntityRequest extends Request {
+@EqualsAndHashCode
+public abstract class NameEntityRequest implements Request {
     @NotNull
     @ValidNameEntity
     @Size(max = 255)
@@ -28,6 +27,12 @@ public abstract class NameEntityRequest extends Request {
     @Override
     public boolean isEmpty() {
         return enName.isBlank() || uaName.isBlank();
+    }
+
+    protected <T extends NameEntityFindRequest.NameEntityFindRequestBuilder<?, ?>> T initFindRequest(@NotNull @NonNull T builder) {
+        builder.enName(enName)
+                .uaName(uaName);
+        return builder;
     }
 
     protected static <T extends NameEntityRequestBuilder<?, ?>> @NonNull T initEmpty(@NotNull T builder) {

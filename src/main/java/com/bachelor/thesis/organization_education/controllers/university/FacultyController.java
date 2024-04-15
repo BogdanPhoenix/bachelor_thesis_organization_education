@@ -1,11 +1,11 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
+import com.bachelor.thesis.organization_education.requests.insert.university.FacultyInsertRequest;
 import com.bachelor.thesis.organization_education.requests.update.UpdateData;
-import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
-import com.bachelor.thesis.organization_education.requests.insert.university.UniversityInsertRequest;
-import com.bachelor.thesis.organization_education.requests.update.university.UniversityUpdateRequest;
-import com.bachelor.thesis.organization_education.responces.university.UniversityResponse;
-import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
+import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
+import com.bachelor.thesis.organization_education.requests.update.university.FacultyUpdateRequest;
+import com.bachelor.thesis.organization_education.responces.university.FacultyResponse;
+import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/university")
-public class UniversityController extends ResourceController<UniversityService>{
+@RequestMapping("/faculty")
+public class FacultyController extends ResourceController<FacultyService>{
     @Autowired
-    public UniversityController(UniversityService service) {
+    public FacultyController(FacultyService service) {
         super(service);
     }
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping
-    public ResponseEntity<UniversityResponse> add(
-            @RequestBody @Valid UniversityInsertRequest request,
+    public ResponseEntity<FacultyResponse> add(
+            @RequestBody @Valid FacultyInsertRequest request,
             BindingResult bindingResult,
             Principal principal
     ) {
@@ -37,8 +37,7 @@ public class UniversityController extends ResourceController<UniversityService>{
                     .build();
         }
 
-        var response = service
-                .addResource(request, principal.getName())
+        var response = service.addResource(request, principal.getName())
                 .getResponse();
 
         return ResponseEntity
@@ -47,8 +46,8 @@ public class UniversityController extends ResourceController<UniversityService>{
     }
 
     @GetMapping
-    public ResponseEntity<UniversityResponse> get(
-            @RequestBody @Valid UniversityFindRequest request,
+    public ResponseEntity<FacultyResponse> get(
+            @RequestBody @Valid FacultyFindRequest request,
             BindingResult bindingResult
     ) {
         return super.get(request, bindingResult);
@@ -56,8 +55,8 @@ public class UniversityController extends ResourceController<UniversityService>{
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PutMapping
-    public ResponseEntity<UniversityResponse> update(
-            @RequestBody @Valid UpdateData<UniversityUpdateRequest> request,
+    public ResponseEntity<FacultyResponse> update(
+            @RequestBody @Valid UpdateData<FacultyUpdateRequest> request,
             BindingResult bindingResult
     ) {
         return super.updateEntity(request, bindingResult);
@@ -65,8 +64,8 @@ public class UniversityController extends ResourceController<UniversityService>{
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @DeleteMapping
-    public ResponseEntity<Void> deactivate(
-            @RequestBody @Valid UniversityFindRequest request,
+    public ResponseEntity<?> deactivate(
+            @RequestBody @Valid FacultyFindRequest request,
             BindingResult bindingResult
     ) {
         return super.deactivate(request, bindingResult);
@@ -74,8 +73,8 @@ public class UniversityController extends ResourceController<UniversityService>{
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> delete(
-            @RequestBody @Valid UniversityFindRequest request,
+    public ResponseEntity<?> delete(
+            @RequestBody @Valid FacultyFindRequest request,
             BindingResult bindingResult
     ) {
         return super.delete(request, bindingResult);
@@ -83,8 +82,8 @@ public class UniversityController extends ResourceController<UniversityService>{
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/activate")
-    public ResponseEntity<Void> activate(
-            @RequestBody @Valid UniversityFindRequest request,
+    public ResponseEntity<?> activate(
+            @RequestBody @Valid FacultyFindRequest request,
             BindingResult bindingResult
     ) {
         return super.activate(request, bindingResult);

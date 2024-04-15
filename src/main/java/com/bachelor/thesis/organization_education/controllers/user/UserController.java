@@ -1,8 +1,8 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
-import com.bachelor.thesis.organization_education.requests.user.AuthRequest;
-import com.bachelor.thesis.organization_education.requests.user.RegistrationOtherUserRequest;
-import com.bachelor.thesis.organization_education.requests.user.RegistrationRequest;
+import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationOtherUserRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

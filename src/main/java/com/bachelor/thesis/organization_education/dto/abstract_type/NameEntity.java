@@ -30,10 +30,9 @@ public abstract class NameEntity extends BaseTableInfo {
     @Column(name = "ua_name", nullable = false, unique = true)
     private String uaName;
 
-    protected <T extends NameEntityResponse.NameEntityResponseBuilder<?, ?>> T initResponse(@NonNull T builder) {
+    protected <T extends NameEntityResponse.NameEntityResponseBuilder<?, ?>> void initResponse(@NonNull T builder) {
         super.initResponse(builder);
         builder.enName(enName)
                 .uaName(uaName);
-        return builder;
     }
 }

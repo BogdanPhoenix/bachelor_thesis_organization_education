@@ -1,4 +1,4 @@
-package com.bachelor.thesis.organization_education.requests.abstract_type;
+package com.bachelor.thesis.organization_education.requests.general.abstracts;
 
 import com.bachelor.thesis.organization_education.annotations.PasswordMatches;
 import com.bachelor.thesis.organization_education.annotations.ValidPassword;
@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @PasswordMatches(message = "The passwords you provided do not match.")
-public abstract class PasswordRequest extends Request {
+public abstract class PasswordRequest implements Request {
     @NotNull
     @NotBlank
     @ValidPassword

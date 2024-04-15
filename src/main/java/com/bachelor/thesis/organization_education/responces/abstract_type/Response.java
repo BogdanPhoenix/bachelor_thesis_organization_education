@@ -18,8 +18,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class Response {
-    public static final Long EMPTY_PARENT_ENTITY = 0L;
-
     private Long id;
 
     @EqualsAndHashCode.Exclude

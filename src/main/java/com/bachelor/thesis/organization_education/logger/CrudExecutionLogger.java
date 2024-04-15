@@ -16,19 +16,19 @@ public class CrudExecutionLogger {
     private String methodName;
     private String methodArgs;
 
-    @Before("execution(* com.bachelor.thesis.organization_education.services.implementations.CrudServiceAbstract(..))")
+    @Before("execution(* com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract(..))")
     public void beforeMethodExecution(JoinPoint joinPoint) {
         initData(joinPoint);
         log.info("Input to the {}.{}{} method", className, methodName, methodArgs);
     }
 
-    @After("execution(* com.bachelor.thesis.organization_education.services.implementations.CrudServiceAbstract(..))")
+    @After("execution(* com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract(..))")
     public void afterMethodExecution(JoinPoint joinPoint) {
         initData(joinPoint);
         log.info("Exiting the {}.{}{} method", className, methodName, methodArgs);
     }
 
-    @AfterThrowing(pointcut = "execution(* com.bachelor.thesis.organization_education.services.implementations.CrudServiceAbstract(..))", throwing = "e")
+    @AfterThrowing(pointcut = "execution(* com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract(..))", throwing = "e")
     public void afterThrowingMethodExecution(JoinPoint joinPoint, Throwable e) {
         initData(joinPoint);
         log.warn("An exception was thrown in method: {}.{}{}", className, methodName, methodArgs);

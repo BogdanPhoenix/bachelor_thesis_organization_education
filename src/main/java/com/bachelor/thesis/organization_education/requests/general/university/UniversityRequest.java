@@ -1,7 +1,11 @@
-package com.bachelor.thesis.organization_education.requests.university;
+package com.bachelor.thesis.organization_education.requests.general.university;
 
 import com.bachelor.thesis.organization_education.annotations.ValidRequestEmpty;
+import com.bachelor.thesis.organization_education.enums.AccreditationLevel;
 import com.bachelor.thesis.organization_education.enums.PatternTemplate;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.NameEntityRequest;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -13,13 +17,23 @@ import java.util.UUID;
 @Setter
 @SuperBuilder
 @MappedSuperclass
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @ValidRequestEmpty
-public class UniversityRequest extends UniversityInsertRequest {
+public class UniversityRequest extends NameEntityRequest {
+    @NotNull
+    private AccreditationLevel accreditationLevel;
     @NotNull
     private UUID adminId;
+
+    @Setter(AccessLevel.PRIVATE)
+    private FindRequest findRequest = UniversityFindRequest.builder()
+            .enName(getEnName())
+            .uaName(getUaName())
+            .adminId(adminId)
+            .build();
 
     @Override
     public boolean isEmpty() {
@@ -27,7 +41,7 @@ public class UniversityRequest extends UniversityInsertRequest {
     }
 
     public static @NonNull UniversityRequest empty() {
-        return UniversityInsertRequest
+        return NameEntityRequest
                 .initEmpty(builder())
                 .adminId(createEmptyUUID())
                 .build();

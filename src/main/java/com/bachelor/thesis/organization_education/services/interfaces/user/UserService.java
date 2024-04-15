@@ -1,11 +1,11 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
-import com.bachelor.thesis.organization_education.requests.user.AuthRequest;
-import com.bachelor.thesis.organization_education.requests.user.RegistrationOtherUserRequest;
+import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationOtherUserRequest;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
-import com.bachelor.thesis.organization_education.requests.user.RegistrationRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationRequest;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.ResponseEntity;
 

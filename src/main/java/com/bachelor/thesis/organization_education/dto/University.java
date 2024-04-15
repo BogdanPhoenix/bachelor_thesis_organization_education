@@ -2,7 +2,6 @@ package com.bachelor.thesis.organization_education.dto;
 
 import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
 import com.bachelor.thesis.organization_education.enums.AccreditationLevel;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.responces.university.UniversityResponse;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +13,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.CascadeType.DETACH;
 
 @Entity
 @Getter
@@ -48,9 +46,10 @@ public class University extends NameEntity {
     private Set<Faculty> faculties;
 
     @Override
-    public Response getResponse() {
+    public UniversityResponse getResponse() {
         var responseBuilder = UniversityResponse.builder();
-        return super.initResponse(responseBuilder)
+        super.initResponse(responseBuilder);
+        return responseBuilder
                 .accreditationLevel(accreditationLevel)
                 .adminId(adminId)
                 .build();

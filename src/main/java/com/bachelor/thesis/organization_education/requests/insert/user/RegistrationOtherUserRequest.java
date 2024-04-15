@@ -1,4 +1,4 @@
-package com.bachelor.thesis.organization_education.requests.user;
+package com.bachelor.thesis.organization_education.requests.insert.user;
 
 import com.bachelor.thesis.organization_education.annotations.ValidRequestEmpty;
 import com.bachelor.thesis.organization_education.enums.Role;

@@ -1,6 +1,8 @@
 package com.bachelor.thesis.organization_education.dto;
 
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.enums.AcademicDegree;
+import com.bachelor.thesis.organization_education.enums.AcademicTitle;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,13 +29,13 @@ import static jakarta.persistence.CascadeType.*;
 @Table(name = "teachers")
 public class Teacher extends BaseTableInfo {
     @NonNull
-    @ManyToOne
-    @JoinColumn(name = "title_id", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "title_id", nullable = false)
     private AcademicTitle title;
 
     @NonNull
-    @ManyToOne
-    @JoinColumn(name = "degree_id", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "degree_id", nullable = false)
     private AcademicDegree degree;
 
     @NonNull

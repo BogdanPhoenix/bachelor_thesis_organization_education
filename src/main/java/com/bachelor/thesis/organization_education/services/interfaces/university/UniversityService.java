@@ -1,8 +1,8 @@
 package com.bachelor.thesis.organization_education.services.interfaces.university;
 
+import com.bachelor.thesis.organization_education.dto.University;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.requests.university.UniversityInsertRequest;
-import com.bachelor.thesis.organization_education.responces.university.UniversityResponse;
+import com.bachelor.thesis.organization_education.requests.insert.university.UniversityInsertRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.CrudService;
 import lombok.NonNull;
 
@@ -16,9 +16,9 @@ public interface UniversityService extends CrudService {
      *
      * @param request data to create a new entity.
      * @param userId identifier of the user who added the resource.
-     * @return response for the saved entity; never {@literal null}.
+     * @return the saved entity; never {@literal null}.
      * @throws NullPointerException if null was passed to the request.
      * @throws DuplicateException if the table contains an entity value that is passed in the query.
      */
-    UniversityResponse addResource(@NonNull UniversityInsertRequest request, @NonNull String userId) throws NullPointerException, DuplicateException;
+    University addResource(@NonNull UniversityInsertRequest request, @NonNull String userId) throws NullPointerException, DuplicateException;
 }
