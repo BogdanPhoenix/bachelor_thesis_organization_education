@@ -3,28 +3,29 @@ package com.bachelor.thesis.organization_education.services.implementations.univ
 import com.bachelor.thesis.organization_education.dto.University;
 import com.bachelor.thesis.organization_education.enums.AccreditationLevel;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.repositories.university.UniversityRepository;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
-import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
 import com.bachelor.thesis.organization_education.requests.insert.university.UniversityInsertRequest;
 import com.bachelor.thesis.organization_education.requests.general.university.UniversityRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.update.university.UniversityUpdateRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
+import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UniversityServiceImpl extends NameEntityServiceAbstract<University, UniversityRepository> implements UniversityService {
     @Autowired
-    protected UniversityServiceImpl(UniversityRepository repository) {
-        super(repository, "Accreditation levels");
+    protected UniversityServiceImpl(UniversityRepository repository, ApplicationContext context) {
+        super(repository, "Universities", context);
     }
 
     @Override
@@ -63,13 +64,24 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     }
 
     @Override
-    protected Optional<University> findEntity(@NonNull FindRequest request) {
-        var universityRequest = (UniversityFindRequest) request;
-
-        return repository.findByEnNameOrUaNameOrAdminId(
-                universityRequest.getEnName(),
-                universityRequest.getUaName(),
-                universityRequest.getAdminId()
+    public void deactivateUserEntity(@NonNull String userId) {
+        var uuid = UUID.fromString(userId);
+        var university = repository.findByAdminId(uuid);
+        university.ifPresent(entity ->
+                disable(entity.getFindRequest())
         );
+    }
+
+    @Override
+    public University findByUser(@NonNull String adminId) throws NotFindEntityInDataBaseException {
+        var uuid = UUID.fromString(adminId);
+        return repository.findByAdminId(uuid)
+                .orElseThrow(() -> new NotFindEntityInDataBaseException("Unable to find a university where the user with the specified ID \"" + adminId + "\" is an administrator."));
+    }
+
+    @Override
+    protected void selectedForDeactivateChild(FindRequest request) {
+        var entity = getValue(request);
+        deactivatedChild(entity.getFaculties(), FacultyService.class);
     }
 }

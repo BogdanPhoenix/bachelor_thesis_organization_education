@@ -4,10 +4,12 @@ import com.bachelor.thesis.organization_education.exceptions.UserCreatingExcepti
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationOtherUserRequest;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 import lombok.NonNull;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationRequest;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 
 @Transactional
 public interface UserService {
@@ -25,8 +27,9 @@ public interface UserService {
      *
      * @param authRequest user data for authorization.
      * @return JSON object with confirmation tokens.
+     * @throws RestClientException if a REST error occurs during a request to the server.
      */
-    ResponseEntity<String> authorization(@NonNull AuthRequest authRequest);
+    ResponseEntity<String> authorization(@NonNull AuthRequest authRequest) throws RestClientException;
 
     /**
      * Manages the user registration process by the university administrator based on the registration request provided.
@@ -43,8 +46,9 @@ public interface UserService {
      *
      * @param userId the user's UUID on the server.
      * @return user data.
+     * @throws NotFoundException if the user could not be found by the specified ID.
      */
-    UserRepresentation getUserById(String userId);
+    UserRepresentation getUserById(String userId) throws NotFoundException;
 
     /**
      * Method for deleting a user account from the system by its UUID.
@@ -52,6 +56,13 @@ public interface UserService {
      * @param userId the user's UUID on the server.
      */
     void deleteUserById(String userId);
+
+    /**
+     * A method for deactivating a user account from the system by its UUID.
+     *
+     * @param userId the user's UUID on the server.
+     */
+    void deactivateUserById(String userId);
 
     /**
      * Method for sending a request to update user data.

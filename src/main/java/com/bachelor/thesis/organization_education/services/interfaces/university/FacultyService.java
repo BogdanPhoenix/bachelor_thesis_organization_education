@@ -3,7 +3,7 @@ package com.bachelor.thesis.organization_education.services.interfaces.universit
 import com.bachelor.thesis.organization_education.dto.Faculty;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.insert.university.FacultyInsertRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.CrudService;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 
 /**
  * Service interface for managing faculties, extending basic CRUD operations.

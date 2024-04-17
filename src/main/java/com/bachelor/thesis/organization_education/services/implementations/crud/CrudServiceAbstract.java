@@ -7,11 +7,13 @@ import com.bachelor.thesis.organization_education.requests.update.UpdateData;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.CrudService;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import lombok.NonNull;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -27,10 +29,16 @@ import static com.bachelor.thesis.organization_education.services.implementation
 public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends JpaRepository<T, Long>> implements CrudService {
     protected final String tableName;
     protected final J repository;
+    protected final ApplicationContext context;
 
     protected CrudServiceAbstract(J repository, String tableName) {
+        this(repository, tableName, null);
+    }
+
+    protected CrudServiceAbstract(J repository, String tableName, ApplicationContext context) {
         this.repository = repository;
         this.tableName = tableName;
+        this.context = context;
     }
 
     @Override
@@ -87,6 +95,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
 
     @Override
     public void disable(@NonNull FindRequest request) throws NotFindEntityInDataBaseException {
+        selectedForDeactivateChild(request);
         updateEnabled(request, false);
     }
 
@@ -118,6 +127,17 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
                 .orElseThrow(() -> new NotFindEntityInDataBaseException("The query failed to find an entity in the table: " + tableName));
     }
 
+    protected <B extends BaseTableInfo, C extends CrudService> void deactivatedChild(Collection<B> collection, Class<C> serviceClass) {
+        var service = getBeanByClass(serviceClass);
+        collection.forEach(
+                entity -> service.disable(entity.getFindRequest())
+        );
+    }
+
+    private <B extends CrudService> B getBeanByClass(Class<B> clazz) {
+        return context.getBean(clazz);
+    }
+
     T findById(Long id) throws NotFindEntityInDataBaseException {
         return repository
                 .findById(id)
@@ -132,4 +152,5 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     protected abstract T createEntity(@NonNull Request request);
     protected abstract Optional<T> findEntity(@NonNull FindRequest request);
     protected abstract void updateEntity(T entity, UpdateRequest request);
+    protected abstract void selectedForDeactivateChild(FindRequest request);
 }

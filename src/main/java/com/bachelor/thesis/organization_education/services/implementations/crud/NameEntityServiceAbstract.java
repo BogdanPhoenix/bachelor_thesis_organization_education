@@ -11,6 +11,7 @@ import com.bachelor.thesis.organization_education.requests.general.abstracts.Req
 import com.bachelor.thesis.organization_education.requests.update.abstracts.NameEntityUpdateRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import lombok.NonNull;
+import org.springframework.context.ApplicationContext;
 
 import java.util.Optional;
 
@@ -21,7 +22,11 @@ import java.util.Optional;
  */
 public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends NameEntityRepository<T>> extends CrudServiceAbstract<T, J> {
     protected NameEntityServiceAbstract(J repository, String tableName) {
-        super(repository, tableName);
+        this(repository, tableName, null);
+    }
+
+    protected NameEntityServiceAbstract(J repository, String tableName, ApplicationContext context) {
+        super(repository, tableName, context);
     }
 
     protected <B extends NameEntity.NameEntityBuilder<?, ?>> @NonNull B initEntity(B builder, Request request) {

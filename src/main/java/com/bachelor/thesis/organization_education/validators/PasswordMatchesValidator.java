@@ -1,7 +1,7 @@
 package com.bachelor.thesis.organization_education.validators;
 
 import com.bachelor.thesis.organization_education.annotations.PasswordMatches;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.PasswordRequest;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.PasswordRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

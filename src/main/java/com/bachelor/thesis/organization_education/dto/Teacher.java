@@ -3,6 +3,7 @@ package com.bachelor.thesis.organization_education.dto;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.enums.AcademicDegree;
 import com.bachelor.thesis.organization_education.enums.AcademicTitle;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import jakarta.persistence.*;
 import lombok.*;
@@ -70,6 +71,11 @@ public class Teacher extends BaseTableInfo {
 
     @Override
     public Response getResponse() {
+        return null;
+    }
+
+    @Override
+    public FindRequest getFindRequest() {
         return null;
     }
 }

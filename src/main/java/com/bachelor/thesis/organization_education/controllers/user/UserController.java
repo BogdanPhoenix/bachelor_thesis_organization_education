@@ -83,14 +83,19 @@ public class UserController {
         return service.getUserById(principal.getName());
     }
 
+    @GetMapping("/{userId}")
+    public UserRepresentation getUser(@PathVariable String userId) {
+        return service.getUserById(userId);
+    }
+
     @PutMapping("/update-password")
     public void updatePassword(Principal principal) {
         service.updatePassword(principal.getName());
     }
 
     @DeleteMapping
-    public void deleteAccount(Principal principal) {
-        service.deleteUserById(principal.getName());
+    public void deactivateAccount(Principal principal) {
+        service.deactivateUserById(principal.getName());
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -20,9 +20,4 @@ import lombok.experimental.SuperBuilder;
 public class RegistrationOtherUserRequest extends RegistrationRequest {
     @NotNull
     private Role role;
-
-    @Override
-    public boolean isEmpty() {
-        return super.isEmpty() || role == Role.EMPTY;
-    }
 }

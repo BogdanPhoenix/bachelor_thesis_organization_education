@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface UniversityRepository extends NameEntityRepository<University> {
-    Optional<University> findByEnNameOrUaNameOrAdminId(String enName, String uaName, UUID adminId);
+    Optional<University> findByAdminId(UUID adminId);
 }

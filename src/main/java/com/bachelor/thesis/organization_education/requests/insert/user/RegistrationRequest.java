@@ -2,9 +2,7 @@ package com.bachelor.thesis.organization_education.requests.insert.user;
 
 import com.bachelor.thesis.organization_education.annotations.ValidEmail;
 import com.bachelor.thesis.organization_education.annotations.ValidNameUser;
-import com.bachelor.thesis.organization_education.annotations.ValidRequestEmpty;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.PasswordRequest;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.PasswordRequest;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -19,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@ValidRequestEmpty
 public class RegistrationRequest extends PasswordRequest {
     @NotNull
     @NotBlank(message = "The email should not be empty or contain only one space.")
@@ -38,14 +35,4 @@ public class RegistrationRequest extends PasswordRequest {
     @Size(min = 2, max = 255, message = "Last name should be between 2 and 255 characters")
     @ValidNameUser
     private String lastName;
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public FindRequest getFindRequest() {
-        return null;
-    }
 }

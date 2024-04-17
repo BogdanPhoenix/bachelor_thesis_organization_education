@@ -1,4 +1,4 @@
-package com.bachelor.thesis.organization_education.services.interfaces;
+package com.bachelor.thesis.organization_education.services.interfaces.crud;
 
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.requests.update.UpdateData;

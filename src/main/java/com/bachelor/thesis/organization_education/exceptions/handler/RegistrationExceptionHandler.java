@@ -1,7 +1,6 @@
 package com.bachelor.thesis.organization_education.exceptions.handler;
 
 import com.bachelor.thesis.organization_education.exceptions.UserAlreadyExistsException;
-import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,7 +24,6 @@ public class RegistrationExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-            UserCreatingException.class,
             UserAlreadyExistsException.class
     })
     public Map<String, String> userNotFound(UserAlreadyExistsException ex){

@@ -5,7 +5,9 @@ import com.bachelor.thesis.organization_education.exceptions.UserCreatingExcepti
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationOtherUserRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -28,6 +31,7 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private final Keycloak keycloak;
     private final RestTemplate keycloakRestTemplate;
+    private final UniversityService universityService;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String jwtIssuerURI;
@@ -53,7 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> authorization(@NonNull AuthRequest authRequest) {
+    public ResponseEntity<String> authorization(@NonNull AuthRequest authRequest) throws RestClientException {
         var requestBody = new LinkedMultiValueMap<String, String>();
         requestBody.add("grant_type", "password");
         requestBody.add("username", authRequest.getUsername());
@@ -93,7 +97,7 @@ public class UserServiceImpl implements UserService {
         }
         catch (Exception e) {
             if(!userId.isBlank()) {
-                deleteUserById(userId);
+                deactivateUserById(userId);
             }
 
             throw new UserCreatingException(e.getMessage());
@@ -162,7 +166,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRepresentation getUserById(String userId) {
+    public void deactivateUserById(String userId) {
+        universityService.deactivateUserEntity(userId);
+
+        var users = getUsersResource();
+        var representation = users.get(userId).toRepresentation();
+        representation.setEnabled(false);
+        users.get(userId).update(representation);
+    }
+
+    @Override
+    public UserRepresentation getUserById(String userId) throws NotFoundException {
         return getUsersResource()
                 .get(userId)
                 .toRepresentation();

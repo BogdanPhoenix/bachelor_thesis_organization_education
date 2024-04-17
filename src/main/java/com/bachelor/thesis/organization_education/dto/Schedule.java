@@ -4,6 +4,7 @@ import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInf
 import com.bachelor.thesis.organization_education.enums.DayWeek;
 import com.bachelor.thesis.organization_education.enums.Frequency;
 import com.bachelor.thesis.organization_education.enums.TypeClass;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import jakarta.persistence.*;
 import lombok.*;
@@ -67,6 +68,11 @@ public class Schedule extends BaseTableInfo {
 
     @Override
     public Response getResponse() {
+        return null;
+    }
+
+    @Override
+    public FindRequest getFindRequest() {
         return null;
     }
 }

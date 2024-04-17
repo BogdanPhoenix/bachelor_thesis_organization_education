@@ -1,4 +1,4 @@
-package com.bachelor.thesis.organization_education.requests.general.abstracts;
+package com.bachelor.thesis.organization_education.requests.insert.abstracts;
 
 import com.bachelor.thesis.organization_education.annotations.PasswordMatches;
 import com.bachelor.thesis.organization_education.annotations.ValidPassword;
@@ -16,9 +16,9 @@ import lombok.experimental.SuperBuilder;
 @MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @PasswordMatches(message = "The passwords you provided do not match.")
-public abstract class PasswordRequest implements Request {
+public abstract class PasswordRequest{
     @NotNull
     @NotBlank
     @ValidPassword
@@ -27,16 +27,4 @@ public abstract class PasswordRequest implements Request {
     @NotNull
     @NotBlank
     private String matchingPassword;
-
-    @Override
-    public boolean isEmpty() {
-        return password.isBlank() ||
-                matchingPassword.isBlank();
-    }
-
-    protected static <T extends PasswordRequestBuilder<?, ?>> @NonNull T initEmpty(@NonNull T builder) {
-        builder.password("")
-                .matchingPassword("");
-        return builder;
-    }
 }

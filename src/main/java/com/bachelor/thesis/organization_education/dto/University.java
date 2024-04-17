@@ -2,6 +2,7 @@ package com.bachelor.thesis.organization_education.dto;
 
 import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
 import com.bachelor.thesis.organization_education.enums.AccreditationLevel;
+import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
 import com.bachelor.thesis.organization_education.responces.university.UniversityResponse;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,7 +33,7 @@ public class University extends NameEntity {
     private AccreditationLevel accreditationLevel;
 
     @NonNull
-    @Column(name = "admin_id", nullable = false)
+    @Column(name = "admin_id", nullable = false, unique = true)
     private UUID adminId;
 
     @ToString.Exclude
@@ -52,6 +53,13 @@ public class University extends NameEntity {
         return responseBuilder
                 .accreditationLevel(accreditationLevel)
                 .adminId(adminId)
+                .build();
+    }
+
+    @Override
+    public UniversityFindRequest getFindRequest() {
+        return UniversityFindRequest.builder()
+                .enName(getEnName())
                 .build();
     }
 }

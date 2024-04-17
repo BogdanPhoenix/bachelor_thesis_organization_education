@@ -2,8 +2,9 @@ package com.bachelor.thesis.organization_education.services.interfaces.universit
 
 import com.bachelor.thesis.organization_education.dto.University;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.insert.university.UniversityInsertRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.CrudService;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import lombok.NonNull;
 
 /**
@@ -21,4 +22,20 @@ public interface UniversityService extends CrudService {
      * @throws DuplicateException if the table contains an entity value that is passed in the query.
      */
     University addResource(@NonNull UniversityInsertRequest request, @NonNull String userId) throws NullPointerException, DuplicateException;
+
+    /**
+     * Deactivate the university entity associated with the user.
+     *
+     * @param userId identifier of the university administrator.
+     */
+    void deactivateUserEntity(@NonNull String userId);
+
+    /**
+     * Find a university entity by the user identifier.
+     *
+     * @param adminId identifier of the university administrator.
+     * @return the university entity associated with the user.
+     * @throws NotFindEntityInDataBaseException if no entity is found for the given identifier.
+     */
+    University findByUser(@NonNull String adminId) throws NotFindEntityInDataBaseException;
 }
