@@ -35,7 +35,7 @@ public class Faculty extends NameEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "faculty", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<Teacher> teachers;
+    private Set<Lecture> lectures;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

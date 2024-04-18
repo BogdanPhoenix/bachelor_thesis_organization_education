@@ -1,12 +1,10 @@
 package com.bachelor.thesis.organization_education.services.implementations.crud;
 
-import com.bachelor.thesis.organization_education.requests.update.UpdateData;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -36,8 +34,8 @@ class CrudServiceAbstractTest {
     private FindRequest findRequestMock;
     @Mock
     private UpdateRequest updateRequestMock;
-    @InjectMocks
-    private UpdateData<UpdateRequest> updateDataMock;
+    @Mock
+    private UpdateRequest updateDataMock;
     @Mock
     private BaseTableInfo tableInfoMock;
 
@@ -84,20 +82,21 @@ class CrudServiceAbstractTest {
     @Nested
     @DisplayName("Test cases for updateValue method")
     class UpdateValueTests {
+        private static final Long ID = 1L;
+
         @BeforeEach
         void init() {
-            updateDataMock.setId(1L);
             when(updateRequestMock.getFindRequest()).thenReturn(findRequestMock);
             doCallRealMethod()
                     .when(serviceMock)
-                    .updateValue(updateDataMock);
+                    .updateValue(ID, updateDataMock);
         }
 
         @Test
         @DisplayName("Check for an exception when the data update request contains data that already exists in the table.")
         void testUpdateValueThrowsDuplicateException() {
             when(serviceMock.isDuplicate(any(FindRequest.class), anyLong())).thenReturn(true);
-            assertThrows(DuplicateException.class, () -> serviceMock.updateValue(updateDataMock));
+            assertThrows(DuplicateException.class, () -> serviceMock.updateValue(ID, updateDataMock));
         }
 
         @Test
@@ -106,7 +105,7 @@ class CrudServiceAbstractTest {
             when(serviceMock.isDuplicate(any(FindRequest.class), anyLong())).thenReturn(false);
             when(serviceMock.findById(anyLong())).thenThrow(NotFindEntityInDataBaseException.class);
 
-            assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.updateValue(updateDataMock));
+            assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.updateValue(ID, updateDataMock));
         }
 
         @Test
@@ -123,7 +122,7 @@ class CrudServiceAbstractTest {
 
             when(repositoryMock.save(any(BaseTableInfo.class))).thenReturn(tableInfoMock);
 
-            serviceMock.updateValue(updateDataMock);
+            serviceMock.updateValue(ID, updateDataMock);
             verify(repositoryMock).save(any());
         }
     }

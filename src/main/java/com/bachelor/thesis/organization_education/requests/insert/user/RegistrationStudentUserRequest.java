@@ -1,14 +1,11 @@
 package com.bachelor.thesis.organization_education.requests.insert.user;
 
 import com.bachelor.thesis.organization_education.annotations.ValidRequestEmpty;
-import com.bachelor.thesis.organization_education.enums.Role;
+import com.bachelor.thesis.organization_education.dto.Group;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-/**
- * A request for the university administrator to create an account for a university user.
- */
 @Getter
 @Setter
 @SuperBuilder
@@ -17,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @ValidRequestEmpty
-public class RegistrationOtherUserRequest extends RegistrationRequest {
+public class RegistrationStudentUserRequest extends RegistrationUserRequest {
     @NotNull
-    private Role role;
+    private Group group;
 }

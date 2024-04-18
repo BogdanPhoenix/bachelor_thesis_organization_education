@@ -33,7 +33,7 @@ public class AcademicDiscipline extends NameEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "disciplines")
-    private List<Teacher> teachers;
+    private List<Lecture> lectures;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

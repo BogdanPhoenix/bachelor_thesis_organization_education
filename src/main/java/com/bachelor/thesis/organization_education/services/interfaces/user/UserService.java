@@ -1,12 +1,13 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
+import com.bachelor.thesis.organization_education.enums.Role;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationOtherUserRequest;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
+import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.NonNull;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationRequest;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
@@ -35,11 +36,11 @@ public interface UserService {
      * Manages the user registration process by the university administrator based on the registration request provided.
      *
      * @param request the registration request containing user information.
-     * @param inviteUserId university administrator UUID.
+     * @param role the value of the user's role.
      * @return user data.
      * @throws UserCreatingException if during registration it was not possible to create a user account.
      */
-    UserRepresentation registerAccountForAnotherUser(@NonNull RegistrationOtherUserRequest request, @NonNull String inviteUserId) throws UserCreatingException;
+    UserRepresentation registerAccountForAnotherUser(@NonNull RegistrationRequest request, Role role) throws UserCreatingException;
 
     /**
      * Method for returning information about a user by their UUID.
@@ -64,10 +65,14 @@ public interface UserService {
      */
     void deactivateUserById(String userId);
 
+    void activate(String userId);
+
     /**
      * Method for sending a request to update user data.
      *
      * @param userId the user's UUID on the server.
      */
     void updatePassword(String userId);
+
+    void updateData(@NonNull UserUpdateRequest request, @NonNull String userId);
 }

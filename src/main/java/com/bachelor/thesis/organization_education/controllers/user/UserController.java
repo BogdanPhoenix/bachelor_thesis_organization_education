@@ -1,8 +1,11 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
+import com.bachelor.thesis.organization_education.enums.Role;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationOtherUserRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLectureRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentUserRequest;
+import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +30,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserRepresentation> registerUser(
-            @RequestBody @Valid RegistrationRequest registrationRequest,
+            @RequestBody @Valid RegistrationUserRequest registrationUserRequest,
             BindingResult bindingResult
     ) {
         if(bindingResult.hasErrors()) {
@@ -36,7 +39,7 @@ public class UserController {
                     .body(new UserRepresentation());
         }
 
-        var response = service.registration(registrationRequest);
+        var response = service.registration(registrationUserRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
@@ -60,10 +63,9 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
-    @PostMapping("/register-other")
-    public ResponseEntity<UserRepresentation> registerAccountForAnotherUser(
-            @RequestBody @Valid RegistrationOtherUserRequest registrationRequest,
-            Principal principal,
+    @PostMapping("/register-other/student")
+    public ResponseEntity<UserRepresentation> registerAccountForStudent(
+            @RequestBody @Valid RegistrationStudentUserRequest registrationRequest,
             BindingResult bindingResult
     ) {
         if(bindingResult.hasErrors()) {
@@ -72,7 +74,25 @@ public class UserController {
                     .body(new UserRepresentation());
         }
 
-        var response = service.registerAccountForAnotherUser(registrationRequest, principal.getName());
+        var response = service.registerAccountForAnotherUser(registrationRequest, Role.STUDENT);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
+    }
+
+    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
+    @PostMapping("/register-other/lecture")
+    public ResponseEntity<UserRepresentation> registerAccountForLecture(
+            @RequestBody @Valid RegistrationLectureRequest registrationRequest,
+            BindingResult bindingResult
+    ) {
+        if(bindingResult.hasErrors()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new UserRepresentation());
+        }
+
+        var response = service.registerAccountForAnotherUser(registrationRequest, Role.LECTURER);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
@@ -93,9 +113,23 @@ public class UserController {
         service.updatePassword(principal.getName());
     }
 
+    @PutMapping
+    public void updateData(
+            @RequestBody @Valid UserUpdateRequest request,
+            Principal principal
+    ) {
+        service.updateData(request, principal.getName());
+    }
+
     @DeleteMapping
     public void deactivateAccount(Principal principal) {
         service.deactivateUserById(principal.getName());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/activate/{userId}")
+    public void active(@PathVariable String userId) {
+        service.activate(userId);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

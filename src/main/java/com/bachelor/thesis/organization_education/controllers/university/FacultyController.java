@@ -1,7 +1,6 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
 import com.bachelor.thesis.organization_education.requests.insert.university.FacultyInsertRequest;
-import com.bachelor.thesis.organization_education.requests.update.UpdateData;
 import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
 import com.bachelor.thesis.organization_education.requests.update.university.FacultyUpdateRequest;
 import com.bachelor.thesis.organization_education.responces.university.FacultyResponse;
@@ -54,12 +53,13 @@ public class FacultyController extends ResourceController<FacultyService>{
     }
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<FacultyResponse> update(
-            @RequestBody @Valid UpdateData<FacultyUpdateRequest> request,
+            @PathVariable Long id,
+            @RequestBody @Valid FacultyUpdateRequest request,
             BindingResult bindingResult
     ) {
-        return super.updateEntity(request, bindingResult);
+        return super.updateEntity(id, request, bindingResult);
     }
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")

@@ -2,10 +2,14 @@ package com.bachelor.thesis.organization_education.services.implementations.user
 
 import com.bachelor.thesis.organization_education.enums.Role;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
+import com.bachelor.thesis.organization_education.requests.find.user.LectureFindRequest;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationOtherUserRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationRequest;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLectureRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
+import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
+import com.bachelor.thesis.organization_education.services.interfaces.user.LectureService;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
@@ -31,7 +35,9 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private final Keycloak keycloak;
     private final RestTemplate keycloakRestTemplate;
+
     private final UniversityService universityService;
+    private final LectureService lectureService;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String jwtIssuerURI;
@@ -44,16 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserRepresentation registration(@NonNull RegistrationRequest request) throws UserCreatingException {
-        var reassembledRequest = RegistrationOtherUserRequest.builder()
-                .username(request.getUsername())
-                .password(request.getPassword())
-                .matchingPassword(request.getMatchingPassword())
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .role(Role.UNIVERSITY_ADMIN)
-                .build();
-
-        return registerAccountForAnotherUser(reassembledRequest, "");
+        return registerAccountForAnotherUser(request, Role.UNIVERSITY_ADMIN);
     }
 
     @Override
@@ -72,41 +69,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRepresentation registerAccountForAnotherUser(@NonNull RegistrationOtherUserRequest request, @NonNull String invitedUserId) throws UserCreatingException {
+    public UserRepresentation registerAccountForAnotherUser(@NonNull RegistrationRequest request, Role role) throws UserCreatingException {
         var userId = "";
-        var user = getUserRepresentation(request);
+        var requestData = (RegistrationUserRequest) request;
+        var user = getUserRepresentation(requestData, role);
         var usersResource = getUsersResource();
 
         try(Response response = usersResource.create(user)) {
             if(!Objects.equals(201, response.getStatus())) {
-                throw new UserCreatingException("The Identity Management server could not successfully create a user on its side. It returned an HTTP code " + response.getStatus());
+                var errorMessage = response.readEntity(String.class);
+                var message = String.format("The Identity Management server could not successfully create a user on its side. \n" +
+                        "It returned an HTTP code: %d. The body of the error: %s.", response.getStatus(), errorMessage);
+                throw new UserCreatingException(message);
             }
 
-            var representationList = usersResource.searchByUsername(request.getUsername(), true);
-            var userRepresentation = representationList
-                    .stream()
-                    .filter(representation -> Objects.equals(false, representation.isEmailVerified()))
-                    .findFirst()
-                    .orElseThrow();
-
+            var userRepresentation = getUserRepresentation(usersResource, requestData.getUsername());
             userId = userRepresentation.getId();
-            assignRole(userRepresentation.getId(), request.getRole().name());
-            emailVerification(userRepresentation.getId());
+
+            if(request instanceof RegistrationLectureRequest) {
+                lectureService.registration(request, userId);
+            }
+
+            assignRole(userId, role.name());
+            emailVerification(userId);
 
             return userRepresentation;
         }
         catch (Exception e) {
             if(!userId.isBlank()) {
-                deactivateUserById(userId);
+                deleteUserById(userId);
             }
 
             throw new UserCreatingException(e.getMessage());
         }
     }
 
-    private static @NonNull UserRepresentation getUserRepresentation(RegistrationOtherUserRequest request) {
+    private static @NonNull UserRepresentation getUserRepresentation(RegistrationUserRequest request, Role role) {
         var user = createUser(request);
-        var credentialRepresentation = createCredentialRepresentation(request);
+        var credentialRepresentation = createCredentialRepresentation(request, role);
         var list = new ArrayList<CredentialRepresentation>();
 
         list.add(credentialRepresentation);
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private static @NonNull UserRepresentation createUser(@NonNull RegistrationOtherUserRequest request) {
+    private static @NonNull UserRepresentation createUser(RegistrationUserRequest request) {
         var user = new UserRepresentation();
 
         user.setEnabled(true);
@@ -128,14 +128,23 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private static @NonNull CredentialRepresentation createCredentialRepresentation(@NonNull RegistrationOtherUserRequest request) {
+    private static @NonNull CredentialRepresentation createCredentialRepresentation(RegistrationUserRequest request, Role role) {
         var credentialRepresentation = new CredentialRepresentation();
 
         credentialRepresentation.setValue(request.getPassword());
-        credentialRepresentation.setTemporary(false);
         credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
+        credentialRepresentation.setTemporary(role != Role.UNIVERSITY_ADMIN);
 
         return credentialRepresentation;
+    }
+
+    private static @NonNull UserRepresentation getUserRepresentation(UsersResource usersResource, String username) {
+        var representationList = usersResource.searchByUsername(username, true);
+        return representationList
+                .stream()
+                .filter(representation -> Objects.equals(false, representation.isEmailVerified()))
+                .findFirst()
+                .orElseThrow();
     }
 
     private void assignRole(String userId, String roleName) {
@@ -163,15 +172,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(String userId) {
         getUsersResource().delete(userId);
+        lectureService.deleteValue(new LectureFindRequest(UUID.fromString(userId)));
     }
 
     @Override
     public void deactivateUserById(String userId) {
         universityService.deactivateUserEntity(userId);
+        lectureService.disable(new LectureFindRequest(UUID.fromString(userId)));
 
+        updateEnable(userId, false);
+    }
+
+    @Override
+    public void activate(String userId) {
+        lectureService.enable(new LectureFindRequest(UUID.fromString(userId)));
+        updateEnable(userId, true);
+    }
+
+    private void updateEnable(String userId, boolean value) {
         var users = getUsersResource();
         var representation = users.get(userId).toRepresentation();
-        representation.setEnabled(false);
+        representation.setEnabled(value);
         users.get(userId).update(representation);
     }
 
@@ -194,6 +215,25 @@ public class UserServiceImpl implements UserService {
         var actions= new ArrayList<String>();
         actions.add("UPDATE_PASSWORD");
         userResource.executeActionsEmail(actions);
+    }
+
+    @Override
+    public void updateData(@NonNull UserUpdateRequest request, @NonNull String userId) {
+        var users = getUsersResource();
+        var representation = users.get(userId).toRepresentation();
+
+        if(request.getUsername() != null && !request.getUsername().isBlank()) {
+            representation.setUsername(request.getUsername());
+            representation.setEmail(request.getUsername());
+        }
+        if(request.getFirstName() != null && !request.getFirstName().isBlank()) {
+            representation.setFirstName(request.getFirstName());
+        }
+        if(request.getLastName() != null && !request.getLastName().isBlank()) {
+            representation.setLastName(request.getLastName());
+        }
+
+        users.get(userId).update(representation);
     }
 
     private UserResource getUserResource(String userId) {

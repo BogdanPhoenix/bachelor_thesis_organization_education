@@ -1,8 +1,6 @@
 package com.bachelor.thesis.organization_education.services.implementations.crud;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
-import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.repositories.NameEntityRepository;
 import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
@@ -34,13 +32,6 @@ public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends 
         builder.uaName(nameEntityRequest.getUaName())
                 .enName(nameEntityRequest.getEnName());
         return builder;
-    }
-
-    @Override
-    public T getValue(@NonNull FindRequest request) throws NotFindEntityInDataBaseException {
-        return findEntity(request)
-                .filter(BaseTableInfo::isEnabled)
-                .orElseThrow(() -> new NotFindEntityInDataBaseException("The query failed to find an entity in the table: " + tableName));
     }
 
     @Override

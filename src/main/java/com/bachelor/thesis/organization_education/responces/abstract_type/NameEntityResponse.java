@@ -16,11 +16,6 @@ public abstract class NameEntityResponse extends Response {
     private String enName;
     private String uaName;
 
-    @Override
-    public boolean isEmpty() {
-        return enName.isBlank() || uaName.isBlank();
-    }
-
     protected static <T extends NameEntityResponseBuilder<?, ?>> @NonNull T initEmpty(T builder) {
         Response.initEmpty(builder)
                 .uaName("")

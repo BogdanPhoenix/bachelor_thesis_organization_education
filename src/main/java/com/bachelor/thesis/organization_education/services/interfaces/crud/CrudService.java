@@ -1,7 +1,6 @@
 package com.bachelor.thesis.organization_education.services.interfaces.crud;
 
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.requests.update.UpdateData;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import lombok.NonNull;
@@ -62,15 +61,8 @@ public interface CrudService {
      */
     Set<BaseTableInfo> getAll();
 
-    /**
-     * Searches for an entity in the database according to the specified query and updates the attribute values with new ones.
-     *
-     * @param request request to search for an entity.
-     * @return the updated content of the entity.
-     * @throws DuplicateException if the table contains an entity value that is passed in the query.
-     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
-     */
-    BaseTableInfo updateValue(@NonNull UpdateData<? extends UpdateRequest> request) throws DuplicateException, NotFindEntityInDataBaseException;
+
+    BaseTableInfo updateValue(@NonNull Long id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException;
 
     /**
      * Searches for an entity in the database by the specified query and deletes it completely.

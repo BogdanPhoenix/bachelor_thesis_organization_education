@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode
 @PasswordMatches(message = "The passwords you provided do not match.")
-public abstract class PasswordRequest{
+public abstract class PasswordRequest {
     @NotNull
     @NotBlank
     @ValidPassword

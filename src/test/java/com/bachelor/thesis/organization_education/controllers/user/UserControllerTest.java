@@ -1,6 +1,6 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -43,7 +43,7 @@ class UserControllerTest {
 
     private ObjectWriter objectWriter;
 
-    private RegistrationRequest request;
+    private RegistrationUserRequest request;
 
     @BeforeEach
     void init() {
@@ -53,7 +53,7 @@ class UserControllerTest {
         objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
 
-        request = RegistrationRequest.builder()
+        request = RegistrationUserRequest.builder()
                 .username("username@gmail.com")
                 .password("Qwertyuiop123!@#")
                 .matchingPassword("Qwertyuiop123!@#")

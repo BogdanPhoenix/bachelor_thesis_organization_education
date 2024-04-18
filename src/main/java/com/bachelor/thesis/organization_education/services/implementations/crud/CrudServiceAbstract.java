@@ -3,7 +3,6 @@ package com.bachelor.thesis.organization_education.services.implementations.crud
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
-import com.bachelor.thesis.organization_education.requests.update.UpdateData;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
@@ -61,12 +60,11 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     }
 
     @Override
-    public T updateValue(@NonNull UpdateData<? extends UpdateRequest> request) throws DuplicateException, NotFindEntityInDataBaseException {
-        var updateRequest = request.getNewValue();
-        validateDuplicate(updateRequest.getFindRequest(), request.getId());
-        var entity = findById(request.getId());
+    public T updateValue(@NonNull Long id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
+        validateDuplicate(request.getFindRequest(), id);
+        var entity = findById(id);
 
-        updateEntity(entity, updateRequest);
+        updateEntity(entity, request);
         entity.setUpdateDate(LocalDateTime.now());
         return repository.save(entity);
     }
@@ -105,6 +103,13 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
         entity.setEnabled(value);
         entity.setUpdateDate(LocalDateTime.now());
         repository.save(entity);
+    }
+
+    @Override
+    public T getValue(@NonNull FindRequest request) throws NotFindEntityInDataBaseException {
+        return findEntity(request)
+                .filter(BaseTableInfo::isEnabled)
+                .orElseThrow(() -> new NotFindEntityInDataBaseException("The query failed to find an entity in the table: " + tableName));
     }
 
     @Override

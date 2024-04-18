@@ -17,11 +17,6 @@ public class FacultyResponse extends NameEntityResponse {
     @NonNull
     private UniversityResponse university;
 
-    @Override
-    public boolean isEmpty() {
-        return super.isEmpty() || university.isEmpty();
-    }
-
     public static @NonNull FacultyResponse empty() {
         return NameEntityResponse
                 .initEmpty(builder())

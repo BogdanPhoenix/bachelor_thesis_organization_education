@@ -1,7 +1,6 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.requests.update.UpdateData;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
@@ -45,14 +44,14 @@ public abstract class ResourceController<T extends CrudService> {
     }
 
     @SuppressWarnings("unchecked")
-    public <I extends UpdateRequest, O extends Response> ResponseEntity<O> updateEntity(UpdateData<I> request, BindingResult bindingResult) {
+    public <I extends UpdateRequest, O extends Response> ResponseEntity<O> updateEntity(Long id, I request, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest()
                     .build();
         }
 
-        var response = (O) service.updateValue(request)
+        var response = (O) service.updateValue(id, request)
                 .getResponse();
 
         return ResponseEntity

@@ -3,8 +3,8 @@ package com.bachelor.thesis.organization_education.dto;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.enums.AcademicDegree;
 import com.bachelor.thesis.organization_education.enums.AcademicTitle;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.requests.find.user.LectureFindRequest;
+import com.bachelor.thesis.organization_education.responces.user.LectureResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -27,8 +27,8 @@ import static jakarta.persistence.CascadeType.*;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "teachers")
-public class Teacher extends BaseTableInfo {
+@Table(name = "lectures")
+public class Lecture extends BaseTableInfo {
     @NonNull
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "title_id", nullable = false)
@@ -66,16 +66,25 @@ public class Teacher extends BaseTableInfo {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "teacher", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "lecture", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Set<Schedule> schedules;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public LectureResponse getResponse() {
+        var builder = LectureResponse.builder();
+        super.initResponse(builder);
+        return builder
+                .userId(user)
+                .title(title)
+                .degree(degree)
+                .faculty(faculty.getResponse())
+                .build();
     }
 
     @Override
-    public FindRequest getFindRequest() {
-        return null;
+    public LectureFindRequest getFindRequest() {
+        return LectureFindRequest.builder()
+                .userId(user)
+                .build();
     }
 }
