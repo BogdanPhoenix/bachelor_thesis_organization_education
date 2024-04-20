@@ -12,10 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
+import java.util.function.Consumer;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -27,26 +27,22 @@ class CrudServiceAbstractTest {
     @Mock
     private CrudServiceAbstract<BaseTableInfo, JpaRepository<BaseTableInfo, Long>> serviceMock;
     @Mock
-    private Request requestMock;
-    @Mock
-    private Response responseMock;
-    @Mock
     private FindRequest findRequestMock;
-    @Mock
-    private UpdateRequest updateRequestMock;
-    @Mock
-    private UpdateRequest updateDataMock;
     @Mock
     private BaseTableInfo tableInfoMock;
 
     @Nested
     @DisplayName("Test cases for addValue method")
     class AddValueTests {
+        @Mock
+        private Request requestMock;
+
         @Test
         @DisplayName("Checking for an exception when null was passed in the request to add data.")
         void testAddValueThrowsNullPointerException() {
-            addValueCallRealMethod(null);
-            assertThrows(NullPointerException.class, () -> serviceMock.addValue(null));
+            Request value = null;
+            doCallRealMethodForAction(serviceMock::addValue, value);
+            assertThrows(NullPointerException.class, () -> serviceMock.addValue(value));
         }
 
         @Test
@@ -54,7 +50,7 @@ class CrudServiceAbstractTest {
         void testAddValueThrowsDuplicateException() {
             when(requestMock.getFindRequest()).thenReturn(findRequestMock);
             when(serviceMock.isDuplicate(any(FindRequest.class))).thenReturn(true);
-            addValueCallRealMethod(requestMock);
+            doCallRealMethodForAction(serviceMock::addValue, requestMock);
             assertThrows(DuplicateException.class, () -> serviceMock.addValue(requestMock));
         }
 
@@ -66,16 +62,10 @@ class CrudServiceAbstractTest {
             when(repositoryMock.save(any(BaseTableInfo.class))).thenReturn(tableInfoMock);
             when(serviceMock.isDuplicate(any(FindRequest.class))).thenReturn(false);
             when(serviceMock.createEntity(requestMock)).thenReturn(tableInfoMock);
-            addValueCallRealMethod(requestMock);
+            doCallRealMethodForAction(serviceMock::addValue, requestMock);
 
             serviceMock.addValue(requestMock);
             verify(repositoryMock).save(any());
-        }
-
-        void addValueCallRealMethod(Request request) {
-            doCallRealMethod()
-                    .when(serviceMock)
-                    .addValue(request);
         }
     }
 
@@ -84,9 +74,13 @@ class CrudServiceAbstractTest {
     class UpdateValueTests {
         private static final Long ID = 1L;
 
+        @Mock
+        private UpdateRequest updateDataMock;
+
         @BeforeEach
         void init() {
-            when(updateRequestMock.getFindRequest()).thenReturn(findRequestMock);
+            when(updateDataMock.getFindRequest()).thenReturn(findRequestMock);
+            when(findRequestMock.skip()).thenReturn(false);
             doCallRealMethod()
                     .when(serviceMock)
                     .updateValue(ID, updateDataMock);
@@ -133,46 +127,48 @@ class CrudServiceAbstractTest {
         @Test
         @DisplayName("Checking for an exception when null was passed in the request to delete data.")
         void testDeleteValueThrowsNullPointerException() {
-            deleteValueCallRealMethod(null);
-            assertThrows(NullPointerException.class, () -> serviceMock.deleteValue(null));
+            FindRequest value = null;
+            doCallRealMethodForAction(serviceMock::deleteValue, value);
+            assertThrows(NullPointerException.class, () -> serviceMock.deleteValue(value));
         }
 
         @Test
         @DisplayName("Check for exceptions when the table cannot find the entity for the specified query.")
         void testDeleteValueThrowsNotFindEntityInDataBaseException() {
             when(serviceMock.getEntity(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
-            deleteValueCallRealMethod(findRequestMock);
+            doCallRealMethodForAction(serviceMock::deleteValue, findRequestMock);
             assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.deleteValue(findRequestMock));
         }
-
-        void deleteValueCallRealMethod(FindRequest request) {
-            doCallRealMethod()
-                    .when(serviceMock)
-                    .deleteValue(request);
-        }
-    }
+}
 
     @Test
     @DisplayName("Check for an exception when the request to activate an entity failed to find the entity.")
     void testEnableEntityThrowsNotFindEntityInDataBaseException() {
-        when(serviceMock.getEntity(findRequestMock)).thenThrow(NotFindEntityInDataBaseException.class);
-
-        doCallRealMethod()
-                .when(serviceMock)
-                .enable(findRequestMock);
-
-        assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.enable(findRequestMock));
+        when(serviceMock.getEntity(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
+        testEntityNotFoundAction(serviceMock::enable);
     }
 
     @Test
     @DisplayName("Check for an exception when the request to deactivate an entity failed to find the entity.")
     void testDisableEntityThrowsNotFindEntityInDataBaseException() {
-        when(serviceMock.getEntity(findRequestMock)).thenThrow(NotFindEntityInDataBaseException.class);
+        when(serviceMock.getEntity(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
+        testEntityNotFoundAction(serviceMock::disable);
+    }
 
-        doCallRealMethod()
-                .when(serviceMock)
-                .disable(findRequestMock);
+    @Test
+    @DisplayName("Check the exception when the entity return request did not find an entity.")
+    void testGetValueThrowsNotFindEntityInDataBaseException() {
+        when(serviceMock.findEntity(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
+        testEntityNotFoundAction(serviceMock::getValue);
+    }
 
-        assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.disable(findRequestMock));
+    private void testEntityNotFoundAction(Consumer<FindRequest> action) {
+        doCallRealMethodForAction(action, findRequestMock);
+        assertThrows(NotFindEntityInDataBaseException.class, () -> action.accept(findRequestMock));
+    }
+
+    private <T> void doCallRealMethodForAction(Consumer<T> action, T value) {
+        doCallRealMethod().when(serviceMock);
+        action.accept(value);
     }
 }

@@ -127,7 +127,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
         repository.delete(entity);
     }
 
-    T getEntity(FindRequest request) {
+    T getEntity(FindRequest request) throws NotFindEntityInDataBaseException {
         return findEntity(request)
                 .orElseThrow(() -> new NotFindEntityInDataBaseException("The query failed to find an entity in the table: " + tableName));
     }
@@ -154,7 +154,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
                 );
     }
 
-    protected abstract T createEntity(@NonNull Request request);
+    protected abstract T createEntity(Request request);
     protected abstract Optional<T> findEntity(@NonNull FindRequest request);
     protected abstract void updateEntity(T entity, UpdateRequest request);
     protected abstract void selectedForDeactivateChild(FindRequest request);

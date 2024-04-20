@@ -28,7 +28,7 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
     }
 
     @Override
-    protected Faculty createEntity(@NonNull Request request) {
+    protected Faculty createEntity(Request request) {
         var facultyRequest = (FacultyRequest) request;
         var builder = Faculty.builder();
         return super.initEntity(builder, request)

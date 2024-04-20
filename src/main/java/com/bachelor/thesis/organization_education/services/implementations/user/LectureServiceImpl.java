@@ -29,7 +29,7 @@ public class LectureServiceImpl extends CrudServiceAbstract<Lecture, LectureRepo
     }
 
     @Override
-    protected Lecture createEntity(@NonNull Request request) {
+    protected Lecture createEntity(Request request) {
         var lectureRequest = (LectureRequest) request;
         return Lecture.builder()
                 .title(lectureRequest.getTitle())

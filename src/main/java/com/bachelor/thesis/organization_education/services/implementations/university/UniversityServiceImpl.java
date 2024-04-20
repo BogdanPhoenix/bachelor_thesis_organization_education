@@ -29,7 +29,7 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     }
 
     @Override
-    protected University createEntity(@NonNull Request request) {
+    protected University createEntity(Request request) {
         var universityRequest = (UniversityRequest) request;
         var builder = University.builder();
         return super.initEntity(builder, request)
