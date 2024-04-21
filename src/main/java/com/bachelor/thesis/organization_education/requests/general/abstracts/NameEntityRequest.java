@@ -1,10 +1,10 @@
 package com.bachelor.thesis.organization_education.requests.general.abstracts;
 
-import com.bachelor.thesis.organization_education.annotations.ValidNameEntity;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import com.bachelor.thesis.organization_education.annotations.ValidNameEntity;
 
 @Getter
 @Setter
@@ -22,9 +22,4 @@ public abstract class NameEntityRequest implements Request {
     @ValidNameEntity
     @Size(max = 255)
     private String uaName;
-
-    @Override
-    public boolean isEmpty() {
-        return enName.isBlank() || uaName.isBlank();
-    }
 }

@@ -9,13 +9,6 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public interface Request {
     /**
-     * Checks if the request is empty.
-     *
-     * @return true if the request does not contain at least one empty attribute, otherwise false.
-     */
-    boolean isEmpty();
-
-    /**
      * Retrieves a FindRequest object representing the parameters for a find operation.
      *
      * @return a FindRequest object containing the criteria for the find operation.

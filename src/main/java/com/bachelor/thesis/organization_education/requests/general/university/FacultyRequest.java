@@ -1,6 +1,5 @@
 package com.bachelor.thesis.organization_education.requests.general.university;
 
-import com.bachelor.thesis.organization_education.annotations.ValidRequestEmpty;
 import com.bachelor.thesis.organization_education.dto.University;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.NameEntityRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
@@ -14,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@ValidRequestEmpty
 public class FacultyRequest extends NameEntityRequest {
     @NonNull
     private University university;

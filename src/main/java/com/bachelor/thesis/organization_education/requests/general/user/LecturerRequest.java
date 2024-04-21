@@ -1,12 +1,12 @@
 package com.bachelor.thesis.organization_education.requests.general.user;
 
-import com.bachelor.thesis.organization_education.dto.Faculty;
-import com.bachelor.thesis.organization_education.enums.AcademicDegree;
-import com.bachelor.thesis.organization_education.enums.AcademicTitle;
-import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import com.bachelor.thesis.organization_education.dto.Faculty;
+import com.bachelor.thesis.organization_education.enums.AcademicTitle;
+import com.bachelor.thesis.organization_education.enums.AcademicDegree;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
 
 import java.util.UUID;
 
@@ -29,11 +29,6 @@ public class LecturerRequest implements Request {
 
     @NonNull
     private UUID userId;
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
 
     @Override
     public LecturerFindRequest getFindRequest() {
