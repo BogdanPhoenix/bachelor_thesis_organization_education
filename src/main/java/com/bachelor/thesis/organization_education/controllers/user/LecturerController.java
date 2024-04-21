@@ -1,9 +1,9 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
 import com.bachelor.thesis.organization_education.controllers.university.ResourceController;
-import com.bachelor.thesis.organization_education.requests.find.user.LectureFindRequest;
-import com.bachelor.thesis.organization_education.requests.update.user.LectureUpdateRequest;
-import com.bachelor.thesis.organization_education.responces.user.LectureResponse;
+import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
+import com.bachelor.thesis.organization_education.requests.update.user.LecturerUpdateRequest;
+import com.bachelor.thesis.organization_education.responces.user.LecturerResponse;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +25,15 @@ public class LecturerController extends ResourceController<LecturerService> {
 
     @PreAuthorize("hasRole('LECTURER')")
     @GetMapping
-    public ResponseEntity<LectureResponse> get(Principal principal) {
+    public ResponseEntity<LecturerResponse> get(Principal principal) {
         var uuid = UUID.fromString(principal.getName());
         return get(uuid);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<LectureResponse> get(@PathVariable UUID userId) {
-        var request = new LectureFindRequest(userId);
-        var response = (LectureResponse) service.getValue(request)
+    public ResponseEntity<LecturerResponse> get(@PathVariable UUID userId) {
+        var request = new LecturerFindRequest(userId);
+        var response = (LecturerResponse) service.getValue(request)
                 .getResponse();
 
         return ResponseEntity.ok(response);
@@ -41,8 +41,8 @@ public class LecturerController extends ResourceController<LecturerService> {
 
     @PreAuthorize("hasRole('LECTURER')")
     @PutMapping
-    public ResponseEntity<LectureResponse> update(
-            @RequestBody @Valid LectureUpdateRequest request,
+    public ResponseEntity<LecturerResponse> update(
+            @RequestBody @Valid LecturerUpdateRequest request,
             BindingResult bindingResult,
             Principal principal
     ) {

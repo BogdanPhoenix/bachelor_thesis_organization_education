@@ -3,8 +3,8 @@ package com.bachelor.thesis.organization_education.dto;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.enums.AcademicDegree;
 import com.bachelor.thesis.organization_education.enums.AcademicTitle;
-import com.bachelor.thesis.organization_education.requests.find.user.LectureFindRequest;
-import com.bachelor.thesis.organization_education.responces.user.LectureResponse;
+import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
+import com.bachelor.thesis.organization_education.responces.user.LecturerResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -70,8 +70,8 @@ public class Lecturer extends BaseTableInfo {
     private Set<Schedule> schedules;
 
     @Override
-    public LectureResponse getResponse() {
-        var builder = LectureResponse.builder();
+    public LecturerResponse getResponse() {
+        var builder = LecturerResponse.builder();
         super.initResponse(builder);
         return builder
                 .userId(user)
@@ -82,8 +82,8 @@ public class Lecturer extends BaseTableInfo {
     }
 
     @Override
-    public LectureFindRequest getFindRequest() {
-        return LectureFindRequest.builder()
+    public LecturerFindRequest getFindRequest() {
+        return LecturerFindRequest.builder()
                 .userId(user)
                 .build();
     }

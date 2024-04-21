@@ -21,7 +21,7 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
-import com.bachelor.thesis.organization_education.requests.find.user.LectureFindRequest;
+import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
@@ -165,19 +165,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(@NotBlank String userId) {
         getUsersResource().delete(userId);
-        lecturerService.deleteValue(new LectureFindRequest(UUID.fromString(userId)));
+        lecturerService.deleteValue(new LecturerFindRequest(UUID.fromString(userId)));
     }
 
     @Override
     public void deactivateUserById(String userId) {
         universityService.deactivateUserEntity(userId);
-        lecturerService.disable(new LectureFindRequest(UUID.fromString(userId)));
+        lecturerService.disable(new LecturerFindRequest(UUID.fromString(userId)));
         updateEnable(userId, false);
     }
 
     @Override
     public void activate(@NotBlank String userId) {
-        lecturerService.enable(new LectureFindRequest(UUID.fromString(userId)));
+        lecturerService.enable(new LecturerFindRequest(UUID.fromString(userId)));
         updateEnable(userId, true);
     }
 

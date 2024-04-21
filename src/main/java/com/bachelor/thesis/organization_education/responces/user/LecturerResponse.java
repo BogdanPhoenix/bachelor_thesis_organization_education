@@ -18,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class LectureResponse extends Response {
+public class LecturerResponse extends Response {
     @NonNull
     private UUID userId;
 

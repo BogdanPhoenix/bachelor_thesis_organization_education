@@ -2,7 +2,7 @@ package com.bachelor.thesis.organization_education.controllers.user;
 
 import com.bachelor.thesis.organization_education.enums.Role;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLectureRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentUserRequest;
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
@@ -83,7 +83,7 @@ public class UserController {
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping("/register-other/lecture")
     public ResponseEntity<UserRepresentation> registerAccountForLecture(
-            @RequestBody @Valid RegistrationLectureRequest registrationRequest,
+            @RequestBody @Valid RegistrationLecturerRequest registrationRequest,
             BindingResult bindingResult
     ) {
         if(bindingResult.hasErrors()) {

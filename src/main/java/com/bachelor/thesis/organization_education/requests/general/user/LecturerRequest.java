@@ -3,7 +3,7 @@ package com.bachelor.thesis.organization_education.requests.general.user;
 import com.bachelor.thesis.organization_education.dto.Faculty;
 import com.bachelor.thesis.organization_education.enums.AcademicDegree;
 import com.bachelor.thesis.organization_education.enums.AcademicTitle;
-import com.bachelor.thesis.organization_education.requests.find.user.LectureFindRequest;
+import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class LectureRequest implements Request {
+public class LecturerRequest implements Request {
     @NonNull
     private AcademicTitle title;
 
@@ -36,8 +36,8 @@ public class LectureRequest implements Request {
     }
 
     @Override
-    public LectureFindRequest getFindRequest() {
-        return LectureFindRequest.builder()
+    public LecturerFindRequest getFindRequest() {
+        return LecturerFindRequest.builder()
                 .userId(userId)
                 .build();
     }

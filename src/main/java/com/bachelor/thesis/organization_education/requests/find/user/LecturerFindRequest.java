@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class LectureFindRequest implements FindRequest {
+public class LecturerFindRequest implements FindRequest {
     @NonNull
     private UUID userId;
 

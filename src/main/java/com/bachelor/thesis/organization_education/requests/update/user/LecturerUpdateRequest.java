@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class LectureUpdateRequest implements UpdateRequest {
+public class LecturerUpdateRequest implements UpdateRequest {
     private AcademicTitle title;
     private AcademicDegree degree;
     private Faculty faculty;

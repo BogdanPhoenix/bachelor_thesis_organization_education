@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class RegistrationLectureRequest extends RegistrationRequest {
+public class RegistrationLecturerRequest extends RegistrationRequest {
     @NonNull
     private AcademicTitle title;
 
