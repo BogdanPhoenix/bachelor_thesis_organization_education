@@ -5,7 +5,7 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.keycloak.representations.idm.UserRepresentation;
 import com.bachelor.thesis.organization_education.enums.Role;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
@@ -19,29 +19,20 @@ public interface UserService {
      * Handles the registration process for a new user based on the provided registration request.
      *
      * @param request the registration request containing user information.
-     * @return registered user data.
+     * @param role the value of the user's role.
+     * @return user data.
      * @throws UserCreatingException if during registration it was not possible to create a user account.
      */
-    UserRepresentation registration(@NonNull RegistrationRequest request) throws UserCreatingException;
+    UserRepresentation registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException;
 
     /**
      * Manages the login process based on the provided authorization request.
      *
      * @param authRequest user data for authorization.
      * @return JSON object with confirmation tokens.
-     * @throws RestClientException if a REST error occurs during a request to the server.
+     * @throws OAuth2AuthenticationException if you failed to log in to the server.
      */
-    ResponseEntity<String> authorization(@NonNull AuthRequest authRequest) throws RestClientException;
-
-    /**
-     * Manages the user registration process by the university administrator based on the registration request provided.
-     *
-     * @param request the registration request containing user information.
-     * @param role the value of the user's role.
-     * @return user data.
-     * @throws UserCreatingException if during registration it was not possible to create a user account.
-     */
-    UserRepresentation registerAccountForAnotherUser(@NonNull RegistrationRequest request, Role role) throws UserCreatingException;
+    ResponseEntity<String> authorization(@NonNull AuthRequest authRequest) throws OAuth2AuthenticationException;
 
     /**
      * Method for returning information about a user by their UUID.

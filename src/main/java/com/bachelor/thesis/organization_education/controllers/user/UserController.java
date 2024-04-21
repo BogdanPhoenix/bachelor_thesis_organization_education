@@ -1,26 +1,26 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
-import com.bachelor.thesis.organization_education.enums.Role;
-import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentUserRequest;
-import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.keycloak.representations.idm.UserRepresentation;
+import com.bachelor.thesis.organization_education.enums.Role;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
+import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentUserRequest;
 
 import java.security.Principal;
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,74 +28,43 @@ import java.util.Objects;
 public class UserController {
     private final UserService service;
 
+    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
+    @PostMapping("/register-other/student")
+    public ResponseEntity<UserRepresentation> registerAccountForStudent(
+            @RequestBody @Valid RegistrationStudentUserRequest registrationRequest
+    ) {
+        return registration(registrationRequest, Role.STUDENT);
+    }
+
+    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
+    @PostMapping("/register-other/lecture")
+    public ResponseEntity<UserRepresentation> registerAccountForLecture(
+            @RequestBody @Valid RegistrationLecturerRequest registrationRequest
+    ) {
+        return registration(registrationRequest, Role.LECTURER);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<UserRepresentation> registerUser(
-            @RequestBody @Valid RegistrationUserRequest registrationUserRequest,
-            BindingResult bindingResult
+            @RequestBody @Valid RegistrationUserRequest registrationRequest
     ) {
-        if(bindingResult.hasErrors()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new UserRepresentation());
-        }
+        return registration(registrationRequest, Role.UNIVERSITY_ADMIN);
+    }
 
-        var response = service.registration(registrationUserRequest);
+    private ResponseEntity<UserRepresentation> registration(
+            RegistrationRequest registrationRequest,
+            Role role
+    ) {
+        var response = service.registration(registrationRequest, role);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<String> authorization(
-            @RequestBody @Valid AuthRequest authRequest,
-            BindingResult bindingResult
-    ) {
-        if(bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("The data you provided contains errors.");
-        }
-
+    public ResponseEntity<String> authorization(@RequestBody @Valid AuthRequest authRequest) {
         var response = service.authorization(authRequest);
-
-        if (!Objects.equals(HttpStatus.OK, response.getStatusCode())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
-        }
         return ResponseEntity.ok(response.getBody());
-    }
-
-    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
-    @PostMapping("/register-other/student")
-    public ResponseEntity<UserRepresentation> registerAccountForStudent(
-            @RequestBody @Valid RegistrationStudentUserRequest registrationRequest,
-            BindingResult bindingResult
-    ) {
-        if(bindingResult.hasErrors()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new UserRepresentation());
-        }
-
-        var response = service.registerAccountForAnotherUser(registrationRequest, Role.STUDENT);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
-    }
-
-    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
-    @PostMapping("/register-other/lecture")
-    public ResponseEntity<UserRepresentation> registerAccountForLecture(
-            @RequestBody @Valid RegistrationLecturerRequest registrationRequest,
-            BindingResult bindingResult
-    ) {
-        if(bindingResult.hasErrors()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new UserRepresentation());
-        }
-
-        var response = service.registerAccountForAnotherUser(registrationRequest, Role.LECTURER);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
     }
 
     @GetMapping

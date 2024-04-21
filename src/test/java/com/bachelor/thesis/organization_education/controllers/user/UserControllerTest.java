@@ -36,13 +36,11 @@ class UserControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    private MockMvc mockMvc;
-
     @MockBean
     private BindingResult bindingResultMock;
 
+    private MockMvc mockMvc;
     private ObjectWriter objectWriter;
-
     private RegistrationUserRequest request;
 
     @BeforeEach

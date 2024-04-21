@@ -1,17 +1,16 @@
 package com.bachelor.thesis.organization_education.exceptions.handler;
 
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
-import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import jakarta.ws.rs.NotFoundException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
 @RestControllerAdvice
 public class Handler extends ResponseEntityExceptionHandler {
@@ -24,7 +23,12 @@ public class Handler extends ResponseEntityExceptionHandler {
             UserCreatingException.class,
             NotFindEntityInDataBaseException.class
     })
-    public ResponseEntity<Object> handleDuplicateException(Exception ex, WebRequest request){
-        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+    public ResponseEntity<Object> handleExceptionInfo(Exception ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(OAuth2AuthenticationException.class)
+    public ResponseEntity<String> handleAuthenticationException(OAuth2AuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 }

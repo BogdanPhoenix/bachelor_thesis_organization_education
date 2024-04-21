@@ -18,6 +18,7 @@ import org.springframework.web.client.RestClientException;
 import org.keycloak.representations.idm.UserRepresentation;
 import com.bachelor.thesis.organization_education.enums.Role;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
@@ -48,27 +49,33 @@ public class UserServiceImpl implements UserService {
     private String realm;
 
     @Override
-    public UserRepresentation registration(@NonNull RegistrationRequest request) throws UserCreatingException {
-        return registerAccountForAnotherUser(request, Role.UNIVERSITY_ADMIN);
+    public ResponseEntity<String> authorization(@NonNull AuthRequest authRequest) throws OAuth2AuthenticationException {
+        try {
+            var requestBody = new LinkedMultiValueMap<String, String>();
+
+            requestBody.add("grant_type", "password");
+            requestBody.add("username", authRequest.getUsername());
+            requestBody.add("password", authRequest.getPassword());
+            requestBody.add("client_id", clientId);
+
+            var response = keycloakRestTemplate.postForEntity(
+                    jwtIssuerURI + "/protocol/openid-connect/token",
+                    requestBody,
+                    String.class
+            );
+
+            if(!response.getStatusCode().is2xxSuccessful()) {
+                throw new OAuth2AuthenticationException("The authorization information you provided is incorrect.");
+            }
+
+            return response;
+        } catch (RestClientException ex) {
+            throw new OAuth2AuthenticationException("Failed to connect to authentication server" + ex.getMessage());
+        }
     }
 
     @Override
-    public ResponseEntity<String> authorization(@NonNull AuthRequest authRequest) throws RestClientException {
-        var requestBody = new LinkedMultiValueMap<String, String>();
-        requestBody.add("grant_type", "password");
-        requestBody.add("username", authRequest.getUsername());
-        requestBody.add("password", authRequest.getPassword());
-        requestBody.add("client_id", clientId);
-
-        return keycloakRestTemplate.postForEntity(
-                jwtIssuerURI + "/protocol/openid-connect/token",
-                requestBody,
-                String.class
-        );
-    }
-
-    @Override
-    public UserRepresentation registerAccountForAnotherUser(@NonNull RegistrationRequest request, Role role) throws UserCreatingException {
+    public UserRepresentation registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException {
         var user = getUserRepresentation(request, role);
         var userId = createUser(user);
 
