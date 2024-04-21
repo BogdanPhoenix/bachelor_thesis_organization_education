@@ -1,16 +1,17 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
+import lombok.NonNull;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
+import org.keycloak.representations.idm.UserRepresentation;
 import com.bachelor.thesis.organization_education.enums.Role;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
-import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
-import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
-import lombok.NonNull;
-import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientException;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 
 @Transactional
 public interface UserService {
@@ -56,7 +57,7 @@ public interface UserService {
      *
      * @param userId the user's UUID on the server.
      */
-    void deleteUserById(String userId);
+    void deleteUserById(@NotBlank String userId);
 
     /**
      * A method for deactivating a user account from the system by its UUID.
@@ -65,7 +66,12 @@ public interface UserService {
      */
     void deactivateUserById(String userId);
 
-    void activate(String userId);
+    /**
+     * Method of activating a user account from the system by its UUID.
+     *
+     * @param userId UUID of the user on the server.
+     */
+    void activate(@NotBlank String userId);
 
     /**
      * Method for sending a request to update user data.
@@ -74,5 +80,11 @@ public interface UserService {
      */
     void updatePassword(String userId);
 
-    void updateData(@NonNull UserUpdateRequest request, @NonNull String userId);
+    /**
+     * A method of updating the user's personal data.
+     *
+     * @param userId the user's UUID on the server.
+     * @param request data that needs to be updated.
+     */
+    void updateData(@NonNull String userId, @NonNull UserUpdateRequest request);
 }

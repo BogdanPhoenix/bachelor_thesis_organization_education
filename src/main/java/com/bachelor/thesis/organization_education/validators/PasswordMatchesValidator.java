@@ -1,13 +1,13 @@
 package com.bachelor.thesis.organization_education.validators;
 
 import com.bachelor.thesis.organization_education.annotations.PasswordMatches;
-import com.bachelor.thesis.organization_education.requests.insert.abstracts.PasswordRequest;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, PasswordRequest> {
+public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, RegistrationRequest> {
     @Override
-    public boolean isValid(PasswordRequest request, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(RegistrationRequest request, ConstraintValidatorContext constraintValidatorContext) {
         return request
                 .getPassword()
                 .equals(request.getMatchingPassword());

@@ -1,32 +1,31 @@
 package com.bachelor.thesis.organization_education.services.implementations.user;
 
-import com.bachelor.thesis.organization_education.enums.Role;
-import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
-import com.bachelor.thesis.organization_education.requests.find.user.LectureFindRequest;
-import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
-import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLectureRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
-import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
-import com.bachelor.thesis.organization_education.services.interfaces.user.LectureService;
-import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import jakarta.ws.rs.NotFoundException;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.RolesResource;
+import org.springframework.stereotype.Service;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.util.LinkedMultiValueMap;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.admin.client.resource.RolesResource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+import org.keycloak.representations.idm.UserRepresentation;
+import com.bachelor.thesis.organization_education.enums.Role;
+import org.keycloak.representations.idm.CredentialRepresentation;
+import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
+import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
+import com.bachelor.thesis.organization_education.requests.find.user.LectureFindRequest;
+import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.user.LectureService;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 
 import java.util.*;
 
@@ -70,42 +69,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserRepresentation registerAccountForAnotherUser(@NonNull RegistrationRequest request, Role role) throws UserCreatingException {
-        var userId = "";
-        var requestData = (RegistrationUserRequest) request;
-        var user = getUserRepresentation(requestData, role);
-        var usersResource = getUsersResource();
+        var user = getUserRepresentation(request, role);
+        var userId = createUser(user);
 
-        try(Response response = usersResource.create(user)) {
-            if(!Objects.equals(201, response.getStatus())) {
-                var errorMessage = response.readEntity(String.class);
-                var message = String.format("The Identity Management server could not successfully create a user on its side. \n" +
-                        "It returned an HTTP code: %d. The body of the error: %s.", response.getStatus(), errorMessage);
-                throw new UserCreatingException(message);
-            }
-
-            var userRepresentation = getUserRepresentation(usersResource, requestData.getUsername());
-            userId = userRepresentation.getId();
-
-            if(request instanceof RegistrationLectureRequest) {
-                lectureService.registration(request, userId);
-            }
-
-            assignRole(userId, role.name());
-            emailVerification(userId);
-
-            return userRepresentation;
+        if(role == Role.LECTURER) {
+            lectureService.registration(request, userId);
         }
-        catch (Exception e) {
-            if(!userId.isBlank()) {
-                deleteUserById(userId);
-            }
 
-            throw new UserCreatingException(e.getMessage());
-        }
+        assignRole(userId, role.name());
+        emailVerification(userId);
+
+        return getUserById(userId);
     }
 
-    private static @NonNull UserRepresentation getUserRepresentation(RegistrationUserRequest request, Role role) {
-        var user = createUser(request);
+    private static @NonNull UserRepresentation getUserRepresentation(RegistrationRequest request, Role role) {
+        var user = initializeUser(request);
         var credentialRepresentation = createCredentialRepresentation(request, role);
         var list = new ArrayList<CredentialRepresentation>();
 
@@ -115,7 +93,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private static @NonNull UserRepresentation createUser(RegistrationUserRequest request) {
+    private static @NonNull UserRepresentation initializeUser(RegistrationRequest request) {
         var user = new UserRepresentation();
 
         user.setEnabled(true);
@@ -128,7 +106,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private static @NonNull CredentialRepresentation createCredentialRepresentation(RegistrationUserRequest request, Role role) {
+    private static @NonNull CredentialRepresentation createCredentialRepresentation(RegistrationRequest request, Role role) {
         var credentialRepresentation = new CredentialRepresentation();
 
         credentialRepresentation.setValue(request.getPassword());
@@ -138,13 +116,27 @@ public class UserServiceImpl implements UserService {
         return credentialRepresentation;
     }
 
-    private static @NonNull UserRepresentation getUserRepresentation(UsersResource usersResource, String username) {
-        var representationList = usersResource.searchByUsername(username, true);
-        return representationList
-                .stream()
-                .filter(representation -> Objects.equals(false, representation.isEmailVerified()))
-                .findFirst()
-                .orElseThrow();
+    private String createUser(UserRepresentation user) throws UserCreatingException {
+        var usersResource = getUsersResource();
+
+        try (Response response = usersResource.create(user)) {
+            if (!response.getStatusInfo().equals(Response.Status.CREATED)) {
+                var errorMessage = response.readEntity(String.class);
+                var message = String.format("The Identity Management server could not successfully create a user on its side. \n" +
+                        "It returned an HTTP code: %d. The body of the error: %s.", response.getStatus(), errorMessage);
+                throw new UserCreatingException(message);
+            }
+
+            return getUserId(response);
+        }
+    }
+
+    private String getUserId(Response response) {
+        var headers = response.getHeaders();
+        var headerLocation = headers.get("Location");
+        var valueLocation = (String) headerLocation.get(0);
+        var parts = valueLocation.split("/");
+        return parts[parts.length - 1];
     }
 
     private void assignRole(String userId, String roleName) {
@@ -153,6 +145,7 @@ public class UserServiceImpl implements UserService {
         var representation = rolesResource
                 .get(roleName)
                 .toRepresentation();
+
         userResource.roles()
                 .realmLevel()
                 .add(Collections.singletonList(representation));
@@ -170,7 +163,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(String userId) {
+    public void deleteUserById(@NotBlank String userId) {
         getUsersResource().delete(userId);
         lectureService.deleteValue(new LectureFindRequest(UUID.fromString(userId)));
     }
@@ -179,12 +172,11 @@ public class UserServiceImpl implements UserService {
     public void deactivateUserById(String userId) {
         universityService.deactivateUserEntity(userId);
         lectureService.disable(new LectureFindRequest(UUID.fromString(userId)));
-
         updateEnable(userId, false);
     }
 
     @Override
-    public void activate(String userId) {
+    public void activate(@NotBlank String userId) {
         lectureService.enable(new LectureFindRequest(UUID.fromString(userId)));
         updateEnable(userId, true);
     }
@@ -218,18 +210,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateData(@NonNull UserUpdateRequest request, @NonNull String userId) {
+    public void updateData(@NonNull String userId, @NonNull UserUpdateRequest request) {
         var users = getUsersResource();
         var representation = users.get(userId).toRepresentation();
 
-        if(request.getUsername() != null && !request.getUsername().isBlank()) {
-            representation.setUsername(request.getUsername());
-            representation.setEmail(request.getUsername());
-        }
-        if(request.getFirstName() != null && !request.getFirstName().isBlank()) {
+        if(!request.firstNameIsEmpty()) {
             representation.setFirstName(request.getFirstName());
         }
-        if(request.getLastName() != null && !request.getLastName().isBlank()) {
+        if(!request.lastNameIsEmpty()) {
             representation.setLastName(request.getLastName());
         }
 

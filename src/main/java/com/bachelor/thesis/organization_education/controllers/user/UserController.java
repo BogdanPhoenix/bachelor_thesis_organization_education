@@ -118,7 +118,7 @@ public class UserController {
             @RequestBody @Valid UserUpdateRequest request,
             Principal principal
     ) {
-        service.updateData(request, principal.getName());
+        service.updateData(principal.getName(), request);
     }
 
     @DeleteMapping
