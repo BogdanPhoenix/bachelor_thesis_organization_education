@@ -28,7 +28,7 @@ import static jakarta.persistence.CascadeType.*;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "lectures")
-public class Lecture extends BaseTableInfo {
+public class Lecturer extends BaseTableInfo {
     @NonNull
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "title_id", nullable = false)
@@ -66,7 +66,7 @@ public class Lecture extends BaseTableInfo {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "lecture", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "lecturer", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Set<Schedule> schedules;
 
     @Override

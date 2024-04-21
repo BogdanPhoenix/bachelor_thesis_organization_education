@@ -23,7 +23,7 @@ import com.bachelor.thesis.organization_education.requests.general.user.AuthRequ
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
 import com.bachelor.thesis.organization_education.requests.find.user.LectureFindRequest;
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.user.LectureService;
+import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     private final RestTemplate keycloakRestTemplate;
 
     private final UniversityService universityService;
-    private final LectureService lectureService;
+    private final LecturerService lecturerService;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String jwtIssuerURI;
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         var userId = createUser(user);
 
         if(role == Role.LECTURER) {
-            lectureService.registration(request, userId);
+            lecturerService.registration(request, userId);
         }
 
         assignRole(userId, role.name());
@@ -165,19 +165,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(@NotBlank String userId) {
         getUsersResource().delete(userId);
-        lectureService.deleteValue(new LectureFindRequest(UUID.fromString(userId)));
+        lecturerService.deleteValue(new LectureFindRequest(UUID.fromString(userId)));
     }
 
     @Override
     public void deactivateUserById(String userId) {
         universityService.deactivateUserEntity(userId);
-        lectureService.disable(new LectureFindRequest(UUID.fromString(userId)));
+        lecturerService.disable(new LectureFindRequest(UUID.fromString(userId)));
         updateEnable(userId, false);
     }
 
     @Override
     public void activate(@NotBlank String userId) {
-        lectureService.enable(new LectureFindRequest(UUID.fromString(userId)));
+        lecturerService.enable(new LectureFindRequest(UUID.fromString(userId)));
         updateEnable(userId, true);
     }
 

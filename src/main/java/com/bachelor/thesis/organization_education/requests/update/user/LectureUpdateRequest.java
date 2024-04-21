@@ -20,8 +20,23 @@ public class LectureUpdateRequest implements UpdateRequest {
     private AcademicDegree degree;
     private Faculty faculty;
 
-    @Override
-    public FindRequest getFindRequest() {
-        return null;
+    @Setter(AccessLevel.PRIVATE)
+    private FindRequest findRequest = new FindRequest() {
+        @Override
+        public boolean skip() {
+            return true;
+        }
+    };
+
+    public boolean titleIsEmpty() {
+        return title == null;
+    }
+
+    public boolean degreeIsEmpty() {
+        return degree == null;
+    }
+
+    public boolean facultyIsEmpty() {
+        return faculty == null;
     }
 }

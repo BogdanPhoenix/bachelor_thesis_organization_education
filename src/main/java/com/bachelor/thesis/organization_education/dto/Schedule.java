@@ -39,7 +39,7 @@ public class Schedule extends BaseTableInfo {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
-    private Lecture lecture;
+    private Lecturer lecturer;
 
     @NonNull
     @ManyToOne

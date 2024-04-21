@@ -4,7 +4,7 @@ import com.bachelor.thesis.organization_education.controllers.university.Resourc
 import com.bachelor.thesis.organization_education.requests.find.user.LectureFindRequest;
 import com.bachelor.thesis.organization_education.requests.update.user.LectureUpdateRequest;
 import com.bachelor.thesis.organization_education.responces.user.LectureResponse;
-import com.bachelor.thesis.organization_education.services.interfaces.user.LectureService;
+import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +17,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/users/lecture")
-public class LectureController extends ResourceController<LectureService> {
+public class LecturerController extends ResourceController<LecturerService> {
     @Autowired
-    public LectureController(LectureService service) {
+    public LecturerController(LecturerService service) {
         super(service);
     }
 

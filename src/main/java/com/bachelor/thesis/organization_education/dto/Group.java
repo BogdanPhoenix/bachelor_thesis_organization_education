@@ -31,7 +31,7 @@ public class Group extends BaseTableInfo {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "curator_id", nullable = false)
-    private Lecture curator;
+    private Lecturer curator;
 
     @NonNull
     @ManyToOne
