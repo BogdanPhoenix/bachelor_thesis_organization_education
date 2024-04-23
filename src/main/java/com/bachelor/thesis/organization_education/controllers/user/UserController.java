@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.validation.BindingResult;
 import org.keycloak.representations.idm.UserRepresentation;
 import com.bachelor.thesis.organization_education.enums.Role;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,29 +29,23 @@ public class UserController {
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping("/register-other/student")
-    public ResponseEntity<UserRepresentation> registerAccountForStudent(
-            @RequestBody @Valid RegistrationStudentUserRequest registrationRequest
-    ) {
+    public ResponseEntity<UserRepresentation> registerAccountForStudent(@RequestBody RegistrationStudentUserRequest registrationRequest) {
         return registration(registrationRequest, Role.STUDENT);
     }
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping("/register-other/lecture")
-    public ResponseEntity<UserRepresentation> registerAccountForLecture(
-            @RequestBody @Valid RegistrationLecturerRequest registrationRequest
-    ) {
+    public ResponseEntity<UserRepresentation> registerAccountForLecture(@RequestBody RegistrationLecturerRequest registrationRequest) {
         return registration(registrationRequest, Role.LECTURER);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRepresentation> registerUser(
-            @RequestBody @Valid RegistrationUserRequest registrationRequest
-    ) {
+    public ResponseEntity<UserRepresentation> registerUser(@RequestBody RegistrationUserRequest registrationRequest) {
         return registration(registrationRequest, Role.UNIVERSITY_ADMIN);
     }
 
     private ResponseEntity<UserRepresentation> registration(
-            RegistrationRequest registrationRequest,
+            @Valid RegistrationRequest registrationRequest,
             Role role
     ) {
         var response = service.registration(registrationRequest, role);
