@@ -1,15 +1,15 @@
 package com.bachelor.thesis.organization_education.services.implementations.crud;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
-import com.bachelor.thesis.organization_education.repositories.NameEntityRepository;
-import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.NameEntityRequest;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
-import com.bachelor.thesis.organization_education.requests.update.abstracts.NameEntityUpdateRequest;
-import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import lombok.NonNull;
 import org.springframework.context.ApplicationContext;
+import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
+import com.bachelor.thesis.organization_education.repositories.NameEntityRepository;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.NameEntityRequest;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEntityFindRequest;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.NameEntityUpdateRequest;
 
 import java.util.Optional;
 
@@ -36,7 +36,7 @@ public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends 
 
     @Override
     protected Optional<T> findEntity(@NonNull FindRequest request) {
-        var nameEntityRequest = (UniversityFindRequest) request;
+        var nameEntityRequest = (NameEntityFindRequest) request;
 
         return repository.findByEnNameOrUaName(
                 nameEntityRequest.getEnName(),

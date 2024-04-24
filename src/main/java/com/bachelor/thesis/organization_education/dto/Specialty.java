@@ -1,18 +1,17 @@
 package com.bachelor.thesis.organization_education.dto;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
+import com.bachelor.thesis.organization_education.responces.university.SpecialtyResponse;
+import com.bachelor.thesis.organization_education.requests.find.university.SpecialtyFindRequest;
 
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.CascadeType.DETACH;
 
 @Entity
 @Getter
@@ -35,12 +34,17 @@ public class Specialty extends NameEntity {
     private Set<Group> groups;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public SpecialtyResponse getResponse() {
+        var builder = SpecialtyResponse.builder();
+        super.initResponse(builder);
+        return builder.number(number)
+                .build();
     }
 
     @Override
-    public FindRequest getFindRequest() {
-        return null;
+    public SpecialtyFindRequest getFindRequest() {
+        return SpecialtyFindRequest.builder()
+                .number(number)
+                .build();
     }
 }
