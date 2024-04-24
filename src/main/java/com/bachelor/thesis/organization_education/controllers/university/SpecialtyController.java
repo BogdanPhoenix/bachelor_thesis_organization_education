@@ -38,6 +38,11 @@ public class SpecialtyController extends ResourceController<SpecialtyService> {
         return super.get(request);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Response> get(@PathVariable Long id) {
+        return super.get(id);
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<UniversityResponse> update(

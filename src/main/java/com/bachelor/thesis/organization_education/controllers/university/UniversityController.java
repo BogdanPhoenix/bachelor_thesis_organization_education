@@ -43,6 +43,11 @@ public class UniversityController extends ResourceController<UniversityService> 
         return super.get(request);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UniversityResponse> get(@PathVariable Long id) {
+        return super.get(id);
+    }
+
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<UniversityResponse> update(

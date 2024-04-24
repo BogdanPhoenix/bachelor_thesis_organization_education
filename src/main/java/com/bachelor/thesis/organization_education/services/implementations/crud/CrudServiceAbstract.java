@@ -116,6 +116,11 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     }
 
     @Override
+    public BaseTableInfo getValue(@NonNull Long id) throws NotFindEntityInDataBaseException {
+        return findValueById(id);
+    }
+
+    @Override
     public Set<BaseTableInfo> getAll() {
         return repository
                 .findAll()

@@ -31,6 +31,14 @@ public abstract class ResourceController<T extends CrudService> {
         return ResponseEntity.ok(response);
     }
 
+    @SuppressWarnings("unchecked")
+    public <O extends Response> ResponseEntity<O> get(Long id) {
+        var response = (O) service.getValue(id)
+                .getResponse();
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/all")
     public Set<Response> getAll() {
         return service.getAll()

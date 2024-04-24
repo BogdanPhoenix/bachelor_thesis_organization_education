@@ -55,6 +55,15 @@ public interface CrudService {
     BaseTableInfo getValue(@NonNull FindRequest request) throws NotFindEntityInDataBaseException;
 
     /**
+     * Searches for an entity in the database by the specified query.
+     *
+     * @param id unique identifier of the entity.
+     * @return the found subject.
+     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
+     */
+    BaseTableInfo getValue(@NonNull Long id) throws NotFindEntityInDataBaseException;
+
+    /**
      * Returns the set of all table entities.
      *
      * @return a set of entities.

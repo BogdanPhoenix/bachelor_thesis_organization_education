@@ -42,6 +42,11 @@ public class FacultyController extends ResourceController<FacultyService> {
         return super.get(request);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FacultyResponse> get(@PathVariable Long id) {
+        return super.get(id);
+    }
+
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<FacultyResponse> update(
