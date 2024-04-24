@@ -5,11 +5,13 @@ import org.springframework.stereotype.Service;
 import com.bachelor.thesis.organization_education.dto.Specialty;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.repositories.university.SpecialtyRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.SpecialtyRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.SpecialtyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
 import com.bachelor.thesis.organization_education.requests.insert.university.SpecialtyInsertRequest;
+import com.bachelor.thesis.organization_education.requests.update.university.SpecialtyUpdateRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
 import java.util.Optional;
@@ -41,7 +43,18 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
     }
 
     @Override
-    protected Optional<Specialty> findEntity(@NonNull FindRequest request) {
+    protected void updateEntity(Specialty entity, UpdateRequest request) {
+        var specialtyRequest = (SpecialtyUpdateRequest) request;
+
+        if(!specialtyRequest.numberIsEmpty()) {
+            entity.setNumber(specialtyRequest.getNumber());
+        }
+
+        super.updateEntity(entity, request);
+    }
+
+    @Override
+    protected Optional<Specialty> findEntityByRequest(@NonNull FindRequest request) {
         var specialtyRequest = (SpecialtyFindRequest) request;
 
         return repository.findByEnNameOrUaNameOrNumber(
@@ -52,5 +65,5 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
     }
 
     @Override
-    protected void selectedForDeactivateChild(FindRequest request) { }
+    protected void selectedForDeactivateChild(Long id) { }
 }

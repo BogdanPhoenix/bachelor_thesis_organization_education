@@ -1,24 +1,25 @@
 package com.bachelor.thesis.organization_education.services.implementations.crud;
 
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
-import org.apache.commons.lang.reflect.FieldUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.mockito.Mock;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.apache.commons.lang.reflect.FieldUtils;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
 import java.util.function.Consumer;
+
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class CrudServiceAbstractTest {
@@ -97,7 +98,7 @@ class CrudServiceAbstractTest {
         @DisplayName("Check for an exception when the data update request contains data that is not in the table.")
         void testUpdateValueThrowsNotFindEntityInDataBaseException() {
             when(serviceMock.isDuplicate(any(FindRequest.class), anyLong())).thenReturn(false);
-            when(serviceMock.findById(anyLong())).thenThrow(NotFindEntityInDataBaseException.class);
+            when(serviceMock.findValueById(anyLong())).thenThrow(NotFindEntityInDataBaseException.class);
 
             assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.updateValue(ID, updateDataMock));
         }
@@ -108,7 +109,7 @@ class CrudServiceAbstractTest {
             FieldUtils.writeField(serviceMock, "repository", repositoryMock, true);
 
             when(serviceMock.isDuplicate(any(FindRequest.class), anyLong())).thenReturn(false);
-            when(serviceMock.findById(anyLong())).thenReturn(tableInfoMock);
+            when(serviceMock.findValueById(anyLong())).thenReturn(tableInfoMock);
 
             doNothing()
                     .when(serviceMock)
@@ -124,47 +125,49 @@ class CrudServiceAbstractTest {
     @Nested
     @DisplayName("Test cases for deleteValue method")
     class DeleteValueTests {
+        private static final Long ID = 1L;
+
         @Test
         @DisplayName("Checking for an exception when null was passed in the request to delete data.")
         void testDeleteValueThrowsNullPointerException() {
-            FindRequest value = null;
-            doCallRealMethodForAction(serviceMock::deleteValue, value);
-            assertThrows(NullPointerException.class, () -> serviceMock.deleteValue(value));
+            doCallRealMethodForAction(serviceMock::deleteValue, null);
+            assertThrows(NullPointerException.class, () -> serviceMock.deleteValue(null));
         }
 
         @Test
         @DisplayName("Check for exceptions when the table cannot find the entity for the specified query.")
         void testDeleteValueThrowsNotFindEntityInDataBaseException() {
-            when(serviceMock.getEntity(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
-            doCallRealMethodForAction(serviceMock::deleteValue, findRequestMock);
-            assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.deleteValue(findRequestMock));
+            when(serviceMock.findEntityById(anyLong())).thenThrow(NotFindEntityInDataBaseException.class);
+            doCallRealMethodForAction(serviceMock::deleteValue, ID);
+            assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.deleteValue(ID));
         }
 }
 
     @Test
     @DisplayName("Check for an exception when the request to activate an entity failed to find the entity.")
-    void testEnableEntityThrowsNotFindEntityInDataBaseException() {
-        when(serviceMock.getEntity(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
-        testEntityNotFoundAction(serviceMock::enable);
+    void testActivateEntityThrowsNotFindEntityByRequestInDataBaseException() {
+        when(serviceMock.findEntityById(anyLong())).thenThrow(NotFindEntityInDataBaseException.class);
+        testEntityNotFoundAction(serviceMock::activate);
     }
 
     @Test
     @DisplayName("Check for an exception when the request to deactivate an entity failed to find the entity.")
-    void testDisableEntityThrowsNotFindEntityInDataBaseException() {
-        when(serviceMock.getEntity(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
-        testEntityNotFoundAction(serviceMock::disable);
+    void testDeactivateEntityThrowsNotFindEntityByRequestInDataBaseException() {
+        when(serviceMock.findEntityById(anyLong())).thenThrow(NotFindEntityInDataBaseException.class);
+        testEntityNotFoundAction(serviceMock::deactivate);
     }
 
     @Test
     @DisplayName("Check the exception when the entity return request did not find an entity.")
-    void testGetValueThrowsNotFindEntityInDataBaseException() {
-        when(serviceMock.findEntity(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
-        testEntityNotFoundAction(serviceMock::getValue);
+    void testGetValueThrowsNotFindEntityByRequestInDataBaseException() {
+        when(serviceMock.findEntityByRequest(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
+        doCallRealMethodForAction(serviceMock::getValue, findRequestMock);
+        assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.getValue(findRequestMock));
     }
 
-    private void testEntityNotFoundAction(Consumer<FindRequest> action) {
-        doCallRealMethodForAction(action, findRequestMock);
-        assertThrows(NotFindEntityInDataBaseException.class, () -> action.accept(findRequestMock));
+    private void testEntityNotFoundAction(Consumer<Long> action) {
+        doCallRealMethodForAction(action, 1L);
+        assertThrows(NotFindEntityInDataBaseException.class, () -> action.accept(1L));
     }
 
     private <T> void doCallRealMethodForAction(Consumer<T> action, T value) {

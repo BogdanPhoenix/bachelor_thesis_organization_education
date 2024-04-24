@@ -1,10 +1,10 @@
 package com.bachelor.thesis.organization_education.requests.update.university;
 
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import com.bachelor.thesis.organization_education.enums.AccreditationLevel;
 import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.NameEntityUpdateRequest;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
@@ -22,5 +22,9 @@ public class UniversityUpdateRequest extends NameEntityUpdateRequest {
                 .enName(getEnName())
                 .uaName(getUaName())
                 .build();
+    }
+
+    public boolean accreditationLevelIsEmpty() {
+        return accreditationLevel == AccreditationLevel.EMPTY;
     }
 }

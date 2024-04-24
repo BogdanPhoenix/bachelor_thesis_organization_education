@@ -1,18 +1,18 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
-import com.bachelor.thesis.organization_education.dto.Faculty;
-import com.bachelor.thesis.organization_education.repositories.university.FacultyRepository;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
-import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
-import com.bachelor.thesis.organization_education.requests.insert.university.FacultyInsertRequest;
-import com.bachelor.thesis.organization_education.requests.general.university.FacultyRequest;
-import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
-import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
-import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.bachelor.thesis.organization_education.dto.Faculty;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.repositories.university.FacultyRepository;
+import com.bachelor.thesis.organization_education.requests.general.university.FacultyRequest;
+import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
+import com.bachelor.thesis.organization_education.requests.insert.university.FacultyInsertRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
+import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
 import java.util.Optional;
 
@@ -50,7 +50,7 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
     }
 
     @Override
-    protected Optional<Faculty> findEntity(@NonNull FindRequest request) {
+    protected Optional<Faculty> findEntityByRequest(@NonNull FindRequest request) {
         var facultyRequest = (FacultyFindRequest) request;
 
         return repository.findFaculty(
@@ -61,5 +61,5 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
     }
 
     @Override
-    protected void selectedForDeactivateChild(FindRequest request) { }
+    protected void selectedForDeactivateChild(Long id) { }
 }

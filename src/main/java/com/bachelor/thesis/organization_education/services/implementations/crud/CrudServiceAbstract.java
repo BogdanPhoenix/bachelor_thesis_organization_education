@@ -1,22 +1,23 @@
 package com.bachelor.thesis.organization_education.services.implementations.crud;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
-import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import lombok.NonNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.Set;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
+import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 import static com.bachelor.thesis.organization_education.services.implementations.tools.ExceptionTools.throwRuntimeException;
 
@@ -55,15 +56,19 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     }
 
     boolean isDuplicate(FindRequest request){
-        return findEntity(request)
+        return findEntityByRequest(request)
                 .isPresent();
     }
 
     @Override
     public T updateValue(@NonNull Long id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
         validateDuplicate(request.getFindRequest(), id);
-        var entity = findById(id);
+        var entity = findValueById(id);
 
+        return updateValue(entity, request);
+    }
+
+    protected T updateValue(T entity, UpdateRequest request) {
         updateEntity(entity, request);
         entity.setUpdateDate(LocalDateTime.now());
         return repository.save(entity);
@@ -75,31 +80,31 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
         }
     }
 
+    boolean isDuplicate(FindRequest request, Long entityId) {
+        return findEntityByRequest(request)
+                .map(entity -> !Objects.equals(entity.getId(), entityId))
+                .orElse(false);
+    }
+
     private void messageDuplicate(FindRequest request) throws DuplicateException {
         var message = String.format("The \"%s\" entity is already present in the \"%s\" table.", request, tableName);
         throwRuntimeException(message, DuplicateException::new);
     }
 
-    boolean isDuplicate(FindRequest request, Long entityId) {
-        return findEntity(request)
-                .map(entity -> !Objects.equals(entity.getId(), entityId))
-                .orElse(false);
+    @Override
+    public void activate(@NonNull Long id) throws NotFindEntityInDataBaseException {
+        var entity = findEntityById(id);
+        updateEnabled(entity, true);
     }
 
     @Override
-    public void enable(@NonNull FindRequest request) throws NotFindEntityInDataBaseException {
-        updateEnabled(request, true);
+    public void deactivate(@NonNull Long id) throws NotFindEntityInDataBaseException {
+        selectedForDeactivateChild(id);
+        var entity = findEntityById(id);
+        updateEnabled(entity, false);
     }
 
-    @Override
-    public void disable(@NonNull FindRequest request) throws NotFindEntityInDataBaseException {
-        selectedForDeactivateChild(request);
-        updateEnabled(request, false);
-    }
-
-    private void updateEnabled(FindRequest request, boolean value) throws NotFindEntityInDataBaseException {
-        var entity = getEntity(request);
-
+    protected void updateEnabled(T entity, boolean value) throws NotFindEntityInDataBaseException {
         entity.setEnabled(value);
         entity.setUpdateDate(LocalDateTime.now());
         repository.save(entity);
@@ -107,9 +112,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
 
     @Override
     public T getValue(@NonNull FindRequest request) throws NotFindEntityInDataBaseException {
-        return findEntity(request)
-                .filter(BaseTableInfo::isEnabled)
-                .orElseThrow(() -> new NotFindEntityInDataBaseException("The query failed to find an entity in the table: " + tableName));
+        return getEntityAndFilter(request, BaseTableInfo::isEnabled);
     }
 
     @Override
@@ -122,20 +125,25 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     }
 
     @Override
-    public void deleteValue(@NonNull FindRequest request) throws NotFindEntityInDataBaseException {
-        var entity = getEntity(request);
+    public void deleteValue(@NonNull Long id) throws NotFindEntityInDataBaseException {
+        var entity = findEntityById(id);
         repository.delete(entity);
     }
 
-    T getEntity(FindRequest request) throws NotFindEntityInDataBaseException {
-        return findEntity(request)
+    protected T getEntity(FindRequest request) throws NotFindEntityInDataBaseException {
+        return getEntityAndFilter(request, filter -> true);
+    }
+
+    private T getEntityAndFilter(FindRequest request, Predicate<? super T> filterPredicate) throws NotFindEntityInDataBaseException {
+        return findEntityByRequest(request)
+                .filter(filterPredicate)
                 .orElseThrow(() -> new NotFindEntityInDataBaseException("The query failed to find an entity in the table: " + tableName));
     }
 
     protected <B extends BaseTableInfo, C extends CrudService> void deactivatedChild(Collection<B> collection, Class<C> serviceClass) {
         var service = getBeanByClass(serviceClass);
         collection.forEach(
-                entity -> service.disable(entity.getFindRequest())
+                entity -> service.deactivate(entity.getId())
         );
     }
 
@@ -143,10 +151,18 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
         return context.getBean(clazz);
     }
 
-    T findById(Long id) throws NotFindEntityInDataBaseException {
+    protected T findEntityById(Long id) throws NotFindEntityInDataBaseException {
+        return findByIdAndFilter(id, filter -> true);
+    }
+
+    T findValueById(Long id) throws NotFindEntityInDataBaseException {
+        return findByIdAndFilter(id, BaseTableInfo::isEnabled);
+    }
+
+    private T findByIdAndFilter(Long id, Predicate<? super T> filterPredicate) throws NotFindEntityInDataBaseException {
         return repository
                 .findById(id)
-                .filter(BaseTableInfo::isEnabled)
+                .filter(filterPredicate)
                 .orElseThrow(() -> {
                             var message = String.format("Unable to find an entity in the \"%s\" table using the specified identifier: %d.", tableName, id);
                             return new NotFindEntityInDataBaseException(message);
@@ -155,7 +171,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     }
 
     protected abstract T createEntity(Request request);
-    protected abstract Optional<T> findEntity(@NonNull FindRequest request);
+    protected abstract Optional<T> findEntityByRequest(@NonNull FindRequest request);
     protected abstract void updateEntity(T entity, UpdateRequest request);
-    protected abstract void selectedForDeactivateChild(FindRequest request);
+    protected abstract void selectedForDeactivateChild(Long id);
 }

@@ -1,17 +1,19 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
+import lombok.NonNull;
+import jakarta.transaction.Transactional;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
-import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
-import lombok.NonNull;
 
 import java.util.UUID;
 
 /**
  * Lecturer service that implements CRUD (create, read, update, delete) operations.
  */
+@Transactional
 public interface LecturerService extends CrudService {
     /**
      * Registering a new lecturer using the sent request and user ID.
@@ -30,4 +32,28 @@ public interface LecturerService extends CrudService {
      * @throws NotFindEntityInDataBaseException if the teacher is not found in the database
      */
     Lecturer updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException;
+
+    /**
+     * Makes the entity active for further interaction with the program.
+     *
+     * @param userId unique identifier of the user.
+     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
+     */
+    void activate(@NonNull String userId);
+
+    /**
+     * Makes the entity inactive, which does not allow the program to interact with it.
+     *
+     * @param userId unique identifier of the user.
+     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
+     */
+    void deactivate(@NonNull String userId);
+
+    /**
+     * Searches for an entity in the database by the specified query and deletes it completely.
+     *
+     * @param userId unique identifier of the user.
+     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
+     */
+    void deleteValue(@NonNull String userId);
 }

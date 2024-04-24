@@ -27,4 +27,8 @@ public class SpecialtyUpdateRequest extends NameEntityUpdateRequest {
                 .number(number)
                 .build();
     }
+
+    public boolean numberIsEmpty() {
+        return number == 0;
+    }
 }

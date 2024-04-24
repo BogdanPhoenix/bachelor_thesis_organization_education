@@ -35,7 +35,7 @@ public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends 
     }
 
     @Override
-    protected Optional<T> findEntity(@NonNull FindRequest request) {
+    protected Optional<T> findEntityByRequest(@NonNull FindRequest request) {
         var nameEntityRequest = (NameEntityFindRequest) request;
 
         return repository.findByEnNameOrUaName(

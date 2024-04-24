@@ -48,20 +48,8 @@ public class SpecialtyController extends ResourceController<SpecialtyService> {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping
-    public ResponseEntity<Void> deactivate(@RequestBody @Valid SpecialtyFindRequest request) {
-        return super.deactivate(request);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestBody @Valid SpecialtyFindRequest request) {
-        return super.delete(request);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/activate")
-    public ResponseEntity<Void> activate(@RequestBody @Valid SpecialtyFindRequest request) {
-        return super.activate(request);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        return super.deactivate(id);
     }
 }

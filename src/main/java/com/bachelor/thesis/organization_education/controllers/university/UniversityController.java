@@ -53,20 +53,8 @@ public class UniversityController extends ResourceController<UniversityService> 
     }
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
-    @DeleteMapping
-    public ResponseEntity<Void> deactivate(@RequestBody @Valid UniversityFindRequest request) {
-        return super.deactivate(request);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestBody @Valid UniversityFindRequest request) {
-        return super.delete(request);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/activate")
-    public ResponseEntity<Void> activate(@RequestBody @Valid UniversityFindRequest request) {
-        return super.activate(request);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        return super.deactivate(id);
     }
 }

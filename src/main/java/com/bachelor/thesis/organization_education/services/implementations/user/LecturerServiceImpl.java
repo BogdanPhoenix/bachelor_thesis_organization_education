@@ -19,7 +19,6 @@ import com.bachelor.thesis.organization_education.services.implementations.crud.
 
 import java.util.UUID;
 import java.util.Optional;
-import java.time.LocalDateTime;
 
 @Service
 public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerRepository> implements LecturerService {
@@ -53,7 +52,7 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    protected Optional<Lecturer> findEntity(@NonNull FindRequest request) {
+    protected Optional<Lecturer> findEntityByRequest(@NonNull FindRequest request) {
         var findRequest = (LecturerFindRequest) request;
         return repository.findByUser(findRequest.getUserId());
     }
@@ -78,11 +77,34 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
         var findRequest = new LecturerFindRequest(id);
         var entity = getValue(findRequest);
 
-        updateEntity(entity, request);
-        entity.setUpdateDate(LocalDateTime.now());
-        return repository.save(entity);
+        return updateValue(entity, request);
     }
 
     @Override
-    protected void selectedForDeactivateChild(FindRequest request) { }
+    public void activate(@NonNull String userId) {
+        updateEnabled(userId, true);
+    }
+
+    @Override
+    public void deactivate(@NonNull String userId) {
+        updateEnabled(userId, false);
+    }
+
+    private void updateEnabled(String adminId, boolean value) throws NotFindEntityInDataBaseException {
+        var uuid = UUID.fromString(adminId);
+        var request = new LecturerFindRequest(uuid);
+        var entity = getEntity(request);
+        super.updateEnabled(entity, value);
+    }
+
+    @Override
+    public void deleteValue(@NonNull String userId) {
+        var uuid = UUID.fromString(userId);
+        var request = new LecturerFindRequest(uuid);
+        var entity = getValue(request);
+        repository.delete(entity);
+    }
+
+    @Override
+    protected void selectedForDeactivateChild(Long id) { }
 }

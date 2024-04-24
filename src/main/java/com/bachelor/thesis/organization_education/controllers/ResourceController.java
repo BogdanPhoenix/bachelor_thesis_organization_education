@@ -2,7 +2,11 @@ package com.bachelor.thesis.organization_education.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
@@ -45,18 +49,22 @@ public abstract class ResourceController<T extends CrudService> {
                 .body(response);
     }
 
-    public <I extends FindRequest> ResponseEntity<Void> deactivate(I request) {
-        service.disable(request);
+    public ResponseEntity<Void> deactivate(Long id) {
+        service.deactivate(id);
         return ResponseEntity.ok().build();
     }
 
-    public <I extends FindRequest> ResponseEntity<Void> delete(I request) {
-        service.deleteValue(request);
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.deleteValue(id);
         return ResponseEntity.noContent().build();
     }
 
-    public <I extends FindRequest> ResponseEntity<Void> activate(I request) {
-        service.enable(request);
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<Void> activate(@PathVariable Long id) {
+        service.activate(id);
         return ResponseEntity.ok().build();
     }
 }

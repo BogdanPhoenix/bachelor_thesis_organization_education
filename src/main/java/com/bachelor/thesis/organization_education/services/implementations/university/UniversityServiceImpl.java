@@ -1,23 +1,21 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
+import lombok.NonNull;
+import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.University;
-import com.bachelor.thesis.organization_education.enums.AccreditationLevel;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.repositories.university.UniversityRepository;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
-import com.bachelor.thesis.organization_education.requests.insert.university.UniversityInsertRequest;
 import com.bachelor.thesis.organization_education.requests.general.university.UniversityRequest;
-import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
-import com.bachelor.thesis.organization_education.requests.update.university.UniversityUpdateRequest;
-import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
-import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
+import com.bachelor.thesis.organization_education.requests.insert.university.UniversityInsertRequest;
+import com.bachelor.thesis.organization_education.requests.update.university.UniversityUpdateRequest;
+import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
 import java.util.UUID;
 
@@ -58,7 +56,7 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
 
         var universityRequest = (UniversityUpdateRequest) request;
 
-        if(universityRequest.getAccreditationLevel() == AccreditationLevel.EMPTY) {
+        if(!universityRequest.accreditationLevelIsEmpty()) {
             entity.setAccreditationLevel(universityRequest.getAccreditationLevel());
         }
     }
@@ -68,7 +66,7 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
         var uuid = UUID.fromString(userId);
         var university = repository.findByAdminId(uuid);
         university.ifPresent(entity ->
-                disable(entity.getFindRequest())
+                deactivate(entity.getId())
         );
     }
 
@@ -80,8 +78,8 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     }
 
     @Override
-    protected void selectedForDeactivateChild(FindRequest request) {
-        var entity = getValue(request);
+    protected void selectedForDeactivateChild(Long id) {
+        var entity = findEntityById(id);
         deactivatedChild(entity.getFaculties(), FacultyService.class);
     }
 }

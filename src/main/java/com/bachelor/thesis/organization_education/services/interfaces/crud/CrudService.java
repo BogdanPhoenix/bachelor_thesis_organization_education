@@ -1,12 +1,12 @@
 package com.bachelor.thesis.organization_education.services.interfaces.crud;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import lombok.NonNull;
 import jakarta.transaction.Transactional;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
 import java.util.Set;
@@ -32,18 +32,18 @@ public interface CrudService {
     /**
      * Makes the entity active for further interaction with the program.
      *
-     * @param request request to search for an entity, must not be {@literal null}.
+     * @param id unique identifier of the entity.
      * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    void enable(@NonNull FindRequest request) throws NotFindEntityInDataBaseException;
+    void activate(@NonNull Long id) throws NotFindEntityInDataBaseException;
 
     /**
      * Makes the entity inactive, which does not allow the program to interact with it.
      *
-     * @param request request to search for an entity, must not be {@literal null}.
+     * @param id unique identifier of the entity.
      * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    void disable(@NonNull FindRequest request) throws NotFindEntityInDataBaseException ;
+    void deactivate(@NonNull Long id) throws NotFindEntityInDataBaseException ;
 
     /**
      * Searches for an entity in the database by the specified query.
@@ -61,14 +61,22 @@ public interface CrudService {
      */
     Set<BaseTableInfo> getAll();
 
-
+    /**
+     * Updates the attributes of the selected entity.
+     *
+     * @param id unique identifier of the entity.
+     * @param request with new data.
+     * @return the updated entity.
+     * @throws DuplicateException if the table already contains the data that is passed in the query.
+     * @throws NotFindEntityInDataBaseException if the entity could not be found.
+     */
     BaseTableInfo updateValue(@NonNull Long id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException;
 
     /**
      * Searches for an entity in the database by the specified query and deletes it completely.
      *
-     * @param request request to search for an entity.
+     * @param id unique identifier of the entity.
      * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    void deleteValue(@NonNull FindRequest request) throws NotFindEntityInDataBaseException;
+    void deleteValue(@NonNull Long id) throws NotFindEntityInDataBaseException;
 }
