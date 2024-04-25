@@ -8,14 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import com.bachelor.thesis.organization_education.responces.university.UniversityResponse;
 import com.bachelor.thesis.organization_education.requests.find.university.SpecialtyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
 import com.bachelor.thesis.organization_education.requests.insert.university.SpecialtyInsertRequest;
 import com.bachelor.thesis.organization_education.requests.update.university.SpecialtyUpdateRequest;
 
 @RestController
-@RequestMapping("/specialty")
+@RequestMapping("/specialties")
 public class SpecialtyController extends ResourceController<SpecialtyService> {
     @Autowired
     public SpecialtyController(SpecialtyService service) {
@@ -45,7 +44,7 @@ public class SpecialtyController extends ResourceController<SpecialtyService> {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<UniversityResponse> update(
+    public ResponseEntity<Response> update(
             @PathVariable Long id,
             @RequestBody @Valid SpecialtyUpdateRequest request
     ) {

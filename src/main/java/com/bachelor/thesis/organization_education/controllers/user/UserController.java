@@ -29,23 +29,23 @@ public class UserController {
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping("/register-other/student")
-    public ResponseEntity<UserRepresentation> registerAccountForStudent(@RequestBody RegistrationStudentUserRequest registrationRequest) {
+    public ResponseEntity<UserRepresentation> registerAccountForStudent(@RequestBody @Valid RegistrationStudentUserRequest registrationRequest) {
         return registration(registrationRequest, Role.STUDENT);
     }
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping("/register-other/lecture")
-    public ResponseEntity<UserRepresentation> registerAccountForLecture(@RequestBody RegistrationLecturerRequest registrationRequest) {
+    public ResponseEntity<UserRepresentation> registerAccountForLecture(@RequestBody @Valid RegistrationLecturerRequest registrationRequest) {
         return registration(registrationRequest, Role.LECTURER);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRepresentation> registerUser(@RequestBody RegistrationUserRequest registrationRequest) {
+    public ResponseEntity<UserRepresentation> registerUser(@RequestBody @Valid RegistrationUserRequest registrationRequest) {
         return registration(registrationRequest, Role.UNIVERSITY_ADMIN);
     }
 
     private ResponseEntity<UserRepresentation> registration(
-            @Valid RegistrationRequest registrationRequest,
+            RegistrationRequest registrationRequest,
             Role role
     ) {
         var response = service.registration(registrationRequest, role);

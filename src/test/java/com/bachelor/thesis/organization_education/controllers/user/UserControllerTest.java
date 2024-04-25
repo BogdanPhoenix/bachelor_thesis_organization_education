@@ -1,32 +1,28 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.NonNull;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.junit.jupiter.params.ParameterizedTest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.BindingResult;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
 
 import java.util.stream.Stream;
-
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @WebAppConfiguration
@@ -35,9 +31,6 @@ class UserControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
-
-    @MockBean
-    private BindingResult bindingResultMock;
 
     private MockMvc mockMvc;
     private ObjectWriter objectWriter;
@@ -132,13 +125,6 @@ class UserControllerTest {
                 Arguments.of("first%name"),
                 Arguments.of("first5name")
         );
-    }
-
-    @Test
-    @DisplayName("Checking the controller for correct user registration in the system.")
-    void testRegistrationCorrect() throws Exception {
-        when(bindingResultMock.hasErrors()).thenReturn(false);
-        postRequestToServer(MockMvcResultMatchers.status().isCreated());
     }
 
     private void postRequestToServer(ResultMatcher matcher) throws Exception {

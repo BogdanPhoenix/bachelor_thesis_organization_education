@@ -14,7 +14,7 @@ import com.bachelor.thesis.organization_education.requests.insert.university.Gro
 import com.bachelor.thesis.organization_education.requests.update.university.GroupUpdateRequest;
 
 @RestController
-@RequestMapping("/group")
+@RequestMapping("/groups")
 public class GroupController extends ResourceController<GroupService> {
     @Autowired
     public GroupController(GroupService service) {

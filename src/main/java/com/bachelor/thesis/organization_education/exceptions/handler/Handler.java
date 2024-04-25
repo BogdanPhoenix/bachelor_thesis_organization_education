@@ -24,7 +24,7 @@ public class Handler extends ResponseEntityExceptionHandler {
             NotFindEntityInDataBaseException.class
     })
     public ResponseEntity<Object> handleExceptionInfo(Exception ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(OAuth2AuthenticationException.class)

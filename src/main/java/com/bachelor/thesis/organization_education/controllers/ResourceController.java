@@ -23,17 +23,15 @@ public abstract class ResourceController<T extends CrudService> {
         this.service = service;
     }
 
-    @SuppressWarnings("unchecked")
-    public <I extends FindRequest, O extends Response> ResponseEntity<O> get(I request) {
-        var response = (O) service.getValue(request)
+    protected  <I extends FindRequest> ResponseEntity<Response> get(I request) {
+        var response = service.getValue(request)
                 .getResponse();
 
         return ResponseEntity.ok(response);
     }
 
-    @SuppressWarnings("unchecked")
-    public <O extends Response> ResponseEntity<O> get(Long id) {
-        var response = (O) service.getValue(id)
+    protected ResponseEntity<Response> get(@PathVariable Long id) {
+        var response = service.getValue(id)
                 .getResponse();
 
         return ResponseEntity.ok(response);
@@ -47,9 +45,8 @@ public abstract class ResourceController<T extends CrudService> {
                 .collect(Collectors.toSet());
     }
 
-    @SuppressWarnings("unchecked")
-    public <I extends UpdateRequest, O extends Response> ResponseEntity<O> updateEntity(Long id, I request) {
-        var response = (O) service.updateValue(id, request)
+    protected <I extends UpdateRequest> ResponseEntity<Response> updateEntity(Long id, I request) {
+        var response = service.updateValue(id, request)
                 .getResponse();
 
         return ResponseEntity
@@ -57,7 +54,7 @@ public abstract class ResourceController<T extends CrudService> {
                 .body(response);
     }
 
-    public ResponseEntity<Void> deactivate(Long id) {
+    protected ResponseEntity<Void> deactivate(Long id) {
         service.deactivate(id);
         return ResponseEntity.ok().build();
     }
