@@ -1,8 +1,8 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
 import lombok.NonNull;
-import jakarta.transaction.Transactional;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
+import org.springframework.transaction.annotation.Transactional;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;

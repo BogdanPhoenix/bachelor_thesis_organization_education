@@ -2,12 +2,12 @@ package com.bachelor.thesis.organization_education.services.interfaces.user;
 
 import lombok.NonNull;
 import jakarta.ws.rs.NotFoundException;
-import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.keycloak.representations.idm.UserRepresentation;
 import com.bachelor.thesis.organization_education.enums.Role;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;

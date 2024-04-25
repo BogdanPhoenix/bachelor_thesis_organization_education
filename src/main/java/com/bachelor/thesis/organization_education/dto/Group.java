@@ -1,18 +1,17 @@
 package com.bachelor.thesis.organization_education.dto;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.responces.university.GroupResponse;
+import com.bachelor.thesis.organization_education.requests.find.university.GroupFindRequest;
 
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.CascadeType.DETACH;
 
 @Entity
 @Getter
@@ -46,8 +45,8 @@ public class Group extends BaseTableInfo {
     @Column(name = "year_start", nullable = false)
     private short yearStart;
 
-    @Column(name = "end_start", nullable = false)
-    private short endStart;
+    @Column(name = "year_end", nullable = false)
+    private short yearEnd;
 
     @Column(name = "reduced_form")
     private boolean reducedForm;
@@ -68,12 +67,24 @@ public class Group extends BaseTableInfo {
     private Set<Student> students;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public GroupResponse getResponse() {
+        var builder = GroupResponse.builder();
+        super.initResponse(builder);
+        return builder.curator(curator.getResponse())
+                .specialty(specialty.getResponse())
+                .faculty(faculty.getResponse())
+                .yearStart(yearStart)
+                .yearEnd(yearEnd)
+                .reducedForm(reducedForm)
+                .build();
     }
 
     @Override
-    public FindRequest getFindRequest() {
-        return null;
+    public GroupFindRequest getFindRequest() {
+        return GroupFindRequest.builder()
+                .specialty(specialty)
+                .yearStart(yearStart)
+                .reducedForm(reducedForm)
+                .build();
     }
 }

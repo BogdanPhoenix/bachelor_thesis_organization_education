@@ -1,7 +1,7 @@
 package com.bachelor.thesis.organization_education.services.interfaces.crud;
 
 import lombok.NonNull;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;

@@ -115,6 +115,9 @@ class CrudServiceAbstractTest {
                     .when(serviceMock)
                     .updateEntity(any(BaseTableInfo.class), any(UpdateRequest.class));
 
+            doCallRealMethod().when(serviceMock)
+                    .updateValue(any(BaseTableInfo.class), any(UpdateRequest.class));
+
             when(repositoryMock.save(any(BaseTableInfo.class))).thenReturn(tableInfoMock);
 
             serviceMock.updateValue(ID, updateDataMock);
