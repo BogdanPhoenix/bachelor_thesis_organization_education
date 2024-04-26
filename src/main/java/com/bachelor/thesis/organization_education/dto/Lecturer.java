@@ -27,7 +27,7 @@ import static jakarta.persistence.CascadeType.*;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "lectures")
+@Table(name = "lecturers")
 public class Lecturer extends BaseTableInfo {
     @NonNull
     @Enumerated(EnumType.ORDINAL)

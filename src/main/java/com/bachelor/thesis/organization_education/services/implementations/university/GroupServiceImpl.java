@@ -1,30 +1,41 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.requests.insert.university.GroupInsertRequest;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationContext;
 import com.bachelor.thesis.organization_education.dto.Group;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.repositories.university.GroupRepository;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.university.GroupRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.requests.find.university.GroupFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
-import com.bachelor.thesis.organization_education.requests.update.university.GroupUpdateRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
+import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 
 import java.util.Optional;
 
 @Service
 public class GroupServiceImpl extends CrudServiceAbstract<Group, GroupRepository> implements GroupService {
-    protected GroupServiceImpl(GroupRepository repository) {
-        super(repository, "Groups");
+    @Autowired
+    public GroupServiceImpl(GroupRepository repository, ApplicationContext context) {
+        super(repository, "Groups", context);
     }
 
     @Override
-    protected Group createEntity(Request request) {
+    protected void objectFormation(InsertRequest request) {
+        var groupRequest = (GroupRequest) request;
+        groupRequest.setCurator(super.getValue(groupRequest.getCurator(), LecturerService.class));
+        groupRequest.setSpecialty(super.getValue(groupRequest.getSpecialty(), SpecialtyService.class));
+        groupRequest.setFaculty(super.getValue(groupRequest.getFaculty(), FacultyService.class));
+    }
+
+    @Override
+    protected Group createEntity(InsertRequest request) {
         var groupRequest = (GroupRequest) request;
         return Group.builder()
                 .curator(groupRequest.getCurator())
@@ -34,20 +45,6 @@ public class GroupServiceImpl extends CrudServiceAbstract<Group, GroupRepository
                 .yearEnd(groupRequest.getYearEnd())
                 .reducedForm(groupRequest.isReducedForm())
                 .build();
-    }
-
-    @Override
-    public Group addResource(@NonNull GroupInsertRequest request) throws DuplicateException, NullPointerException {
-        var groupRequest = GroupRequest.builder()
-                .curator(request.getCurator())
-                .specialty(request.getSpecialty())
-                .faculty(request.getFaculty())
-                .yearStart(request.getYearStart())
-                .yearEnd(request.getYearEnd())
-                .reducedForm(request.isReducedForm())
-                .build();
-
-        return super.addValue(groupRequest);
     }
 
     @Override
@@ -63,16 +60,19 @@ public class GroupServiceImpl extends CrudServiceAbstract<Group, GroupRepository
 
     @Override
     protected void updateEntity(Group entity, UpdateRequest request) {
-        var groupRequest = (GroupUpdateRequest) request;
+        var groupRequest = (GroupRequest) request;
 
         if(!groupRequest.curatorIsEmpty()) {
-            entity.setCurator(groupRequest.getCurator());
+            var curator = super.getValue(groupRequest.getCurator(), LecturerService.class);
+            entity.setCurator(curator);
         }
         if(!groupRequest.specialtyIsEmpty()) {
-            entity.setSpecialty(groupRequest.getSpecialty());
+            var specialty = super.getValue(groupRequest.getSpecialty(), SpecialtyService.class);
+            entity.setSpecialty(specialty);
         }
         if(!groupRequest.facultyIsEmpty()) {
-            entity.setFaculty(groupRequest.getFaculty());
+            var faculty = super.getValue(groupRequest.getFaculty(), FacultyService.class);
+            entity.setFaculty(faculty);
         }
         if(!groupRequest.yearStartIsEmpty()) {
             entity.setYearStart(groupRequest.getYearStart());

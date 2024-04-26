@@ -1,10 +1,9 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
-import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.keycloak.representations.idm.UserRepresentation;
 import com.bachelor.thesis.organization_education.enums.Role;
@@ -16,6 +15,7 @@ import com.bachelor.thesis.organization_education.services.interfaces.user.UserS
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentUserRequest;
 
@@ -24,23 +24,24 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
+@Validated
 public class UserController {
     private final UserService service;
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping("/register-other/student")
-    public ResponseEntity<UserRepresentation> registerAccountForStudent(@RequestBody @Valid RegistrationStudentUserRequest registrationRequest) {
+    public ResponseEntity<UserRepresentation> registerAccountForStudent(@Validated @RequestBody RegistrationStudentUserRequest registrationRequest) {
         return registration(registrationRequest, Role.STUDENT);
     }
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping("/register-other/lecture")
-    public ResponseEntity<UserRepresentation> registerAccountForLecture(@RequestBody @Valid RegistrationLecturerRequest registrationRequest) {
+    public ResponseEntity<UserRepresentation> registerAccountForLecture(@Validated @RequestBody RegistrationLecturerRequest registrationRequest) {
         return registration(registrationRequest, Role.LECTURER);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRepresentation> registerUser(@RequestBody @Valid RegistrationUserRequest registrationRequest) {
+    public ResponseEntity<UserRepresentation> registerUser(@Validated @RequestBody RegistrationUserRequest registrationRequest) {
         return registration(registrationRequest, Role.UNIVERSITY_ADMIN);
     }
 
@@ -55,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<String> authorization(@RequestBody @Valid AuthRequest authRequest) {
+    public ResponseEntity<String> authorization(@Validated @RequestBody AuthRequest authRequest) {
         var response = service.authorization(authRequest);
         return ResponseEntity.ok(response.getBody());
     }
@@ -77,8 +78,8 @@ public class UserController {
 
     @PutMapping
     public void updateData(
-            @RequestBody @Valid UserUpdateRequest request,
-            Principal principal
+            Principal principal,
+            @Validated @RequestBody UserUpdateRequest request
     ) {
         service.updateData(principal.getName(), request);
     }

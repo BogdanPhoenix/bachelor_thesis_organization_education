@@ -4,14 +4,13 @@ import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.repositories.user.LecturerRepository;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.general.user.LecturerRequest;
 import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
-import com.bachelor.thesis.organization_education.requests.update.user.LecturerUpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
@@ -28,7 +27,12 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    protected Lecturer createEntity(Request request) {
+    protected void objectFormation(InsertRequest request) {
+
+    }
+
+    @Override
+    protected Lecturer createEntity(InsertRequest request) {
         var lectureRequest = (LecturerRequest) request;
         return Lecturer.builder()
                 .title(lectureRequest.getTitle())
@@ -59,7 +63,7 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
 
     @Override
     protected void updateEntity(Lecturer entity, UpdateRequest request) {
-        var lectureRequest = (LecturerUpdateRequest) request;
+        var lectureRequest = (LecturerRequest) request;
 
         if(!lectureRequest.titleIsEmpty()) {
             entity.setTitle(lectureRequest.getTitle());
@@ -91,18 +95,23 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     private void updateEnabled(String adminId, boolean value) throws NotFindEntityInDataBaseException {
-        var uuid = UUID.fromString(adminId);
-        var request = new LecturerFindRequest(uuid);
-        var entity = getEntity(request);
-        super.updateEnabled(entity, value);
+        var entity = getEntity(adminId);
+        entity.ifPresent(e -> {
+            selectedForDeactivateChild(e.getId());
+            super.updateEnabled(e, value);
+        });
     }
 
     @Override
     public void deleteValue(@NonNull String userId) {
-        var uuid = UUID.fromString(userId);
+        var entity = getEntity(userId);
+        entity.ifPresent(repository::delete);
+    }
+
+    private Optional<Lecturer> getEntity(String adminId) {
+        var uuid = UUID.fromString(adminId);
         var request = new LecturerFindRequest(uuid);
-        var entity = getValue(request);
-        repository.delete(entity);
+        return findEntityByRequest(request);
     }
 
     @Override

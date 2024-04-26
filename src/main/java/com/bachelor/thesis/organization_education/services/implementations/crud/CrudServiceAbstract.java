@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
@@ -42,9 +42,9 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     }
 
     @Override
-    public T addValue(@NonNull Request request) throws DuplicateException, NullPointerException {
+    public T addValue(@NonNull InsertRequest request) throws DuplicateException, NullPointerException {
         validateDuplicate(request.getFindRequest());
-
+        objectFormation(request);
         var newEntity = createEntity(request);
         return repository.save(newEntity);
     }
@@ -135,10 +135,6 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
         repository.delete(entity);
     }
 
-    protected T getEntity(FindRequest request) throws NotFindEntityInDataBaseException {
-        return getEntityAndFilter(request, filter -> true);
-    }
-
     private T getEntityAndFilter(FindRequest request, Predicate<? super T> filterPredicate) throws NotFindEntityInDataBaseException {
         return findEntityByRequest(request)
                 .filter(filterPredicate)
@@ -150,6 +146,12 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
         collection.forEach(
                 entity -> service.deactivate(entity.getId())
         );
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <B extends BaseTableInfo, C extends CrudService> B getValue(B request, Class<C> serviceClass) {
+        var service = getBeanByClass(serviceClass);
+        return (B) service.getValue(request.getId());
     }
 
     private <B extends CrudService> B getBeanByClass(Class<B> clazz) {
@@ -175,7 +177,8 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
                 );
     }
 
-    protected abstract T createEntity(Request request);
+    protected abstract void objectFormation(InsertRequest request);
+    protected abstract T createEntity(InsertRequest request);
     protected abstract Optional<T> findEntityByRequest(@NonNull FindRequest request);
     protected abstract void updateEntity(T entity, UpdateRequest request);
     protected abstract void selectedForDeactivateChild(Long id);

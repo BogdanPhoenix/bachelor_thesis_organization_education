@@ -3,7 +3,7 @@ package com.bachelor.thesis.organization_education.services.interfaces.universit
 import com.bachelor.thesis.organization_education.dto.University;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
-import com.bachelor.thesis.organization_education.requests.insert.university.UniversityInsertRequest;
+import com.bachelor.thesis.organization_education.requests.general.university.UniversityRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import lombok.NonNull;
 
@@ -21,7 +21,7 @@ public interface UniversityService extends CrudService {
      * @throws NullPointerException if null was passed to the request.
      * @throws DuplicateException if the table contains an entity value that is passed in the query.
      */
-    University addResource(@NonNull UniversityInsertRequest request, @NonNull String userId) throws NullPointerException, DuplicateException;
+    University addResource(@NonNull UniversityRequest request, @NonNull String userId) throws NullPointerException, DuplicateException;
 
     /**
      * Deactivate the university entity associated with the user.

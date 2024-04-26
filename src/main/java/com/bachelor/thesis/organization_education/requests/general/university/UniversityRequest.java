@@ -1,5 +1,8 @@
 package com.bachelor.thesis.organization_education.requests.general.university;
 
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import jakarta.validation.GroupSequence;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.validation.constraints.NotNull;
@@ -16,10 +19,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@GroupSequence({UniversityRequest.class, InsertRequest.class, UpdateRequest.class})
 public class UniversityRequest extends NameEntityRequest {
-    @NotNull
+    @NotNull(groups = InsertRequest.class)
     private AccreditationLevel accreditationLevel;
-    @NotNull
     private UUID adminId;
 
     @Override
@@ -29,5 +32,9 @@ public class UniversityRequest extends NameEntityRequest {
                 .uaName(getUaName())
                 .adminId(adminId)
                 .build();
+    }
+
+    public boolean accreditationLevelIsEmpty() {
+        return accreditationLevel == null || accreditationLevel == AccreditationLevel.EMPTY;
     }
 }

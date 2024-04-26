@@ -1,10 +1,11 @@
 package com.bachelor.thesis.organization_education.requests.find.university;
 
-import com.bachelor.thesis.organization_education.dto.University;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEntityFindRequest;
-import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
+import com.bachelor.thesis.organization_education.dto.University;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEntityFindRequest;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class FacultyFindRequest extends NameEntityFindRequest {
-    @NonNull
+    @NotNull
     private University university;
 
     @Override

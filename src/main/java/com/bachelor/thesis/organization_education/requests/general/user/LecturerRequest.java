@@ -2,11 +2,13 @@ package com.bachelor.thesis.organization_education.requests.general.user;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.validation.GroupSequence;
 import com.bachelor.thesis.organization_education.dto.Faculty;
 import com.bachelor.thesis.organization_education.enums.AcademicTitle;
 import com.bachelor.thesis.organization_education.enums.AcademicDegree;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
 import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 
 import java.util.UUID;
 
@@ -17,17 +19,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class LecturerRequest implements Request {
-    @NonNull
+@GroupSequence({LecturerRequest.class, InsertRequest.class, UpdateRequest.class})
+public class LecturerRequest implements InsertRequest, UpdateRequest {
     private AcademicTitle title;
-
-    @NonNull
     private AcademicDegree degree;
-
-    @NonNull
     private Faculty faculty;
-
-    @NonNull
     private UUID userId;
 
     @Override
@@ -35,5 +31,17 @@ public class LecturerRequest implements Request {
         return LecturerFindRequest.builder()
                 .userId(userId)
                 .build();
+    }
+
+    public boolean titleIsEmpty() {
+        return title == null;
+    }
+
+    public boolean degreeIsEmpty() {
+        return degree == null;
+    }
+
+    public boolean facultyIsEmpty() {
+        return faculty == null;
     }
 }

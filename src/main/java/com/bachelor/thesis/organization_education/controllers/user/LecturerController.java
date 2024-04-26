@@ -1,21 +1,23 @@
 package com.bachelor.thesis.organization_education.controllers.user;
 
-import jakarta.validation.Valid;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.requests.general.user.LecturerRequest;
 import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
-import com.bachelor.thesis.organization_education.requests.update.user.LecturerUpdateRequest;
 
 import java.util.UUID;
 import java.security.Principal;
 
 @RestController
 @RequestMapping("/users/lecturer")
+@Validated
 public class LecturerController extends ResourceController<LecturerService> {
     @Autowired
     public LecturerController(LecturerService service) {
@@ -39,7 +41,7 @@ public class LecturerController extends ResourceController<LecturerService> {
     @PutMapping
     public ResponseEntity<Response> update(
             Principal principal,
-            @RequestBody @Valid LecturerUpdateRequest request
+            @Validated(UpdateRequest.class) @RequestBody LecturerRequest request
     ) {
         var uuid = UUID.fromString(principal.getName());
         var response = service.updateValue(uuid, request)

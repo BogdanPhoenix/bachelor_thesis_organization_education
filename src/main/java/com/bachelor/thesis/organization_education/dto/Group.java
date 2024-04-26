@@ -42,11 +42,13 @@ public class Group extends BaseTableInfo {
     @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
 
+    @NonNull
     @Column(name = "year_start", nullable = false)
-    private short yearStart;
+    private Short yearStart;
 
+    @NonNull
     @Column(name = "year_end", nullable = false)
-    private short yearEnd;
+    private Short yearEnd;
 
     @Column(name = "reduced_form")
     private boolean reducedForm;

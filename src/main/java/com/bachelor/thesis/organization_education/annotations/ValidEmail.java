@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ValidEmail {
     String message() default """
-            The email address you provided: "%s" has not been validated. It must comply with the following rules:
+            The email address you provided has not been validated. It must comply with the following rules:
                 - The main body must contain only letters (uppercase or lowercase) of the Latin alphabet, numbers, or the symbols '_', '.', '+', or '-'.
                 - The '@' symbol must be followed by at least one character, which can be a letter (uppercase or lowercase) of the Latin alphabet, a number, or a dash.
                 - The dot (.) in the domain must be followed by at least one character, which can be a letter (uppercase or lowercase) of the Latin alphabet, a number, a dash or a period.

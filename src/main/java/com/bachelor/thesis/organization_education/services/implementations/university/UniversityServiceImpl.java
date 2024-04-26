@@ -6,15 +6,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.University;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.repositories.university.UniversityRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.UniversityRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
-import com.bachelor.thesis.organization_education.requests.insert.university.UniversityInsertRequest;
-import com.bachelor.thesis.organization_education.requests.update.university.UniversityUpdateRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
 import java.util.UUID;
@@ -27,7 +25,10 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     }
 
     @Override
-    protected University createEntity(Request request) {
+    protected void objectFormation(InsertRequest request) { }
+
+    @Override
+    protected University createEntity(InsertRequest request) {
         var universityRequest = (UniversityRequest) request;
         var builder = University.builder();
         return super.initEntity(builder, request)
@@ -39,22 +40,16 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     }
 
     @Override
-    public University addResource(@NonNull UniversityInsertRequest request, @NonNull String userId) throws NullPointerException, DuplicateException {
-        var universityRequest = UniversityRequest.builder()
-                .accreditationLevel(request.getAccreditationLevel())
-                .adminId(UUID.fromString(userId))
-                .enName(request.getEnName())
-                .uaName(request.getUaName())
-                .build();
-
-        return super.addValue(universityRequest);
+    public University addResource(@NonNull UniversityRequest request, @NonNull String userId) throws NullPointerException, DuplicateException {
+        request.setAdminId(UUID.fromString(userId));
+        return super.addValue(request);
     }
 
     @Override
     protected void updateEntity(University entity, UpdateRequest request) {
         super.updateEntity(entity, request);
 
-        var universityRequest = (UniversityUpdateRequest) request;
+        var universityRequest = (UniversityRequest) request;
 
         if(!universityRequest.accreditationLevelIsEmpty()) {
             entity.setAccreditationLevel(universityRequest.getAccreditationLevel());

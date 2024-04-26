@@ -16,26 +16,15 @@ import org.springframework.validation.annotation.Validated;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-@PasswordMatches(message = "The passwords you provided do not match.")
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Validated
-public abstract class RegistrationRequest {
+public abstract class RegistrationRequest extends PasswordRequest{
     @NotNull
     @NotBlank(message = "The email should not be empty or contain only one space.")
     @Size(min = 3, max = 255, message = "Email should be between 3 and 255 characters")
     @ValidEmail
     private String username;
-
-    @NotNull
-    @NotBlank
-    @ValidPassword
-    @Size(min = 8)
-    private String password;
-
-    @NotNull
-    @NotBlank
-    private String matchingPassword;
 
     @NotNull
     @NotBlank(message = "The first name should not be empty or contain only one space.")

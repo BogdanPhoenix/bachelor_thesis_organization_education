@@ -1,20 +1,22 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.university.GroupRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.GroupFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
-import com.bachelor.thesis.organization_education.requests.insert.university.GroupInsertRequest;
-import com.bachelor.thesis.organization_education.requests.update.university.GroupUpdateRequest;
 
 @RestController
 @RequestMapping("/groups")
+@Validated
 public class GroupController extends ResourceController<GroupService> {
     @Autowired
     public GroupController(GroupService service) {
@@ -23,8 +25,8 @@ public class GroupController extends ResourceController<GroupService> {
 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping
-    public ResponseEntity<Response> add(@RequestBody @Valid GroupInsertRequest request) {
-        var response = service.addResource(request)
+    public ResponseEntity<Response> add(@Validated(InsertRequest.class) @RequestBody GroupRequest request) {
+        var response = service.addValue(request)
                 .getResponse();
 
         return ResponseEntity
@@ -33,7 +35,7 @@ public class GroupController extends ResourceController<GroupService> {
     }
 
     @GetMapping
-    public ResponseEntity<Response> get(@RequestBody @Valid GroupFindRequest request) {
+    public ResponseEntity<Response> get(@Validated @RequestBody GroupFindRequest request) {
         return super.get(request);
     }
 
@@ -46,7 +48,7 @@ public class GroupController extends ResourceController<GroupService> {
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
             @PathVariable Long id,
-            @RequestBody @Valid GroupUpdateRequest request
+            @Validated(UpdateRequest.class) @RequestBody GroupRequest request
     ) {
         return super.updateEntity(id, request);
     }

@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
@@ -36,12 +36,12 @@ class CrudServiceAbstractTest {
     @DisplayName("Test cases for addValue method")
     class AddValueTests {
         @Mock
-        private Request requestMock;
+        private InsertRequest requestMock;
 
         @Test
         @DisplayName("Checking for an exception when null was passed in the request to add data.")
         void testAddValueThrowsNullPointerException() {
-            Request value = null;
+            InsertRequest value = null;
             doCallRealMethodForAction(serviceMock::addValue, value);
             assertThrows(NullPointerException.class, () -> serviceMock.addValue(value));
         }

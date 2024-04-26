@@ -1,22 +1,24 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.university.UniversityRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
-import com.bachelor.thesis.organization_education.requests.insert.university.UniversityInsertRequest;
-import com.bachelor.thesis.organization_education.requests.update.university.UniversityUpdateRequest;
 
 import java.security.Principal;
 
 @RestController
 @RequestMapping("/universities")
+@Validated
 public class UniversityController extends ResourceController<UniversityService> {
     @Autowired
     public UniversityController(UniversityService service) {
@@ -26,7 +28,7 @@ public class UniversityController extends ResourceController<UniversityService> 
     @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping
     public ResponseEntity<Response> add(
-            @RequestBody @Valid UniversityInsertRequest request,
+            @Validated(InsertRequest.class) @RequestBody UniversityRequest request,
             Principal principal
     ) {
         var response = service
@@ -39,7 +41,7 @@ public class UniversityController extends ResourceController<UniversityService> 
     }
 
     @GetMapping
-    public ResponseEntity<Response> get(@RequestBody @Valid UniversityFindRequest request) {
+    public ResponseEntity<Response> get(@Validated @RequestBody UniversityFindRequest request) {
         return super.get(request);
     }
 
@@ -52,7 +54,7 @@ public class UniversityController extends ResourceController<UniversityService> 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
             @PathVariable Long id,
-            @RequestBody @Valid UniversityUpdateRequest request
+            @Validated(UpdateRequest.class) @RequestBody UniversityRequest request
     ) {
         return super.updateEntity(id, request);
     }

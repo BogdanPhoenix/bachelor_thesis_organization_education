@@ -1,13 +1,12 @@
 package com.bachelor.thesis.organization_education.requests.general.abstracts;
 
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import org.springframework.validation.annotation.Validated;
 
 /**
- * An abstract class representing the query structure that can be used to interact with the system.
+ * Interface for processing data addition requests.
+ * This interface defines methods for requests to insert data into the database.
  */
-@Validated
-public interface Request {
+public interface InsertRequest {
     /**
      * Retrieves a FindRequest object representing the parameters for a find operation.
      *

@@ -4,12 +4,11 @@ import lombok.NonNull;
 import org.springframework.context.ApplicationContext;
 import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
 import com.bachelor.thesis.organization_education.repositories.NameEntityRepository;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.NameEntityRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEntityFindRequest;
-import com.bachelor.thesis.organization_education.requests.update.abstracts.NameEntityUpdateRequest;
 
 import java.util.Optional;
 
@@ -27,7 +26,7 @@ public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends 
         super(repository, tableName, context);
     }
 
-    protected <B extends NameEntity.NameEntityBuilder<?, ?>> @NonNull B initEntity(B builder, Request request) {
+    protected <B extends NameEntity.NameEntityBuilder<?, ?>> @NonNull B initEntity(B builder, InsertRequest request) {
         var nameEntityRequest = (NameEntityRequest) request;
         builder.uaName(nameEntityRequest.getUaName())
                 .enName(nameEntityRequest.getEnName());
@@ -46,12 +45,12 @@ public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends 
 
     @Override
     protected void updateEntity(T entity, UpdateRequest request) {
-        var nameEntityRequest = (NameEntityUpdateRequest) request;
+        var nameEntityRequest = (NameEntityRequest) request;
 
-        if(!nameEntityRequest.getEnName().isBlank()) {
+        if(!nameEntityRequest.enNameIsEmpty()) {
             entity.setEnName(nameEntityRequest.getEnName());
         }
-        if(!nameEntityRequest.getUaName().isBlank()) {
+        if(!nameEntityRequest.uaNameIsEmpty()) {
             entity.setUaName(nameEntityRequest.getUaName());
         }
     }

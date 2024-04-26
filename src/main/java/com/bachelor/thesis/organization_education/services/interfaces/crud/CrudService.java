@@ -4,7 +4,7 @@ import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.Request;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
@@ -27,7 +27,7 @@ public interface CrudService {
      * @throws DuplicateException if the table contains an entity value that is passed in the query.
      * @throws NullPointerException if null was passed to the request.
      */
-    BaseTableInfo addValue(@NonNull Request request) throws DuplicateException, NullPointerException;
+    BaseTableInfo addValue(@NonNull InsertRequest request) throws DuplicateException, NullPointerException;
 
     /**
      * Makes the entity active for further interaction with the program.
