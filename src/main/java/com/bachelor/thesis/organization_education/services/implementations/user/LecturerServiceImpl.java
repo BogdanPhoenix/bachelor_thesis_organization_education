@@ -1,5 +1,6 @@
 package com.bachelor.thesis.organization_education.services.implementations.user;
 
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    public void registration(@NonNull RegistrationRequest request, @NonNull String userId) {
+    public void registration(@NonNull RegistrationRequest request, @NonNull String userId) throws DuplicateException {
         var lectureRegistrationRequest = (RegistrationLecturerRequest) request;
         var lectureRequest = LecturerRequest.builder()
                 .title(lectureRegistrationRequest.getTitle())

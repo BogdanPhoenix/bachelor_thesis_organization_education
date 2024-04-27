@@ -1,5 +1,6 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import lombok.NonNull;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.validation.constraints.NotBlank;
@@ -26,8 +27,9 @@ public interface UserService {
      * @param role the value of the user's role.
      * @return user data.
      * @throws UserCreatingException if during registration it was not possible to create a user account.
+     * @throws DuplicateException if the table contains an entity value that is passed in the query.
      */
-    UserRepresentation registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException;
+    UserRepresentation registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException, DuplicateException;
 
     /**
      * Manages the login process based on the provided authorization request.

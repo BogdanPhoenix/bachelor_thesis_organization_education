@@ -1,5 +1,6 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import lombok.NonNull;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +21,9 @@ public interface LecturerService extends CrudService {
      *
      * @param request request for registration
      * @param userId user ID
+     * @throws DuplicateException if the table contains an entity value that is passed in the query.
      */
-    void registration(@NonNull RegistrationRequest request, @NonNull String userId);
+    void registration(@NonNull RegistrationRequest request, @NonNull String userId) throws DuplicateException;
 
     /**
      * Updates the teacher data with the specified ID based on the received request.

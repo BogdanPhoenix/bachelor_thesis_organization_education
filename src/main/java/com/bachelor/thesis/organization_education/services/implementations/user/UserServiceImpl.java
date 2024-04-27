@@ -19,6 +19,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import com.bachelor.thesis.organization_education.enums.Role;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
@@ -74,14 +75,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRepresentation registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException {
+    public UserRepresentation registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException, DuplicateException {
         var user = getUserRepresentation(request, role);
         var userId = createUser(user);
 
-        if(role == Role.LECTURER) {
-            lecturerService.registration(request, userId);
-        }
-
+        createAdditionalInfo(request, role, userId);
         assignRole(userId, role.name());
         emailVerification(userId);
 
@@ -134,6 +132,18 @@ public class UserServiceImpl implements UserService {
             }
 
             return getUserId(response);
+        }
+    }
+
+    private void createAdditionalInfo(RegistrationRequest request, Role role, String userId) throws DuplicateException {
+        try{
+            switch (role){
+                case LECTURER -> lecturerService.registration(request, userId);
+                default -> throw new IllegalStateException("Unexpected value: " + role);
+            }
+        } catch (DuplicateException ex) {
+            deleteUserById(userId);
+            throw new DuplicateException(ex.getMessage());
         }
     }
 
