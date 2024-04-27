@@ -1,14 +1,13 @@
 package com.bachelor.thesis.organization_education.dto;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
-import com.bachelor.thesis.organization_education.enums.AccreditationLevel;
-import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
-import com.bachelor.thesis.organization_education.responces.university.UniversityResponse;
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import com.bachelor.thesis.organization_education.enums.AccreditationLevel;
+import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
+import com.bachelor.thesis.organization_education.responces.university.UniversityResponse;
 
 import java.util.Set;
 import java.util.UUID;
@@ -53,13 +52,6 @@ public class University extends NameEntity {
         return responseBuilder
                 .accreditationLevel(accreditationLevel)
                 .adminId(adminId)
-                .build();
-    }
-
-    @Override
-    public UniversityFindRequest getFindRequest() {
-        return UniversityFindRequest.builder()
-                .enName(getEnName())
                 .build();
     }
 }

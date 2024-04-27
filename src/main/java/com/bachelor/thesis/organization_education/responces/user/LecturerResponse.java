@@ -1,13 +1,15 @@
 package com.bachelor.thesis.organization_education.responces.user;
 
-import com.bachelor.thesis.organization_education.enums.AcademicDegree;
-import com.bachelor.thesis.organization_education.enums.AcademicTitle;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import com.bachelor.thesis.organization_education.responces.university.FacultyResponse;
-import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.persistence.MappedSuperclass;
+import com.bachelor.thesis.organization_education.enums.AcademicTitle;
+import com.bachelor.thesis.organization_education.enums.AcademicDegree;
+import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.responces.university.FacultyResponse;
+import com.bachelor.thesis.organization_education.responces.university.AcademicDisciplineResponse;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -30,4 +32,7 @@ public class LecturerResponse extends Response {
 
     @NonNull
     private FacultyResponse faculty;
+
+    @NonNull
+    private List<AcademicDisciplineResponse> disciplines;
 }

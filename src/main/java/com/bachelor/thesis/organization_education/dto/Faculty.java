@@ -1,13 +1,12 @@
 package com.bachelor.thesis.organization_education.dto;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
-import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
-import com.bachelor.thesis.organization_education.responces.university.FacultyResponse;
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
+import com.bachelor.thesis.organization_education.responces.university.FacultyResponse;
 
 import java.util.Set;
 
@@ -48,14 +47,6 @@ public class Faculty extends NameEntity {
         super.initResponse(responseBuilder);
         return responseBuilder
                 .university(university.getResponse())
-                .build();
-    }
-
-    @Override
-    public FacultyFindRequest getFindRequest() {
-        return FacultyFindRequest.builder()
-                .university(university)
-                .enName(getEnName())
                 .build();
     }
 }

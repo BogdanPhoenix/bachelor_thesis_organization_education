@@ -1,6 +1,5 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +38,7 @@ public class FacultyController extends ResourceController<FacultyService> {
     }
 
     @GetMapping
-    public ResponseEntity<Response> get(@Valid @RequestBody FacultyFindRequest request) {
+    public ResponseEntity<Response> get(@Validated @RequestBody FacultyFindRequest request) {
         return super.get(request);
     }
 

@@ -58,4 +58,12 @@ public interface LecturerService extends CrudService {
      * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
     void deleteValue(@NonNull String userId);
+
+    /**
+     *
+     * @param lecturerId
+     * @param disciplineId
+     * @throws NotFindEntityInDataBaseException
+     */
+    void addDiscipline(@NonNull Long lecturerId, @NonNull Long disciplineId) throws NotFindEntityInDataBaseException;
 }

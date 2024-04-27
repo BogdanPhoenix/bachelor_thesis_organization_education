@@ -7,7 +7,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.university.GroupResponse;
-import com.bachelor.thesis.organization_education.requests.find.university.GroupFindRequest;
 
 import java.util.Set;
 
@@ -77,15 +76,6 @@ public class Group extends BaseTableInfo {
                 .faculty(faculty.getResponse())
                 .yearStart(yearStart)
                 .yearEnd(yearEnd)
-                .reducedForm(reducedForm)
-                .build();
-    }
-
-    @Override
-    public GroupFindRequest getFindRequest() {
-        return GroupFindRequest.builder()
-                .specialty(specialty)
-                .yearStart(yearStart)
                 .reducedForm(reducedForm)
                 .build();
     }

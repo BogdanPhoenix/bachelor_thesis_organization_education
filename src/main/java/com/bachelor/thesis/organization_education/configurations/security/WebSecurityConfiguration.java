@@ -33,6 +33,24 @@ public class WebSecurityConfiguration {
             "/users/auth"
     };
 
+    private static final Map<Role, List<RequestMatcherConfig>> ROLE_REQUEST_MATCHERS = Map.of(
+            Role.LECTURER, List.of(
+                    new RequestMatcherConfig(HttpMethod.GET, "/users/lecturer"),
+                    new RequestMatcherConfig(HttpMethod.PUT, "/users/lecturer")
+            ),
+            Role.UNIVERSITY_ADMIN, List.of(
+                    new RequestMatcherConfig(HttpMethod.POST, "/users/register-other/*", "/faculties", "/groups", "/universities", "/disciplines"),
+                    new RequestMatcherConfig(HttpMethod.PUT, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*", "/connect-with-lecturer/**", "/users/lecturer/*/connect-with-discipline/*"),
+                    new RequestMatcherConfig(HttpMethod.DELETE, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*")
+            ),
+            Role.ADMIN, List.of(
+                    new RequestMatcherConfig(HttpMethod.DELETE, "/*/delete/**"),
+                    new RequestMatcherConfig(HttpMethod.PUT, "/*/activate/**"),
+                    new RequestMatcherConfig(HttpMethod.POST, "/specialties"),
+                    new RequestMatcherConfig(HttpMethod.PUT, "/specialties/**")
+            )
+    );
+
     private final JwtAuthConverter jwtAuthConverter;
     private final KeycloakLogoutHandler keycloakLogoutHandler;
 
@@ -56,18 +74,17 @@ public class WebSecurityConfiguration {
     }
 
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> authorizeHttpRequestsCustomizer() {
-        return request -> request
-                .requestMatchers(HttpMethod.POST, WHILE_LIST).permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/delete/**").hasRole(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.PUT, "/activate/**").hasRole(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.POST, "/specialties").hasRole(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.PUT, "/specialties/**").hasRole(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.POST, "/users/register-other/**", "/faculties", "/groups", "/universities").hasRole(Role.UNIVERSITY_ADMIN.name())
-                .requestMatchers(HttpMethod.PUT, "/faculties/**", "/groups/**", "/universities/**").hasRole(Role.UNIVERSITY_ADMIN.name())
-                .requestMatchers(HttpMethod.DELETE, "/faculties/**", "/groups/**", "/universities/**").hasRole(Role.UNIVERSITY_ADMIN.name())
-                .requestMatchers(HttpMethod.GET, "/users/lecturer").hasRole(Role.LECTURER.name())
-                .requestMatchers(HttpMethod.PUT, "/users/lecturer/**").hasRole(Role.LECTURER.name())
-                .anyRequest().authenticated();
+        return request -> {
+            ROLE_REQUEST_MATCHERS.forEach((role, configs) ->
+                    configs.forEach(config ->
+                            request.requestMatchers(config.method, config.paths).hasRole(role.name())
+                    )
+            );
+
+            request
+                    .requestMatchers(HttpMethod.POST, WHILE_LIST).permitAll()
+                    .anyRequest().authenticated();
+        };
     }
 
     private Customizer<OAuth2ResourceServerConfigurer<HttpSecurity>> oauth2ResourceServerCustomizer() {
@@ -92,4 +109,6 @@ public class WebSecurityConfiguration {
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
+
+    private record RequestMatcherConfig(HttpMethod method, String... paths) { }
 }

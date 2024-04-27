@@ -4,10 +4,12 @@ import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Faculty;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.repositories.university.FacultyRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.FacultyRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
@@ -57,5 +59,9 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
     }
 
     @Override
-    protected void selectedForDeactivateChild(Long id) { }
+    protected void selectedForDeactivateChild(Long id) {
+       var entity = findEntityById(id);
+       deactivatedChild(entity.getGroups(), GroupService.class);
+       deactivatedChild(entity.getLecturers(), LecturerService.class);
+    }
 }

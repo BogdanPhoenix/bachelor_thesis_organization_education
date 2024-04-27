@@ -1,17 +1,21 @@
 package com.bachelor.thesis.organization_education.services.implementations.user;
 
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
+import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
 import lombok.NonNull;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
-import com.bachelor.thesis.organization_education.repositories.user.LecturerRepository;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
+import com.bachelor.thesis.organization_education.repositories.user.LecturerRepository;
 import com.bachelor.thesis.organization_education.requests.general.user.LecturerRequest;
 import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
+import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
@@ -23,14 +27,12 @@ import java.util.Optional;
 @Service
 public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerRepository> implements LecturerService {
     @Autowired
-    public LecturerServiceImpl(LecturerRepository repository) {
-        super(repository, "Lectures");
+    public LecturerServiceImpl(LecturerRepository repository, ApplicationContext context) {
+        super(repository, "Lectures", context);
     }
 
     @Override
-    protected void objectFormation(InsertRequest request) {
-
-    }
+    protected void objectFormation(InsertRequest request) { }
 
     @Override
     protected Lecturer createEntity(InsertRequest request) {
@@ -109,6 +111,16 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
         entity.ifPresent(repository::delete);
     }
 
+    @Override
+    public void addDiscipline(@NonNull Long lecturerId, @NonNull Long disciplineId) throws NotFindEntityInDataBaseException {
+        var lecturer = findEntityById(lecturerId);
+        var discipline = (AcademicDiscipline) getBeanByClass(AcademicDisciplineService.class)
+                .getValue(disciplineId);
+
+        lecturer.getDisciplines().add(discipline);
+        repository.save(lecturer);
+    }
+
     private Optional<Lecturer> getEntity(String adminId) {
         var uuid = UUID.fromString(adminId);
         var request = new LecturerFindRequest(uuid);
@@ -116,5 +128,8 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    protected void selectedForDeactivateChild(Long id) { }
+    protected void selectedForDeactivateChild(Long id) {
+        var entity = findEntityById(id);
+        deactivatedChild(entity.getGroups(), GroupService.class);
+    }
 }

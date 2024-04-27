@@ -1,13 +1,12 @@
 package com.bachelor.thesis.organization_education.dto;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 
 import java.util.UUID;
 
@@ -36,11 +35,6 @@ public class Student extends BaseTableInfo {
 
     @Override
     public Response getResponse() {
-        return null;
-    }
-
-    @Override
-    public FindRequest getFindRequest() {
         return null;
     }
 }

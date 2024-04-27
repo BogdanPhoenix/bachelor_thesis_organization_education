@@ -1,18 +1,17 @@
 package com.bachelor.thesis.organization_education.dto;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.enums.AcademicDegree;
-import com.bachelor.thesis.organization_education.enums.AcademicTitle;
-import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
-import com.bachelor.thesis.organization_education.responces.user.LecturerResponse;
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import com.bachelor.thesis.organization_education.enums.AcademicTitle;
+import com.bachelor.thesis.organization_education.enums.AcademicDegree;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.responces.user.LecturerResponse;
 
-import java.util.List;
 import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.*;
@@ -50,12 +49,12 @@ public class Lecturer extends BaseTableInfo {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToMany(cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {PERSIST, MERGE, REFRESH})
     @JoinTable(
-            name = "teachers_disciplines",
-            joinColumns = @JoinColumn(name = "teacher_id", nullable = false),
+            name = "lecturer_disciplines",
+            joinColumns = @JoinColumn(name = "lecturer_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "discipline_id", nullable = false),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"teacher_id", "discipline_id"})
+            uniqueConstraints = @UniqueConstraint(columnNames = {"lecturer_id", "discipline_id"})
     )
     private List<AcademicDiscipline> disciplines;
 
@@ -72,19 +71,18 @@ public class Lecturer extends BaseTableInfo {
     @Override
     public LecturerResponse getResponse() {
         var builder = LecturerResponse.builder();
+        var disciplinesResponse = disciplines
+                .stream()
+                .map(AcademicDiscipline::getResponse)
+                .toList();
+
         super.initResponse(builder);
         return builder
                 .userId(user)
                 .title(title)
                 .degree(degree)
                 .faculty(faculty.getResponse())
-                .build();
-    }
-
-    @Override
-    public LecturerFindRequest getFindRequest() {
-        return LecturerFindRequest.builder()
-                .userId(user)
+                .disciplines(disciplinesResponse)
                 .build();
     }
 }

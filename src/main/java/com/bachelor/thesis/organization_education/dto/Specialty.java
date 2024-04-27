@@ -7,7 +7,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
 import com.bachelor.thesis.organization_education.responces.university.SpecialtyResponse;
-import com.bachelor.thesis.organization_education.requests.find.university.SpecialtyFindRequest;
 
 import java.util.Set;
 
@@ -38,13 +37,6 @@ public class Specialty extends NameEntity {
         var builder = SpecialtyResponse.builder();
         super.initResponse(builder);
         return builder.number(number)
-                .build();
-    }
-
-    @Override
-    public SpecialtyFindRequest getFindRequest() {
-        return SpecialtyFindRequest.builder()
-                .number(number)
                 .build();
     }
 }

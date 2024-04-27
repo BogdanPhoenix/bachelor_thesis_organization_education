@@ -3,10 +3,11 @@ package com.bachelor.thesis.organization_education.services.implementations.univ
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import com.bachelor.thesis.organization_education.dto.Specialty;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.repositories.university.SpecialtyRepository;
+import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 import com.bachelor.thesis.organization_education.requests.general.university.SpecialtyRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.SpecialtyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
@@ -57,5 +58,8 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
     }
 
     @Override
-    protected void selectedForDeactivateChild(Long id) { }
+    protected void selectedForDeactivateChild(Long id) {
+        var entity = findEntityById(id);
+        deactivatedChild(entity.getGroups(), GroupService.class);
+    }
 }

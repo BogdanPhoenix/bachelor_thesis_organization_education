@@ -31,10 +31,6 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     protected final J repository;
     protected final ApplicationContext context;
 
-    protected CrudServiceAbstract(J repository, String tableName) {
-        this(repository, tableName, null);
-    }
-
     protected CrudServiceAbstract(J repository, String tableName, ApplicationContext context) {
         this.repository = repository;
         this.tableName = tableName;
@@ -154,7 +150,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
         return (B) service.getValue(request.getId());
     }
 
-    private <B extends CrudService> B getBeanByClass(Class<B> clazz) {
+    protected  <B extends CrudService> B getBeanByClass(Class<B> clazz) {
         return context.getBean(clazz);
     }
 

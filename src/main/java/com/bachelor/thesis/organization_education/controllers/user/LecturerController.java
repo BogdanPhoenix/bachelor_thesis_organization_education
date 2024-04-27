@@ -23,6 +23,14 @@ public class LecturerController extends ResourceController<LecturerService> {
         super(service);
     }
 
+    @PutMapping("/{lecturerId}/connect-with-discipline/{disciplineId}")
+    public void connectWithDiscipline(
+            @PathVariable Long lecturerId,
+            @PathVariable Long disciplineId
+    ) {
+        service.addDiscipline(lecturerId, disciplineId);
+    }
+
     @GetMapping
     public ResponseEntity<Response> get(Principal principal) {
         var uuid = UUID.fromString(principal.getName());

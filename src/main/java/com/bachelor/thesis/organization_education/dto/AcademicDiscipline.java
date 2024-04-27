@@ -1,19 +1,17 @@
 package com.bachelor.thesis.organization_education.dto;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
+import com.bachelor.thesis.organization_education.responces.university.AcademicDisciplineResponse;
 
 import java.util.List;
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.CascadeType.DETACH;
 
 @Entity
 @Getter
@@ -32,7 +30,7 @@ public class AcademicDiscipline extends NameEntity {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToMany(mappedBy = "disciplines")
+    @ManyToMany(mappedBy = "disciplines", cascade = {PERSIST, MERGE, REFRESH})
     private List<Lecturer> lecturers;
 
     @ToString.Exclude
@@ -46,12 +44,18 @@ public class AcademicDiscipline extends NameEntity {
     private Set<Schedule> schedules;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public AcademicDisciplineResponse getResponse() {
+        var builder = AcademicDisciplineResponse.builder();
+        super.initResponse(builder);
+        return builder
+                .amountCredits(amountCredits)
+                .build();
     }
 
-    @Override
-    public FindRequest getFindRequest() {
-        return null;
+    @PreRemove
+    private void removeLecturerAssociations() {
+        for(var lecturer : this.lecturers) {
+            lecturer.getDisciplines().remove(this);
+        }
     }
 }
