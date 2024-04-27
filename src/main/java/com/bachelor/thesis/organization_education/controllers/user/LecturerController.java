@@ -31,6 +31,14 @@ public class LecturerController extends ResourceController<LecturerService> {
         service.addDiscipline(lecturerId, disciplineId);
     }
 
+    @PutMapping("/{lecturerId}/disconnect-discipline/{disciplineId}")
+    public void disconnectDiscipline(
+            @PathVariable Long lecturerId,
+            @PathVariable Long disciplineId
+    ) {
+        service.disconnectDiscipline(lecturerId, disciplineId);
+    }
+
     @GetMapping
     public ResponseEntity<Response> get(Principal principal) {
         var uuid = UUID.fromString(principal.getName());

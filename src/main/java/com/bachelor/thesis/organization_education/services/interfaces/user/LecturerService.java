@@ -1,9 +1,9 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import lombok.NonNull;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
 import org.springframework.transaction.annotation.Transactional;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
@@ -60,10 +60,20 @@ public interface LecturerService extends CrudService {
     void deleteValue(@NonNull String userId);
 
     /**
+     * Adds a discipline to the database for the specified lecturer.
      *
-     * @param lecturerId
-     * @param disciplineId
-     * @throws NotFindEntityInDataBaseException
+     * @param lecturerId lecturer identifier
+     * @param disciplineId identifier of the discipline
+     * @throws NotFindEntityInDataBaseException exception thrown if the corresponding entity is not found in the database
      */
     void addDiscipline(@NonNull Long lecturerId, @NonNull Long disciplineId) throws NotFindEntityInDataBaseException;
+
+    /**
+     * Breaks the connection between the lecturer and the discipline.
+     *
+     * @param lecturerId lecturer identifier
+     * @param disciplineId identifier of the discipline
+     * @throws NotFindEntityInDataBaseException exception thrown if the corresponding entity is not found in the database
+     */
+    void disconnectDiscipline(@NonNull Long lecturerId, @NonNull Long disciplineId) throws NotFindEntityInDataBaseException;
 }

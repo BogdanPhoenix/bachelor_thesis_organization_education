@@ -16,4 +16,13 @@ public interface AcademicDisciplineService extends CrudService {
      * @throws NotFindEntityInDataBaseException Якщо вказану навчальну дисципліну або лектора не знайдено в базі даних.
      */
     void addLecturer(@NonNull Long disciplineId, @NonNull Long lecturerId) throws NotFindEntityInDataBaseException;
+
+    /**
+     * Breaks the connection between the discipline and the lecturer.
+     *
+     * @param disciplineId identifier of the discipline
+     * @param lecturerId lecturer identifier
+     * @throws NotFindEntityInDataBaseException exception thrown if the corresponding entity is not found in the database
+     */
+    void disconnectLecturer(@NonNull Long disciplineId, @NonNull Long lecturerId) throws NotFindEntityInDataBaseException;
 }

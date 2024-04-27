@@ -121,6 +121,16 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
         repository.save(lecturer);
     }
 
+    @Override
+    public void disconnectDiscipline(@NonNull Long lecturerId, @NonNull Long disciplineId) throws NotFindEntityInDataBaseException {
+        var lecturer = findEntityById(lecturerId);
+        var discipline = (AcademicDiscipline) getBeanByClass(AcademicDisciplineService.class)
+                .getValue(disciplineId);
+
+        lecturer.getDisciplines().remove(discipline);
+        repository.save(lecturer);
+    }
+
     private Optional<Lecturer> getEntity(String adminId) {
         var uuid = UUID.fromString(adminId);
         var request = new LecturerFindRequest(uuid);

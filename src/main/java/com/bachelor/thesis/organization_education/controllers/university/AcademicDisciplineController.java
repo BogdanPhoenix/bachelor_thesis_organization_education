@@ -39,6 +39,14 @@ public class AcademicDisciplineController extends ResourceController<AcademicDis
         service.addLecturer(disciplineId, lecturerId);
     }
 
+    @PutMapping("/{disciplineId}/disconnect-lecturer/{lecturerId}")
+    public void disconnectLecturer(
+            @PathVariable Long disciplineId,
+            @PathVariable Long lecturerId
+    ) {
+        service.disconnectLecturer(disciplineId, lecturerId);
+    }
+
     @GetMapping
     public ResponseEntity<Response> get(@Validated @RequestBody AcademicDisciplineFindRequest request) {
         return super.get(request);

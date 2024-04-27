@@ -52,4 +52,10 @@ public class AcademicDisciplineServiceImpl extends NameEntityServiceAbstract<Aca
         getBeanByClass(LecturerService.class)
                 .addDiscipline(lecturerId, disciplineId);
     }
+
+    @Override
+    public void disconnectLecturer(@NonNull Long disciplineId, @NonNull Long lecturerId) throws NotFindEntityInDataBaseException {
+        getBeanByClass(LecturerService.class)
+                .disconnectDiscipline(lecturerId, disciplineId);
+    }
 }
