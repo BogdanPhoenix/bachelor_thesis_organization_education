@@ -2,23 +2,24 @@ package com.bachelor.thesis.organization_education.configurations.security;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.web.SecurityFilterChain;
+import com.bachelor.thesis.organization_education.enums.Role;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 
 import java.util.*;
 
@@ -57,6 +58,15 @@ public class WebSecurityConfiguration {
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> authorizeHttpRequestsCustomizer() {
         return request -> request
                 .requestMatchers(HttpMethod.POST, WHILE_LIST).permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/delete/**").hasRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/activate/**").hasRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.POST, "/specialties").hasRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/specialties/**").hasRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.POST, "/users/register-other/**", "/faculties", "/groups", "/universities").hasRole(Role.UNIVERSITY_ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/faculties/**", "/groups/**", "/universities/**").hasRole(Role.UNIVERSITY_ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE, "/faculties/**", "/groups/**", "/universities/**").hasRole(Role.UNIVERSITY_ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/users/lecturer").hasRole(Role.LECTURER.name())
+                .requestMatchers(HttpMethod.PUT, "/users/lecturer/**").hasRole(Role.LECTURER.name())
                 .anyRequest().authenticated();
     }
 

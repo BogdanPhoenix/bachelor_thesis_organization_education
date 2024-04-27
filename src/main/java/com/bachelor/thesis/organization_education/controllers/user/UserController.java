@@ -3,11 +3,10 @@ package com.bachelor.thesis.organization_education.controllers.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.validation.annotation.Validated;
 import com.bachelor.thesis.organization_education.enums.Role;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
@@ -28,13 +27,11 @@ import java.security.Principal;
 public class UserController {
     private final UserService service;
 
-    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping("/register-other/student")
     public ResponseEntity<UserRepresentation> registerAccountForStudent(@Validated @RequestBody RegistrationStudentUserRequest registrationRequest) {
         return registration(registrationRequest, Role.STUDENT);
     }
 
-    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping("/register-other/lecture")
     public ResponseEntity<UserRepresentation> registerAccountForLecture(@Validated @RequestBody RegistrationLecturerRequest registrationRequest) {
         return registration(registrationRequest, Role.LECTURER);
@@ -89,13 +86,11 @@ public class UserController {
         service.deactivateUserById(principal.getName());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/activate/{userId}")
     public void active(@PathVariable String userId) {
         service.activate(userId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}")
     public void deleteUserById(@PathVariable String userId) {
         service.deleteUserById(userId);

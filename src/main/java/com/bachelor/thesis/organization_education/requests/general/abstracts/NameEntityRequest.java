@@ -8,6 +8,13 @@ import jakarta.validation.constraints.NotBlank;
 import com.bachelor.thesis.organization_education.annotations.ValidNameEntity;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 
+/**
+ * The NameEntityRequest abstract class is the base class for request objects associated with entity names.
+ * This class uses Lombok annotations to automatically generate getters, setters, toString(), constructors,
+ * as well as equals() and hashCode() methods, which simplifies the work with objects.
+ * It also has the ability to build objects using the “Builder” pattern through the @SuperBuilder annotation.
+ * The class contains two fields for entity names - enName (English) and uaName (Ukrainian).
+ */
 @Getter
 @Setter
 @ToString

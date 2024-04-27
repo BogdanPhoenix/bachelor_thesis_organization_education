@@ -1,16 +1,20 @@
 package com.bachelor.thesis.organization_education.requests.insert.abstracts;
 
-import com.bachelor.thesis.organization_education.annotations.PasswordMatches;
-import com.bachelor.thesis.organization_education.annotations.ValidEmail;
-import com.bachelor.thesis.organization_education.annotations.ValidNameUser;
-import com.bachelor.thesis.organization_education.annotations.ValidPassword;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.validation.annotation.Validated;
+import com.bachelor.thesis.organization_education.annotations.ValidEmail;
+import com.bachelor.thesis.organization_education.annotations.ValidNameUser;
 
+/**
+ * The abstract RegistrationRequest class is the base class for user registration request objects.
+ * It extends the PasswordRequest class and adds additional fields to identify the user during registration.
+ * This class uses Lombok annotations to automatically generate getters, setters, constructors,
+ * toString(), equals(), and hashCode() methods, which simplifies the work with objects.
+ */
 @Getter
 @Setter
 @SuperBuilder

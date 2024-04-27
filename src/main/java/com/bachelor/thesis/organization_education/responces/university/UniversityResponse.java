@@ -21,11 +21,4 @@ public class UniversityResponse extends NameEntityResponse {
     private AccreditationLevel accreditationLevel;
     @NonNull
     private UUID adminId;
-
-    public static @NonNull UniversityResponse empty() {
-        return NameEntityResponse
-                .initEmpty(builder())
-                .accreditationLevel(AccreditationLevel.EMPTY)
-                .build();
-    }
 }

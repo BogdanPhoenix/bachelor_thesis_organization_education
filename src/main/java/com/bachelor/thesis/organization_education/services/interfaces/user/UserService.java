@@ -13,6 +13,10 @@ import com.bachelor.thesis.organization_education.requests.general.user.AuthRequ
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 
+/**
+ * The UserService service interface is responsible for managing users of the system.
+ * Uses the @Transactional annotation to ensure that methods are transactional.
+ */
 @Transactional
 public interface UserService {
     /**

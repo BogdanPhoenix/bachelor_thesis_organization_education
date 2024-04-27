@@ -1,11 +1,18 @@
 package com.bachelor.thesis.organization_education.requests.find.abstracts;
 
-import com.bachelor.thesis.organization_education.annotations.ValidNameEntity;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.validation.constraints.Size;
+import jakarta.persistence.MappedSuperclass;
+import com.bachelor.thesis.organization_education.annotations.ValidNameEntity;
 
+/**
+ * The abstract class NameEntityFindRequest is the base class for search request objects,
+ * that refer to entities with names that can be represented in both Ukrainian and English.
+ * This class uses Lombok annotations to automatically generate getters, setters, constructors,
+ * toString(), equals(), and hashCode() methods, which simplifies the work with objects.
+ * Also, the @MappedSuperclass annotation is used to mark the class as a base class for JPA entities.
+ */
 @Getter
 @Setter
 @SuperBuilder

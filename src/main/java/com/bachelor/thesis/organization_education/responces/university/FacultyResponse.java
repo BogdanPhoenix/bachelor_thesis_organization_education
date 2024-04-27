@@ -16,11 +16,4 @@ import lombok.experimental.SuperBuilder;
 public class FacultyResponse extends NameEntityResponse {
     @NonNull
     private UniversityResponse university;
-
-    public static @NonNull FacultyResponse empty() {
-        return NameEntityResponse
-                .initEmpty(builder())
-                .university(UniversityResponse.empty())
-                .build();
-    }
 }

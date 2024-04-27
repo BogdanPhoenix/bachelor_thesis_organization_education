@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
@@ -26,7 +25,6 @@ public class FacultyController extends ResourceController<FacultyService> {
         super(service);
     }
 
-    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PostMapping
     public ResponseEntity<Response> add(
             @Validated(InsertRequest.class) @RequestBody FacultyRequest request,
@@ -45,23 +43,11 @@ public class FacultyController extends ResourceController<FacultyService> {
         return super.get(request);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Response> get(@PathVariable Long id) {
-        return super.get(id);
-    }
-
-    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
             @PathVariable Long id,
             @Validated(UpdateRequest.class) @RequestBody FacultyRequest request
     ) {
         return super.updateEntity(id, request);
-    }
-
-    @PreAuthorize("hasRole('UNIVERSITY_ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        return super.deactivate(id);
     }
 }
