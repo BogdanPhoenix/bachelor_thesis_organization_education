@@ -36,7 +36,7 @@ public class ClassRecording extends BaseTableInfo {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "magazine_id", nullable = false)
-    private GroupsDiscipline magazine;
+    private GroupDiscipline magazine;
 
     @NonNull
     @NotBlank

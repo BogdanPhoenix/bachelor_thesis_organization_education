@@ -42,7 +42,7 @@ public class AcademicDiscipline extends NameEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "discipline", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<GroupsDiscipline> groupsDisciplines;
+    private Set<GroupDiscipline> groupsDisciplines;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

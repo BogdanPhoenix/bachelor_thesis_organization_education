@@ -154,7 +154,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
         return findByIdAndFilter(id, filter -> true);
     }
 
-    T findValueById(UUID id) throws NotFindEntityInDataBaseException {
+    protected T findValueById(UUID id) throws NotFindEntityInDataBaseException {
         return findByIdAndFilter(id, BaseTableInfo::isEnabled);
     }
 
