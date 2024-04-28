@@ -5,6 +5,9 @@ import jakarta.validation.Payload;
 import jakarta.validation.Constraint;
 import com.bachelor.thesis.organization_education.validators.YearValidator;
 
+/**
+ * Note for checking the validity of the year.
+ */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = YearValidator.class)

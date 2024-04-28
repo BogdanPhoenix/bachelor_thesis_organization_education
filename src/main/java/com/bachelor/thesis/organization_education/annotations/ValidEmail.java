@@ -1,16 +1,21 @@
 package com.bachelor.thesis.organization_education.annotations;
 
-import com.bachelor.thesis.organization_education.validators.EmailValidator;
-import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import jakarta.validation.Constraint;
+import com.bachelor.thesis.organization_education.validators.EmailValidator;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Documented;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Annotation to validate email addresses.
+ * Validates that the email address provided adheres to standard formatting rules.
+ * Example: "username@domain.domain_zone"
+ */
 @Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = EmailValidator.class)
