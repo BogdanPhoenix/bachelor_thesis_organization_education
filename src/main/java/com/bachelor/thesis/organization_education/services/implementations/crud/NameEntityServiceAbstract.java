@@ -18,10 +18,6 @@ import java.util.Optional;
  * @param <J> the type of entity repository that manages access to and interconnection with the entity.
  */
 public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends NameEntityRepository<T>> extends CrudServiceAbstract<T, J> {
-    protected NameEntityServiceAbstract(J repository, String tableName) {
-        this(repository, tableName, null);
-    }
-
     protected NameEntityServiceAbstract(J repository, String tableName, ApplicationContext context) {
         super(repository, tableName, context);
     }

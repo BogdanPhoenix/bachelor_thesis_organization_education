@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import jakarta.ws.rs.NotFoundException;
 import org.keycloak.admin.client.Keycloak;
 import org.springframework.stereotype.Service;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.util.LinkedMultiValueMap;
@@ -76,14 +75,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserRepresentation registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException, DuplicateException {
-        var user = getUserRepresentation(request, role);
-        var userId = createUser(user);
+        String userId = "";
+        try {
+            var user = getUserRepresentation(request, role);
+            userId = createUser(user);
+            var uuid = UUID.fromString(userId);
 
-        createAdditionalInfo(request, role, userId);
-        assignRole(userId, role.name());
-        emailVerification(userId);
+            if(role == Role.LECTURER) {
+                lecturerService.registration(request, uuid);
+            }
 
-        return getUserById(userId);
+            assignRole(userId, role.name());
+            emailVerification(userId);
+
+            return getUserById(userId);
+        } catch (DuplicateException ex) {
+            if(!userId.isBlank()) {
+                deleteUserById(UUID.fromString(userId));
+            }
+            throw new DuplicateException(ex.getMessage());
+        }
     }
 
     private static @NonNull UserRepresentation getUserRepresentation(RegistrationRequest request, Role role) {
@@ -135,18 +146,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void createAdditionalInfo(RegistrationRequest request, Role role, String userId) throws DuplicateException {
-        try{
-            switch (role){
-                case LECTURER -> lecturerService.registration(request, userId);
-                default -> throw new IllegalStateException("Unexpected value: " + role);
-            }
-        } catch (DuplicateException ex) {
-            deleteUserById(userId);
-            throw new DuplicateException(ex.getMessage());
-        }
-    }
-
     private String getUserId(Response response) {
         var headers = response.getHeaders();
         var headerLocation = headers.get("Location");
@@ -179,33 +178,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(@NotBlank String userId) {
-        getUsersResource().delete(userId);
+    public void deleteUserById(@NonNull UUID userId) {
+        getUsersResource().delete(userId.toString());
         lecturerService.deleteValue(userId);
     }
 
     @Override
-    public void deactivateUserById(String userId) {
-        universityService.deactivateUserEntity(userId);
-        lecturerService.deactivate(userId);
-        updateEnable(userId, false);
+    public void deactivateUserById(@NonNull String userId) {
+        var uuid = UUID.fromString(userId);
+        universityService.deactivateUserEntity(uuid);
+        lecturerService.deactivate(uuid);
+        updateEnable(uuid, false);
     }
 
     @Override
-    public void activate(@NotBlank String userId) {
+    public void activate(@NonNull UUID userId) {
         lecturerService.activate(userId);
         updateEnable(userId, true);
     }
 
-    private void updateEnable(String userId, boolean value) {
+    private void updateEnable(UUID userId, boolean value) {
+        var uuid = userId.toString();
         var users = getUsersResource();
-        var representation = users.get(userId).toRepresentation();
+        var representation = users.get(uuid).toRepresentation();
         representation.setEnabled(value);
-        users.get(userId).update(representation);
+        users.get(uuid).update(representation);
     }
 
     @Override
-    public UserRepresentation getUserById(String userId) throws NotFoundException {
+    public UserRepresentation getUserById(@NonNull String userId) throws NotFoundException {
         return getUsersResource()
                 .get(userId)
                 .toRepresentation();
@@ -218,7 +219,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(String userId) {
+    public void updatePassword(@NonNull String userId) {
         var userResource = getUserResource(userId);
         var actions= new ArrayList<String>();
         actions.add("UPDATE_PASSWORD");

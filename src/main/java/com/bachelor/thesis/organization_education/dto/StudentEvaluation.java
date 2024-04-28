@@ -24,6 +24,11 @@ import java.util.UUID;
         uniqueConstraints = @UniqueConstraint(columnNames = {"record_id", "student_id"})
 )
 public class StudentEvaluation extends BaseTableInfo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    protected UUID id;
+
     @NonNull
     @ManyToOne
     @JoinColumn(name = "record_id", nullable = false)

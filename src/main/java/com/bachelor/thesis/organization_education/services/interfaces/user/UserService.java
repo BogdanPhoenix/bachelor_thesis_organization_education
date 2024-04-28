@@ -1,18 +1,19 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import lombok.NonNull;
 import jakarta.ws.rs.NotFoundException;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
 import org.keycloak.representations.idm.UserRepresentation;
 import com.bachelor.thesis.organization_education.enums.Role;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
+
+import java.util.UUID;
 
 /**
  * The UserService service interface is responsible for managing users of the system.
@@ -47,35 +48,35 @@ public interface UserService {
      * @return user data.
      * @throws NotFoundException if the user could not be found by the specified ID.
      */
-    UserRepresentation getUserById(String userId) throws NotFoundException;
+    UserRepresentation getUserById(@NonNull String userId) throws NotFoundException;
 
     /**
      * Method for deleting a user account from the system by its UUID.
      *
      * @param userId the user's UUID on the server.
      */
-    void deleteUserById(@NotBlank String userId);
+    void deleteUserById(@NonNull UUID userId);
 
     /**
      * A method for deactivating a user account from the system by its UUID.
      *
      * @param userId the user's UUID on the server.
      */
-    void deactivateUserById(String userId);
+    void deactivateUserById(@NonNull String userId);
 
     /**
      * Method of activating a user account from the system by its UUID.
      *
      * @param userId UUID of the user on the server.
      */
-    void activate(@NotBlank String userId);
+    void activate(@NonNull UUID userId);
 
     /**
      * Method for sending a request to update user data.
      *
      * @param userId the user's UUID on the server.
      */
-    void updatePassword(String userId);
+    void updatePassword(@NonNull String userId);
 
     /**
      * A method of updating the user's personal data.

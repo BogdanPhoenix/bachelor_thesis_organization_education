@@ -1,6 +1,8 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import com.bachelor.thesis.organization_education.dto.Specialty;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
@@ -13,12 +15,14 @@ import com.bachelor.thesis.organization_education.requests.find.university.Speci
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
+import java.util.UUID;
 import java.util.Optional;
 
 @Service
 public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, SpecialtyRepository> implements SpecialtyService {
-    protected SpecialtyServiceImpl(SpecialtyRepository repository) {
-        super(repository, "Specialties");
+    @Autowired
+    public SpecialtyServiceImpl(SpecialtyRepository repository, ApplicationContext context) {
+        super(repository, "Specialties", context);
     }
 
     @Override
@@ -58,7 +62,7 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
     }
 
     @Override
-    protected void selectedForDeactivateChild(Long id) {
+    protected void selectedForDeactivateChild(UUID id) {
         var entity = findEntityById(id);
         deactivatedChild(entity.getGroups(), GroupService.class);
     }

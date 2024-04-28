@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,11 +20,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class BaseTableInfo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    protected Long id;
-
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
@@ -34,9 +30,11 @@ public abstract class BaseTableInfo {
     private boolean enabled;
 
     public abstract Response getResponse();
+    public abstract void setId(UUID id);
+    public abstract UUID getId();
 
     protected <T extends Response.ResponseBuilder<?, ?>> void initResponse(@NonNull T builder){
-        builder.id(this.id)
+        builder.id(this.getId())
                 .createDate(this.createDate)
                 .updateDate(this.updateDate);
     }

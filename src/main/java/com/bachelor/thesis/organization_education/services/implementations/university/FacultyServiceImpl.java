@@ -1,6 +1,7 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
 import lombok.NonNull;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Faculty;
@@ -15,6 +16,7 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
+import java.util.UUID;
 import java.util.Optional;
 
 @Service
@@ -22,8 +24,12 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
     private final UniversityService universityService;
 
     @Autowired
-    protected FacultyServiceImpl(FacultyRepository repository, UniversityService universityService) {
-        super(repository, "Faculties");
+    protected FacultyServiceImpl(
+            FacultyRepository repository,
+            ApplicationContext context,
+            UniversityService universityService
+    ) {
+        super(repository, "Faculties", context);
 
         this.universityService = universityService;
     }
@@ -41,8 +47,9 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
     }
 
     @Override
-    public Faculty addResource(FacultyRequest request, String userId) {
-        var university = universityService.findByUser(userId);
+    public Faculty addResource(@NonNull FacultyRequest request, @NonNull String userId) {
+        var uuid = UUID.fromString(userId);
+        var university = universityService.findByUser(uuid);
         request.setUniversity(university);
         return super.addValue(request);
     }
@@ -59,7 +66,7 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
     }
 
     @Override
-    protected void selectedForDeactivateChild(Long id) {
+    protected void selectedForDeactivateChild(UUID id) {
        var entity = findEntityById(id);
        deactivatedChild(entity.getGroups(), GroupService.class);
        deactivatedChild(entity.getLecturers(), LecturerService.class);

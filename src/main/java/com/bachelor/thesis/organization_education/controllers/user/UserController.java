@@ -18,6 +18,7 @@ import com.bachelor.thesis.organization_education.requests.insert.abstracts.Regi
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentUserRequest;
 
+import java.util.UUID;
 import java.security.Principal;
 
 @RestController
@@ -87,12 +88,12 @@ public class UserController {
     }
 
     @PutMapping("/activate/{userId}")
-    public void active(@PathVariable String userId) {
+    public void active(@PathVariable UUID userId) {
         service.activate(userId);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUserById(@PathVariable String userId) {
+    public void deleteUserById(@PathVariable UUID userId) {
         service.deleteUserById(userId);
     }
 

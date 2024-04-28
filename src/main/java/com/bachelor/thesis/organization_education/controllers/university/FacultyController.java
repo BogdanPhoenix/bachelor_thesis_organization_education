@@ -13,6 +13,7 @@ import com.bachelor.thesis.organization_education.requests.general.university.Fa
 import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 
+import java.util.UUID;
 import java.security.Principal;
 
 @RestController
@@ -44,7 +45,7 @@ public class FacultyController extends ResourceController<FacultyService> {
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Validated(UpdateRequest.class) @RequestBody FacultyRequest request
     ) {
         return super.updateEntity(id, request);

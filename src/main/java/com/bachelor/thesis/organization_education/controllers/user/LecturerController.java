@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.general.user.LecturerRequest;
-import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 
@@ -25,16 +24,16 @@ public class LecturerController extends ResourceController<LecturerService> {
 
     @PutMapping("/{lecturerId}/connect-with-discipline/{disciplineId}")
     public void connectWithDiscipline(
-            @PathVariable Long lecturerId,
-            @PathVariable Long disciplineId
+            @PathVariable UUID lecturerId,
+            @PathVariable UUID disciplineId
     ) {
         service.addDiscipline(lecturerId, disciplineId);
     }
 
     @PutMapping("/{lecturerId}/disconnect-discipline/{disciplineId}")
     public void disconnectDiscipline(
-            @PathVariable Long lecturerId,
-            @PathVariable Long disciplineId
+            @PathVariable UUID lecturerId,
+            @PathVariable UUID disciplineId
     ) {
         service.disconnectDiscipline(lecturerId, disciplineId);
     }
@@ -43,12 +42,6 @@ public class LecturerController extends ResourceController<LecturerService> {
     public ResponseEntity<Response> get(Principal principal) {
         var uuid = UUID.fromString(principal.getName());
         return this.get(uuid);
-    }
-
-    @GetMapping("/info/{userId}")
-    public ResponseEntity<Response> get(@PathVariable UUID userId) {
-        var request = new LecturerFindRequest(userId);
-        return super.get(request);
     }
 
     @PutMapping

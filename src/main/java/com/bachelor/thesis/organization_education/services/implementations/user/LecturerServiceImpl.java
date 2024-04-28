@@ -1,12 +1,11 @@
 package com.bachelor.thesis.organization_education.services.implementations.user;
 
-import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
-import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
 import lombok.NonNull;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
+import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.repositories.user.LecturerRepository;
@@ -20,6 +19,7 @@ import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInData
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
+import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
 
 import java.util.UUID;
 import java.util.Optional;
@@ -38,21 +38,21 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     protected Lecturer createEntity(InsertRequest request) {
         var lectureRequest = (LecturerRequest) request;
         return Lecturer.builder()
+                .id(lectureRequest.getUserId())
                 .title(lectureRequest.getTitle())
                 .degree(lectureRequest.getDegree())
                 .faculty(lectureRequest.getFaculty())
-                .user(lectureRequest.getUserId())
                 .build();
     }
 
     @Override
-    public void registration(@NonNull RegistrationRequest request, @NonNull String userId) throws DuplicateException {
+    public void registration(@NonNull RegistrationRequest request, @NonNull UUID userId) throws DuplicateException {
         var lectureRegistrationRequest = (RegistrationLecturerRequest) request;
         var lectureRequest = LecturerRequest.builder()
+                .userId(userId)
                 .title(lectureRegistrationRequest.getTitle())
                 .degree(lectureRegistrationRequest.getDegree())
                 .faculty(lectureRegistrationRequest.getFaculty())
-                .userId(UUID.fromString(userId))
                 .build();
 
         super.addValue(lectureRequest);
@@ -61,7 +61,7 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     @Override
     protected Optional<Lecturer> findEntityByRequest(@NonNull FindRequest request) {
         var findRequest = (LecturerFindRequest) request;
-        return repository.findByUser(findRequest.getUserId());
+        return repository.findById(findRequest.getUserId());
     }
 
     @Override
@@ -88,31 +88,13 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    public void activate(@NonNull String userId) {
-        updateEnabled(userId, true);
-    }
-
-    @Override
-    public void deactivate(@NonNull String userId) {
-        updateEnabled(userId, false);
-    }
-
-    private void updateEnabled(String adminId, boolean value) throws NotFindEntityInDataBaseException {
-        var entity = getEntity(adminId);
-        entity.ifPresent(e -> {
-            selectedForDeactivateChild(e.getId());
-            super.updateEnabled(e, value);
-        });
-    }
-
-    @Override
-    public void deleteValue(@NonNull String userId) {
+    public void deleteValue(@NonNull UUID userId) {
         var entity = getEntity(userId);
         entity.ifPresent(repository::delete);
     }
 
     @Override
-    public void addDiscipline(@NonNull Long lecturerId, @NonNull Long disciplineId) throws NotFindEntityInDataBaseException {
+    public void addDiscipline(@NonNull UUID lecturerId, @NonNull UUID disciplineId) throws NotFindEntityInDataBaseException {
         var lecturer = findEntityById(lecturerId);
         var discipline = (AcademicDiscipline) getBeanByClass(AcademicDisciplineService.class)
                 .getValue(disciplineId);
@@ -122,7 +104,7 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    public void disconnectDiscipline(@NonNull Long lecturerId, @NonNull Long disciplineId) throws NotFindEntityInDataBaseException {
+    public void disconnectDiscipline(@NonNull UUID lecturerId, @NonNull UUID disciplineId) throws NotFindEntityInDataBaseException {
         var lecturer = findEntityById(lecturerId);
         var discipline = (AcademicDiscipline) getBeanByClass(AcademicDisciplineService.class)
                 .getValue(disciplineId);
@@ -131,14 +113,13 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
         repository.save(lecturer);
     }
 
-    private Optional<Lecturer> getEntity(String adminId) {
-        var uuid = UUID.fromString(adminId);
-        var request = new LecturerFindRequest(uuid);
+    private Optional<Lecturer> getEntity(UUID adminId) {
+        var request = new LecturerFindRequest(adminId);
         return findEntityByRequest(request);
     }
 
     @Override
-    protected void selectedForDeactivateChild(Long id) {
+    protected void selectedForDeactivateChild(UUID id) {
         var entity = findEntityById(id);
         deactivatedChild(entity.getGroups(), GroupService.class);
     }

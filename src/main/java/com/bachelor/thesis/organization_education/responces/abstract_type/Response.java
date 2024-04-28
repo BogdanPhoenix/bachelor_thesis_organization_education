@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * An abstract class that represents a response structure that can be used to interact with the system.
@@ -18,17 +19,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class Response {
-    private Long id;
+    private UUID id;
 
     @EqualsAndHashCode.Exclude
     private LocalDateTime createDate;
 
     @EqualsAndHashCode.Exclude
     private LocalDateTime updateDate;
-
-    protected static <T extends ResponseBuilder<?, ?>> @NonNull T initEmpty(@NonNull T builder) {
-        builder.createDate(LocalDateTime.MIN)
-                .updateDate(LocalDateTime.MIN);
-        return builder;
-    }
 }

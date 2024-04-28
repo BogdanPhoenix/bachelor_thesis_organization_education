@@ -26,6 +26,11 @@ import static jakarta.persistence.CascadeType.*;
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "universities")
 public class University extends NameEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    protected UUID id;
+
     @NonNull
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "accreditation_id", nullable = false)
@@ -44,6 +49,11 @@ public class University extends NameEntity {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "university", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Set<Faculty> faculties;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "university", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
+    private Set<AcademicYear> academicYears;
 
     @Override
     public UniversityResponse getResponse() {

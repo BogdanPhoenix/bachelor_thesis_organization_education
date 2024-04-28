@@ -9,6 +9,7 @@ import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
 import com.bachelor.thesis.organization_education.responces.university.SpecialtyResponse;
 
 import java.util.Set;
+import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -24,6 +25,11 @@ import static jakarta.persistence.CascadeType.*;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "specialties")
 public class Specialty extends NameEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    protected UUID id;
+
     @Column(name = "number", nullable = false, unique = true)
     private short number;
 

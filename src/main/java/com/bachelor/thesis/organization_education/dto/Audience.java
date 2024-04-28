@@ -9,6 +9,7 @@ import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInf
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 
 import java.util.Set;
+import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -26,6 +27,11 @@ import static jakarta.persistence.CascadeType.*;
         uniqueConstraints = @UniqueConstraint(columnNames = {"university_id", "num_floor", "num_audience"})
 )
 public class Audience extends BaseTableInfo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    protected UUID id;
+
     @NonNull
     @ManyToOne
     @JoinColumn(name = "university_id", nullable = false)

@@ -13,6 +13,8 @@ import com.bachelor.thesis.organization_education.requests.general.university.Gr
 import com.bachelor.thesis.organization_education.requests.find.university.GroupFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/groups")
 @Validated
@@ -39,7 +41,7 @@ public class GroupController extends ResourceController<GroupService> {
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Validated(UpdateRequest.class) @RequestBody GroupRequest request
     ) {
         return super.updateEntity(id, request);

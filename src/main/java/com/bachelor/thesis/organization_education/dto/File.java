@@ -22,6 +22,11 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "files")
 public class File extends BaseTableInfo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    protected UUID id;
+
     @NonNull
     @Column(name = "user_id", nullable = false)
     private UUID userId;

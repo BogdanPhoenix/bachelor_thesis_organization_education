@@ -14,6 +14,8 @@ import com.bachelor.thesis.organization_education.requests.general.university.Ac
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
 
+import java.util.UUID;
+
 @Service
 public class AcademicDisciplineServiceImpl extends NameEntityServiceAbstract<AcademicDiscipline, AcademicDisciplineRepository> implements AcademicDisciplineService {
     @Autowired
@@ -45,16 +47,16 @@ public class AcademicDisciplineServiceImpl extends NameEntityServiceAbstract<Aca
     }
 
     @Override
-    protected void selectedForDeactivateChild(Long id) { }
+    protected void selectedForDeactivateChild(UUID id) { }
 
     @Override
-    public void addLecturer(@NonNull Long disciplineId, @NonNull Long lecturerId) throws NotFindEntityInDataBaseException {
+    public void addLecturer(@NonNull UUID disciplineId, @NonNull UUID lecturerId) throws NotFindEntityInDataBaseException {
         getBeanByClass(LecturerService.class)
                 .addDiscipline(lecturerId, disciplineId);
     }
 
     @Override
-    public void disconnectLecturer(@NonNull Long disciplineId, @NonNull Long lecturerId) throws NotFindEntityInDataBaseException {
+    public void disconnectLecturer(@NonNull UUID disciplineId, @NonNull UUID lecturerId) throws NotFindEntityInDataBaseException {
         getBeanByClass(LecturerService.class)
                 .disconnectDiscipline(lecturerId, disciplineId);
     }

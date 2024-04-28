@@ -10,7 +10,6 @@ import com.bachelor.thesis.organization_education.responces.university.FacultyRe
 import com.bachelor.thesis.organization_education.responces.university.AcademicDisciplineResponse;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -21,9 +20,6 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class LecturerResponse extends Response {
-    @NonNull
-    private UUID userId;
-
     @NonNull
     private AcademicTitle title;
 

@@ -6,8 +6,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.University;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.repositories.university.UniversityRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.UniversityRequest;
@@ -41,7 +41,8 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
 
     @Override
     public University addResource(@NonNull UniversityRequest request, @NonNull String userId) throws NullPointerException, DuplicateException {
-        request.setAdminId(UUID.fromString(userId));
+        var uuid = UUID.fromString(userId);
+        request.setAdminId(uuid);
         return super.addValue(request);
     }
 
@@ -57,23 +58,21 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     }
 
     @Override
-    public void deactivateUserEntity(@NonNull String userId) {
-        var uuid = UUID.fromString(userId);
-        var university = repository.findByAdminId(uuid);
+    public void deactivateUserEntity(@NonNull UUID userId) {
+        var university = repository.findByAdminId(userId);
         university.ifPresent(entity ->
                 deactivate(entity.getId())
         );
     }
 
     @Override
-    public University findByUser(@NonNull String adminId) throws NotFindEntityInDataBaseException {
-        var uuid = UUID.fromString(adminId);
-        return repository.findByAdminId(uuid)
+    public University findByUser(@NonNull UUID adminId) throws NotFindEntityInDataBaseException {
+        return repository.findByAdminId(adminId)
                 .orElseThrow(() -> new NotFindEntityInDataBaseException("Unable to find a university where the user with the specified ID \"" + adminId + "\" is an administrator."));
     }
 
     @Override
-    protected void selectedForDeactivateChild(Long id) {
+    protected void selectedForDeactivateChild(UUID id) {
         var entity = findEntityById(id);
         deactivatedChild(entity.getFaculties(), FacultyService.class);
     }

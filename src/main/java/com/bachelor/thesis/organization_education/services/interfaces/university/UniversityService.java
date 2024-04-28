@@ -7,6 +7,8 @@ import com.bachelor.thesis.organization_education.requests.general.university.Un
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import lombok.NonNull;
 
+import java.util.UUID;
+
 /**
  * This interface represents a service for managing university entities.
  * It extends the CrudService interface to inherit CRUD operations.
@@ -28,7 +30,7 @@ public interface UniversityService extends CrudService {
      *
      * @param userId identifier of the university administrator.
      */
-    void deactivateUserEntity(@NonNull String userId);
+    void deactivateUserEntity(@NonNull UUID userId);
 
     /**
      * Find a university entity by the user identifier.
@@ -37,5 +39,5 @@ public interface UniversityService extends CrudService {
      * @return the university entity associated with the user.
      * @throws NotFindEntityInDataBaseException if no entity is found for the given identifier.
      */
-    University findByUser(@NonNull String adminId) throws NotFindEntityInDataBaseException;
+    University findByUser(@NonNull UUID adminId) throws NotFindEntityInDataBaseException;
 }

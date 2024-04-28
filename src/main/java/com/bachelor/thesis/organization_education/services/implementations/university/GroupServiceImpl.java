@@ -17,6 +17,7 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 
+import java.util.UUID;
 import java.util.Optional;
 
 @Service
@@ -85,5 +86,5 @@ public class GroupServiceImpl extends CrudServiceAbstract<Group, GroupRepository
     }
 
     @Override
-    protected void selectedForDeactivateChild(Long id) { }
+    protected void selectedForDeactivateChild(UUID id) { }
 }

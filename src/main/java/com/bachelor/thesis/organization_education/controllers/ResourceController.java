@@ -13,6 +13,7 @@ import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudS
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +36,7 @@ public abstract class ResourceController<T extends CrudService> {
     }
 
     @GetMapping("/{id}")
-    protected ResponseEntity<Response> get(@PathVariable Long id) {
+    protected ResponseEntity<Response> get(@PathVariable UUID id) {
         var response = service.getValue(id)
                 .getResponse();
 
@@ -50,7 +51,7 @@ public abstract class ResourceController<T extends CrudService> {
                 .collect(Collectors.toSet());
     }
 
-    protected <I extends UpdateRequest> ResponseEntity<Response> updateEntity(Long id, I request) {
+    protected <I extends UpdateRequest> ResponseEntity<Response> updateEntity(UUID id, I request) {
         var response = service.updateValue(id, request)
                 .getResponse();
 
@@ -60,19 +61,19 @@ public abstract class ResourceController<T extends CrudService> {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+    public ResponseEntity<Void> deactivate(@PathVariable UUID id) {
         service.deactivate(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.deleteValue(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/activate/{id}")
-    public ResponseEntity<Void> activate(@PathVariable Long id) {
+    public ResponseEntity<Void> activate(@PathVariable UUID id) {
         service.activate(id);
         return ResponseEntity.ok().build();
     }

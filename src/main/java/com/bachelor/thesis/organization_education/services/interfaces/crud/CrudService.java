@@ -10,6 +10,7 @@ import com.bachelor.thesis.organization_education.requests.update.abstracts.Upda
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * This interface represents a CRUD (Create, Read, Update, Delete) service
@@ -35,7 +36,7 @@ public interface CrudService {
      * @param id unique identifier of the entity.
      * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    void activate(@NonNull Long id) throws NotFindEntityInDataBaseException;
+    void activate(@NonNull UUID id) throws NotFindEntityInDataBaseException;
 
     /**
      * Makes the entity inactive, which does not allow the program to interact with it.
@@ -43,7 +44,7 @@ public interface CrudService {
      * @param id unique identifier of the entity.
      * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    void deactivate(@NonNull Long id) throws NotFindEntityInDataBaseException ;
+    void deactivate(@NonNull UUID id) throws NotFindEntityInDataBaseException ;
 
     /**
      * Searches for an entity in the database by the specified query.
@@ -61,7 +62,7 @@ public interface CrudService {
      * @return the found subject.
      * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    BaseTableInfo getValue(@NonNull Long id) throws NotFindEntityInDataBaseException;
+    BaseTableInfo getValue(@NonNull UUID id) throws NotFindEntityInDataBaseException;
 
     /**
      * Returns the set of all table entities.
@@ -79,7 +80,7 @@ public interface CrudService {
      * @throws DuplicateException if the table already contains the data that is passed in the query.
      * @throws NotFindEntityInDataBaseException if the entity could not be found.
      */
-    BaseTableInfo updateValue(@NonNull Long id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException;
+    BaseTableInfo updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException;
 
     /**
      * Searches for an entity in the database by the specified query and deletes it completely.
@@ -87,5 +88,5 @@ public interface CrudService {
      * @param id unique identifier of the entity.
      * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    void deleteValue(@NonNull Long id) throws NotFindEntityInDataBaseException;
+    void deleteValue(@NonNull UUID id) throws NotFindEntityInDataBaseException;
 }

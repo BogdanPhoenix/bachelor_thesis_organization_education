@@ -13,6 +13,7 @@ import com.bachelor.thesis.organization_education.requests.general.university.Un
 import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 
+import java.util.UUID;
 import java.security.Principal;
 
 @RestController
@@ -45,7 +46,7 @@ public class UniversityController extends ResourceController<UniversityService> 
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Validated(UpdateRequest.class) @RequestBody UniversityRequest request
     ) {
         return super.updateEntity(id, request);

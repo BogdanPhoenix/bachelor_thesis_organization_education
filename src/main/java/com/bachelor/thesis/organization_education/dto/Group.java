@@ -9,6 +9,7 @@ import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInf
 import com.bachelor.thesis.organization_education.responces.university.GroupResponse;
 
 import java.util.Set;
+import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -26,6 +27,11 @@ import static jakarta.persistence.CascadeType.*;
         uniqueConstraints = @UniqueConstraint(columnNames = {"specialty_id", "year_start", "reduced_form"})
 )
 public class Group extends BaseTableInfo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    protected UUID id;
+
     @NonNull
     @ManyToOne
     @JoinColumn(name = "curator_id", nullable = false)

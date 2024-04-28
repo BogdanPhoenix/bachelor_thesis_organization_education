@@ -28,24 +28,24 @@ import static jakarta.persistence.CascadeType.*;
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "lecturers")
 public class Lecturer extends BaseTableInfo {
+    @Id
+    @Column(name = "id")
+    protected UUID id;
+
     @NonNull
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "title_id", nullable = false)
+    @Column(name = "title", nullable = false)
     private AcademicTitle title;
 
     @NonNull
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "degree_id", nullable = false)
+    @Column(name = "degree", nullable = false)
     private AcademicDegree degree;
 
     @NonNull
     @ManyToOne
     @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
-
-    @NonNull
-    @Column(name = "user_id", nullable = false, unique = true)
-    private UUID user;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -78,7 +78,6 @@ public class Lecturer extends BaseTableInfo {
 
         super.initResponse(builder);
         return builder
-                .userId(user)
                 .title(title)
                 .degree(degree)
                 .faculty(faculty.getResponse())

@@ -8,8 +8,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 
-import java.sql.Time;
 import java.util.Set;
+import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -23,22 +23,32 @@ import static jakarta.persistence.CascadeType.*;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "call_schedule",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"start_time", "end_time"})
+@Table(name = "academic_years",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"university_id", "start_year", "end_year"})
 )
-public class CallSchedule extends BaseTableInfo {
-    @NonNull
-    @Column(name = "start_time", nullable = false)
-    private Time startTime;
+public class AcademicYear extends BaseTableInfo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    protected UUID id;
 
     @NonNull
-    @Column(name = "end_time", nullable = false)
-    private Time endTime;
+    @ManyToOne
+    @JoinColumn(name = "university_id", nullable = false)
+    private University university;
+
+    @NonNull
+    @Column(name = "start_year", nullable = false)
+    private Short startYear;
+
+    @NonNull
+    @Column(name = "end_year", nullable = false)
+    private Short endYear;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "call", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<Schedule> schedules;
+    @OneToMany(mappedBy = "course", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
+    private Set<Semester> semesters;
 
     @Override
     public Response getResponse() {

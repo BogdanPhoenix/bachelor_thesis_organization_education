@@ -13,6 +13,8 @@ import com.bachelor.thesis.organization_education.requests.general.university.Ac
 import com.bachelor.thesis.organization_education.requests.find.university.AcademicDisciplineFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/disciplines")
 @Validated
@@ -33,16 +35,16 @@ public class AcademicDisciplineController extends ResourceController<AcademicDis
 
     @PutMapping("/{disciplineId}/connect-with-lecturer/{lecturerId}")
     public void connectWithLecturer(
-            @PathVariable Long disciplineId,
-            @PathVariable Long lecturerId
+            @PathVariable UUID disciplineId,
+            @PathVariable UUID lecturerId
     ) {
         service.addLecturer(disciplineId, lecturerId);
     }
 
     @PutMapping("/{disciplineId}/disconnect-lecturer/{lecturerId}")
     public void disconnectLecturer(
-            @PathVariable Long disciplineId,
-            @PathVariable Long lecturerId
+            @PathVariable UUID disciplineId,
+            @PathVariable UUID lecturerId
     ) {
         service.disconnectLecturer(disciplineId, lecturerId);
     }
@@ -54,7 +56,7 @@ public class AcademicDisciplineController extends ResourceController<AcademicDis
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Validated(UpdateRequest.class) @RequestBody AcademicDisciplineRequest request
     ) {
         return super.updateEntity(id, request);

@@ -13,6 +13,8 @@ import com.bachelor.thesis.organization_education.requests.general.university.Sp
 import com.bachelor.thesis.organization_education.requests.find.university.SpecialtyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/specialties")
 @Validated
@@ -39,7 +41,7 @@ public class SpecialtyController extends ResourceController<SpecialtyService> {
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Validated(UpdateRequest.class) @RequestBody SpecialtyRequest request
     ) {
         return super.updateEntity(id, request);

@@ -23,7 +23,7 @@ public interface LecturerService extends CrudService {
      * @param userId user ID
      * @throws DuplicateException if the table contains an entity value that is passed in the query.
      */
-    void registration(@NonNull RegistrationRequest request, @NonNull String userId) throws DuplicateException;
+    void registration(@NonNull RegistrationRequest request, @NonNull UUID userId) throws DuplicateException;
 
     /**
      * Updates the teacher data with the specified ID based on the received request.
@@ -36,28 +36,12 @@ public interface LecturerService extends CrudService {
     Lecturer updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException;
 
     /**
-     * Makes the entity active for further interaction with the program.
-     *
-     * @param userId unique identifier of the user.
-     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
-     */
-    void activate(@NonNull String userId);
-
-    /**
-     * Makes the entity inactive, which does not allow the program to interact with it.
-     *
-     * @param userId unique identifier of the user.
-     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
-     */
-    void deactivate(@NonNull String userId);
-
-    /**
      * Searches for an entity in the database by the specified query and deletes it completely.
      *
      * @param userId unique identifier of the user.
      * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    void deleteValue(@NonNull String userId);
+    void deleteValue(@NonNull UUID userId);
 
     /**
      * Adds a discipline to the database for the specified lecturer.
@@ -66,7 +50,7 @@ public interface LecturerService extends CrudService {
      * @param disciplineId identifier of the discipline
      * @throws NotFindEntityInDataBaseException exception thrown if the corresponding entity is not found in the database
      */
-    void addDiscipline(@NonNull Long lecturerId, @NonNull Long disciplineId) throws NotFindEntityInDataBaseException;
+    void addDiscipline(@NonNull UUID lecturerId, @NonNull UUID disciplineId) throws NotFindEntityInDataBaseException;
 
     /**
      * Breaks the connection between the lecturer and the discipline.
@@ -75,5 +59,5 @@ public interface LecturerService extends CrudService {
      * @param disciplineId identifier of the discipline
      * @throws NotFindEntityInDataBaseException exception thrown if the corresponding entity is not found in the database
      */
-    void disconnectDiscipline(@NonNull Long lecturerId, @NonNull Long disciplineId) throws NotFindEntityInDataBaseException;
+    void disconnectDiscipline(@NonNull UUID lecturerId, @NonNull UUID disciplineId) throws NotFindEntityInDataBaseException;
 }

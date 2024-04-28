@@ -8,8 +8,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
 import com.bachelor.thesis.organization_education.responces.university.AcademicDisciplineResponse;
 
-import java.util.List;
 import java.util.Set;
+import java.util.List;
+import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -25,6 +26,11 @@ import static jakarta.persistence.CascadeType.*;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "academic_disciplines")
 public class AcademicDiscipline extends NameEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    protected UUID id;
+
     @Column(name = "amount_credits", nullable = false)
     private short amountCredits;
 

@@ -21,17 +21,17 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "students",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"group_id", "user_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"group_id", "id"})
 )
 public class Student extends BaseTableInfo {
+    @Id
+    @Column(name = "id")
+    protected UUID id;
+
     @NonNull
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
-
-    @NonNull
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
 
     @Override
     public Response getResponse() {

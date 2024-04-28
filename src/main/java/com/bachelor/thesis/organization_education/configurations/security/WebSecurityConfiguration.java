@@ -39,18 +39,16 @@ public class WebSecurityConfiguration {
                     new RequestMatcherConfig(HttpMethod.PUT, "/users/lecturer")
             ),
             Role.UNIVERSITY_ADMIN, List.of(
-                    new RequestMatcherConfig(HttpMethod.POST, "/users/register-other/*", "/faculties", "/groups", "/universities", "/disciplines"),
-                    new RequestMatcherConfig(HttpMethod.PUT, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*",
-                            "/disciplines/*/connect-with-lecturer/*", "/disciplines/*/disconnect-lecturer/*", "/users/lecturer/*/connect-with-discipline/*",
-                            "/users/lecturer/*/disconnect-discipline/*"
+                    new RequestMatcherConfig(HttpMethod.POST, "/users/register-other/*", "/faculties", "/groups", "/universities"),
+                    new RequestMatcherConfig(HttpMethod.PUT, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*/connect-with-lecturer/*",
+                            "/disciplines/*/disconnect-lecturer/*", "/users/lecturer/*/connect-with-discipline/*", "/users/lecturer/*/disconnect-discipline/*"
                     ),
                     new RequestMatcherConfig(HttpMethod.DELETE, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*")
             ),
             Role.ADMIN, List.of(
-                    new RequestMatcherConfig(HttpMethod.DELETE, "/*/delete/**"),
-                    new RequestMatcherConfig(HttpMethod.PUT, "/*/activate/**"),
-                    new RequestMatcherConfig(HttpMethod.POST, "/specialties"),
-                    new RequestMatcherConfig(HttpMethod.PUT, "/specialties/**")
+                    new RequestMatcherConfig(HttpMethod.DELETE, "*/delete/*"),
+                    new RequestMatcherConfig(HttpMethod.PUT, "*/activate/*", "/specialties/*", "/disciplines/*"),
+                    new RequestMatcherConfig(HttpMethod.POST, "/specialties", "/disciplines")
             )
     );
 
