@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.responces.university.ClassRecordingResponse;
 
 import java.util.Set;
 import java.util.UUID;
@@ -59,7 +59,14 @@ public class ClassRecording extends BaseTableInfo {
     private Set<File> files;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public ClassRecordingResponse getResponse() {
+        var builder = ClassRecordingResponse.builder();
+        super.initResponse(builder);
+        return builder
+                .magazine(magazine.getResponse())
+                .classTopic(classTopic)
+                .description(description)
+                .build();
+
     }
 }
