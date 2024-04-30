@@ -17,8 +17,8 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 
+import java.util.List;
 import java.util.UUID;
-import java.util.Optional;
 
 @Service
 public class GroupServiceImpl extends CrudServiceAbstract<Group, GroupRepository> implements GroupService {
@@ -49,10 +49,10 @@ public class GroupServiceImpl extends CrudServiceAbstract<Group, GroupRepository
     }
 
     @Override
-    protected Optional<Group> findEntityByRequest(@NonNull FindRequest request) {
+    protected List<Group> findAllEntitiesByRequest(@NonNull FindRequest request) {
         var groupRequest = (GroupFindRequest) request;
 
-        return repository.findBySpecialtyAndYearStartAndReducedForm(
+        return repository.findAllBySpecialtyAndYearStartAndReducedForm(
                 groupRequest.getSpecialty(),
                 groupRequest.getYearStart(),
                 groupRequest.isReducedForm()

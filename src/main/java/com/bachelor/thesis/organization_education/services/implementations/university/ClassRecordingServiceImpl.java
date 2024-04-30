@@ -15,8 +15,8 @@ import com.bachelor.thesis.organization_education.requests.find.university.Class
 import com.bachelor.thesis.organization_education.services.interfaces.university.ClassRecordingService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
 
+import java.util.List;
 import java.util.UUID;
-import java.util.Optional;
 
 @Service
 public class ClassRecordingServiceImpl extends CrudServiceAbstract<ClassRecording, ClassRecordingRepository> implements ClassRecordingService {
@@ -42,9 +42,9 @@ public class ClassRecordingServiceImpl extends CrudServiceAbstract<ClassRecordin
     }
 
     @Override
-    protected Optional<ClassRecording> findEntityByRequest(@NonNull FindRequest request) {
+    protected List<ClassRecording> findAllEntitiesByRequest(@NonNull FindRequest request) {
         var findRequest = (ClassRecordingFindRequest) request;
-        return repository.findByMagazineAndClassTopic(
+        return repository.findAllByMagazineAndClassTopic(
                 findRequest.getMagazine(),
                 findRequest.getClassTopic()
         );

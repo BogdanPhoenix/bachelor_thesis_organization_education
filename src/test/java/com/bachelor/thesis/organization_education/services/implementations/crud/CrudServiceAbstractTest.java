@@ -150,28 +150,33 @@ class CrudServiceAbstractTest {
     @Test
     @DisplayName("Check for an exception when the request to activate an entity failed to find the entity.")
     void testActivateEntityThrowsNotFindEntityByRequestInDataBaseException() {
-        when(serviceMock.findEntityById(any(UUID.class))).thenThrow(NotFindEntityInDataBaseException.class);
         testEntityNotFoundAction(serviceMock::activate);
     }
 
     @Test
     @DisplayName("Check for an exception when the request to deactivate an entity failed to find the entity.")
     void testDeactivateEntityThrowsNotFindEntityByRequestInDataBaseException() {
-        when(serviceMock.findEntityById(any(UUID.class))).thenThrow(NotFindEntityInDataBaseException.class);
         testEntityNotFoundAction(serviceMock::deactivate);
     }
 
     @Test
     @DisplayName("Check the exception when the entity return request did not find an entity.")
     void testGetValueThrowsNotFindEntityByRequestInDataBaseException() {
-        when(serviceMock.findEntityByRequest(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
+        when(serviceMock.findAllEntitiesByRequest(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
         doCallRealMethodForAction(serviceMock::getValue, findRequestMock);
         assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.getValue(findRequestMock));
     }
 
     private void testEntityNotFoundAction(Consumer<UUID> action) {
         var ID = UUID.randomUUID();
+        doCallRealMethod()
+                .when(serviceMock)
+                .updateEnabled(any(UUID.class), any(Boolean.class));
+
+        when(serviceMock.findEntityById(any(UUID.class)))
+                .thenThrow(NotFindEntityInDataBaseException.class);
         doCallRealMethodForAction(action, ID);
+
         assertThrows(NotFindEntityInDataBaseException.class, () -> action.accept(ID));
     }
 

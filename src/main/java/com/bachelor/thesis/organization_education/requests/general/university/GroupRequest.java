@@ -9,6 +9,7 @@ import com.bachelor.thesis.organization_education.dto.Faculty;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
 import com.bachelor.thesis.organization_education.dto.Specialty;
 import com.bachelor.thesis.organization_education.annotations.ValidYear;
+import com.bachelor.thesis.organization_education.annotations.ValidNotUpdate;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.GroupFindRequest;
@@ -26,6 +27,7 @@ public class GroupRequest implements InsertRequest, UpdateRequest {
     private Lecturer curator;
 
     @NotNull(groups = InsertRequest.class)
+    @ValidNotUpdate(groups = UpdateRequest.class)
     private Specialty specialty;
 
     @NotNull(groups = InsertRequest.class)

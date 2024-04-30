@@ -15,8 +15,8 @@ import com.bachelor.thesis.organization_education.requests.find.university.Speci
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
+import java.util.List;
 import java.util.UUID;
-import java.util.Optional;
 
 @Service
 public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, SpecialtyRepository> implements SpecialtyService {
@@ -51,10 +51,10 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
     }
 
     @Override
-    protected Optional<Specialty> findEntityByRequest(@NonNull FindRequest request) {
+    protected List<Specialty> findAllEntitiesByRequest(@NonNull FindRequest request) {
         var specialtyRequest = (SpecialtyFindRequest) request;
 
-        return repository.findByEnNameOrUaNameOrNumber(
+        return repository.findAllByEnNameOrUaNameOrNumber(
                 specialtyRequest.getEnName(),
                 specialtyRequest.getUaName(),
                 specialtyRequest.getNumber()

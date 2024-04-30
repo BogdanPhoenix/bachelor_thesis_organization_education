@@ -17,8 +17,10 @@ import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRe
 @EqualsAndHashCode
 public class GroupDisciplineFindRequest implements FindRequest {
     @NotNull
+    @NonNull
     private Group group;
 
     @NotNull
+    @NonNull
     private AcademicDiscipline discipline;
 }

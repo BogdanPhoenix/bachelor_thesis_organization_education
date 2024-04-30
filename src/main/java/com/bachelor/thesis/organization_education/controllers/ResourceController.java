@@ -1,6 +1,5 @@
 package com.bachelor.thesis.organization_education.controllers;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,9 +54,7 @@ public abstract class ResourceController<T extends CrudService> {
         var response = service.updateValue(id, request)
                 .getResponse();
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

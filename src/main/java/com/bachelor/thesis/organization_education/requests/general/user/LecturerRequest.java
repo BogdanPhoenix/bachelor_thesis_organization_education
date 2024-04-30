@@ -3,6 +3,7 @@ package com.bachelor.thesis.organization_education.requests.general.user;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.validation.GroupSequence;
+import jakarta.validation.constraints.NotNull;
 import com.bachelor.thesis.organization_education.dto.Faculty;
 import com.bachelor.thesis.organization_education.enums.AcademicTitle;
 import com.bachelor.thesis.organization_education.enums.AcademicDegree;
@@ -21,9 +22,15 @@ import java.util.UUID;
 @EqualsAndHashCode
 @GroupSequence({LecturerRequest.class, InsertRequest.class, UpdateRequest.class})
 public class LecturerRequest implements InsertRequest, UpdateRequest {
+    @NotNull(groups = InsertRequest.class)
     private AcademicTitle title;
+
+    @NotNull(groups = InsertRequest.class)
     private AcademicDegree degree;
+
+    @NotNull(groups = InsertRequest.class)
     private Faculty faculty;
+
     private UUID userId;
 
     @Override

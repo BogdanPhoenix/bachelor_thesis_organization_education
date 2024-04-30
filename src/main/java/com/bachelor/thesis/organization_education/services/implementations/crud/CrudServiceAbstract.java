@@ -5,10 +5,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
 import java.util.*;
@@ -49,8 +49,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     }
 
     boolean isDuplicate(FindRequest request){
-        return findEntityByRequest(request)
-                .isPresent();
+        return !findAllEntitiesByRequest(request).isEmpty();
     }
 
     @Override
@@ -74,7 +73,14 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     }
 
     boolean isDuplicate(FindRequest request, UUID entityId) {
-        return findEntityByRequest(request)
+        var entities = findAllEntitiesByRequest(request);
+
+        if(entities.size() > 1) {
+            return true;
+        }
+
+        return entities.stream()
+                .findFirst()
                 .map(entity -> !Objects.equals(entity.getId(), entityId))
                 .orElse(false);
     }
@@ -104,7 +110,14 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
 
     @Override
     public T getValue(@NonNull FindRequest request) throws NotFindEntityInDataBaseException {
-        return getEntityAndFilter(request, BaseTableInfo::isEnabled);
+        return findAllEntitiesByRequest(request)
+                .stream()
+                .filter(BaseTableInfo::isEnabled)
+                .findFirst()
+                .orElseThrow(() -> {
+                    var errorMessage = String.format("No entities were found for the query: %s could not find any entities in the table: %s.", request, tableName);
+                    return new NotFindEntityInDataBaseException(errorMessage);
+                });
     }
 
     @Override
@@ -125,12 +138,6 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     public void deleteValue(@NonNull UUID id) throws NotFindEntityInDataBaseException {
         var entity = findEntityById(id);
         repository.delete(entity);
-    }
-
-    private T getEntityAndFilter(FindRequest request, Predicate<? super T> filterPredicate) throws NotFindEntityInDataBaseException {
-        return findEntityByRequest(request)
-                .filter(filterPredicate)
-                .orElseThrow(() -> new NotFindEntityInDataBaseException("The query failed to find an entity in the table: " + tableName));
     }
 
     protected <B extends BaseTableInfo, C extends CrudService> void deactivatedChild(Collection<B> collection, Class<C> serviceClass) {
@@ -171,7 +178,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
 
     protected abstract void objectFormation(InsertRequest request);
     protected abstract T createEntity(InsertRequest request);
-    protected abstract Optional<T> findEntityByRequest(@NonNull FindRequest request);
+    protected abstract List<T> findAllEntitiesByRequest(@NonNull FindRequest request);
     protected abstract void updateEntity(T entity, UpdateRequest request);
     protected abstract void selectedForDeactivateChild(UUID id);
 }

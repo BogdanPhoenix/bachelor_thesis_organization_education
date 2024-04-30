@@ -17,6 +17,7 @@ import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEn
 @EqualsAndHashCode(callSuper = true)
 public class FacultyFindRequest extends NameEntityFindRequest {
     @NotNull
+    @NonNull
     private University university;
 
     @Override

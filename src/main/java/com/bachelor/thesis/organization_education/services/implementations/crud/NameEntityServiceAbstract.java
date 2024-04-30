@@ -4,13 +4,13 @@ import lombok.NonNull;
 import org.springframework.context.ApplicationContext;
 import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
 import com.bachelor.thesis.organization_education.repositories.NameEntityRepository;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.NameEntityRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEntityFindRequest;
 
-import java.util.Optional;
+import java.util.List;
 
 /**
  * An abstract class that contains an implementation for working with the name attributes of the entities that contain them.
@@ -30,10 +30,10 @@ public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends 
     }
 
     @Override
-    protected Optional<T> findEntityByRequest(@NonNull FindRequest request) {
+    protected List<T> findAllEntitiesByRequest(@NonNull FindRequest request) {
         var nameEntityRequest = (NameEntityFindRequest) request;
 
-        return repository.findByEnNameOrUaName(
+        return repository.findAllByEnNameOrUaName(
                 nameEntityRequest.getEnName(),
                 nameEntityRequest.getUaName()
         );

@@ -1,9 +1,10 @@
 package com.bachelor.thesis.organization_education.requests.find.user;
 
-import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 public class LecturerFindRequest implements FindRequest {
+    @NotNull
     @NonNull
     private UUID userId;
 

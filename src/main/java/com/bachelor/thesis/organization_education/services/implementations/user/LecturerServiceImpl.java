@@ -21,8 +21,8 @@ import com.bachelor.thesis.organization_education.requests.insert.user.Registrat
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
 
+import java.util.List;
 import java.util.UUID;
-import java.util.Optional;
 
 @Service
 public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerRepository> implements LecturerService {
@@ -59,9 +59,9 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    protected Optional<Lecturer> findEntityByRequest(@NonNull FindRequest request) {
+    protected List<Lecturer> findAllEntitiesByRequest(@NonNull FindRequest request) {
         var findRequest = (LecturerFindRequest) request;
-        return repository.findById(findRequest.getUserId());
+        return repository.findAllById(findRequest.getUserId());
     }
 
     @Override
@@ -88,12 +88,6 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    public void deleteValue(@NonNull UUID userId) {
-        var entity = getEntity(userId);
-        entity.ifPresent(repository::delete);
-    }
-
-    @Override
     public void addDiscipline(@NonNull UUID lecturerId, @NonNull UUID disciplineId) throws NotFindEntityInDataBaseException {
         var lecturer = findEntityById(lecturerId);
         var discipline = (AcademicDiscipline) getBeanByClass(AcademicDisciplineService.class)
@@ -111,11 +105,6 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
 
         lecturer.getDisciplines().remove(discipline);
         repository.save(lecturer);
-    }
-
-    private Optional<Lecturer> getEntity(UUID adminId) {
-        var request = new LecturerFindRequest(adminId);
-        return findEntityByRequest(request);
     }
 
     @Override

@@ -23,11 +23,11 @@ import com.bachelor.thesis.organization_education.requests.find.university.Group
 @GroupSequence({GroupDisciplineRequest.class, InsertRequest.class, UpdateRequest.class})
 public class GroupDisciplineRequest implements InsertRequest, UpdateRequest {
     @NotNull(groups = InsertRequest.class)
-    @ValidNotUpdate(groups = {UpdateRequest.class})
+    @ValidNotUpdate(groups = UpdateRequest.class)
     private Group group;
 
     @NotNull(groups = InsertRequest.class)
-    @ValidNotUpdate(groups = {UpdateRequest.class})
+    @ValidNotUpdate(groups = UpdateRequest.class)
     private AcademicDiscipline discipline;
 
     @Min(value = 0, groups = {InsertRequest.class, UpdateRequest.class})

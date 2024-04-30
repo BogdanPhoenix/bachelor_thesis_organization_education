@@ -1,9 +1,9 @@
 package com.bachelor.thesis.organization_education.requests.find.university;
 
-import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEntityFindRequest;
-import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.persistence.MappedSuperclass;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEntityFindRequest;
 
 import java.util.UUID;
 

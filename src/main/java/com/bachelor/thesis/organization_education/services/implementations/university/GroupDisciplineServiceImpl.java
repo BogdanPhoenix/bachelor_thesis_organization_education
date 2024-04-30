@@ -18,8 +18,8 @@ import com.bachelor.thesis.organization_education.requests.find.university.Group
 import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
 
+import java.util.List;
 import java.util.UUID;
-import java.util.Optional;
 
 @Service
 public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipline, GroupDisciplineRepository> implements GroupDisciplineService {
@@ -54,9 +54,9 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
     }
 
     @Override
-    protected Optional<GroupDiscipline> findEntityByRequest(@NonNull FindRequest request) {
+    protected List<GroupDiscipline> findAllEntitiesByRequest(@NonNull FindRequest request) {
         var findRequest = (GroupDisciplineFindRequest) request;
-        return repository.findByGroupAndDiscipline(
+        return repository.findAllByGroupAndDiscipline(
                 findRequest.getGroup(),
                 findRequest.getDiscipline()
         );

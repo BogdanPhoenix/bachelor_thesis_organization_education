@@ -18,8 +18,11 @@ import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRe
 @EqualsAndHashCode
 public class GroupFindRequest implements FindRequest {
     @NotNull
+    @NonNull
     private Specialty specialty;
+
     @Min(1900)
     private short yearStart;
+
     private boolean reducedForm;
 }

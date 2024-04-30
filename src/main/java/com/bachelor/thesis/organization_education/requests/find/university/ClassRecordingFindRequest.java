@@ -16,8 +16,10 @@ import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRe
 @EqualsAndHashCode
 public class ClassRecordingFindRequest implements FindRequest {
     @NotNull
+    @NonNull
     private GroupDiscipline magazine;
 
     @NotNull
+    @NonNull
     private String classTopic;
 }

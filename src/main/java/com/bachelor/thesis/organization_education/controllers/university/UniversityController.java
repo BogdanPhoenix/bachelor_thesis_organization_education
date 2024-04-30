@@ -46,9 +46,13 @@ public class UniversityController extends ResourceController<UniversityService> 
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
+            Principal principal,
             @PathVariable UUID id,
             @Validated(UpdateRequest.class) @RequestBody UniversityRequest request
     ) {
-        return super.updateEntity(id, request);
+        var response = service.updateValue(principal.getName(), id, request)
+                .getResponse();
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -6,15 +6,19 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.University;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.repositories.university.UniversityRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.UniversityRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
+import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -47,6 +51,14 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     }
 
     @Override
+    public BaseTableInfo updateValue(@NonNull String adminId, @NonNull UUID entityId, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
+        var updateRequest = (UniversityRequest) request;
+        var uuid = UUID.fromString(adminId);
+        updateRequest.setAdminId(uuid);
+        return super.updateValue(entityId, updateRequest);
+    }
+
+    @Override
     protected void updateEntity(University entity, UpdateRequest request) {
         super.updateEntity(entity, request);
 
@@ -55,6 +67,16 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
         if(!universityRequest.accreditationLevelIsEmpty()) {
             entity.setAccreditationLevel(universityRequest.getAccreditationLevel());
         }
+    }
+
+    @Override
+    protected List<University> findAllEntitiesByRequest(@NonNull FindRequest request) {
+        var findRequest = (UniversityFindRequest) request;
+        return repository.findAllByAdminIdOrEnNameOrUaName(
+                findRequest.getAdminId(),
+                findRequest.getEnName(),
+                findRequest.getUaName()
+        );
     }
 
     @Override
