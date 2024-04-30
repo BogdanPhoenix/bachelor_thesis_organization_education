@@ -3,12 +3,14 @@ package com.bachelor.thesis.organization_education.services.interfaces.user;
 import lombok.NonNull;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
 import org.springframework.transaction.annotation.Transactional;
+import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -60,4 +62,13 @@ public interface LecturerService extends CrudService {
      * @throws NotFindEntityInDataBaseException exception thrown if the corresponding entity is not found in the database
      */
     void disconnectDiscipline(@NonNull UUID lecturerId, @NonNull UUID disciplineId) throws NotFindEntityInDataBaseException;
+
+    /**
+     * Allows you to get the disciplines taught by the lecturer.
+     *
+     * @param lecturerId lecturer identifier.
+     * @return a set of disciplines taught by a teacher.
+     * @throws NotFindEntityInDataBaseException if you can't find anything.
+     */
+    Set<AcademicDiscipline> getDisciplines(@NonNull UUID lecturerId) throws NotFindEntityInDataBaseException;
 }

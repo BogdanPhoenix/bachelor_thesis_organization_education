@@ -1,8 +1,9 @@
 package com.bachelor.thesis.organization_education.services.implementations.crud;
 
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
@@ -10,10 +11,10 @@ import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudS
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
+import com.bachelor.thesis.organization_education.repositories.abstracts.BaseTableInfoRepository;
 
 import java.util.*;
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 import java.util.function.Predicate;
 
 import static com.bachelor.thesis.organization_education.services.implementations.tools.ExceptionTools.throwRuntimeException;
@@ -23,7 +24,7 @@ import static com.bachelor.thesis.organization_education.services.implementation
  * @param <T> type of the entity class for which CRUD is implemented.
  * @param <J> the type of entity repository that manages access to and interconnection with the entity.
  */
-public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends JpaRepository<T, UUID>> implements CrudService {
+public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends BaseTableInfoRepository<T>> implements CrudService {
     protected final String tableName;
     protected final J repository;
     protected final ApplicationContext context;
@@ -126,12 +127,8 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Jpa
     }
 
     @Override
-    public Set<BaseTableInfo> getAll() {
-        return repository
-                .findAll()
-                .stream()
-                .filter(BaseTableInfo::isEnabled)
-                .collect(Collectors.toSet());
+    public Page<BaseTableInfo> getAll(Pageable pageable) {
+        return repository.findAllActiveEntities(pageable);
     }
 
     @Override

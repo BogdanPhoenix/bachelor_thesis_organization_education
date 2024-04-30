@@ -10,10 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
+import com.bachelor.thesis.organization_education.repositories.abstracts.BaseTableInfoRepository;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -27,7 +28,7 @@ class CrudServiceAbstractTest {
     @Mock
     private JpaRepository<BaseTableInfo, Long> repositoryMock;
     @Mock
-    private CrudServiceAbstract<BaseTableInfo, JpaRepository<BaseTableInfo, UUID>> serviceMock;
+    private CrudServiceAbstract<BaseTableInfo, BaseTableInfoRepository<BaseTableInfo>> serviceMock;
     @Mock
     private FindRequest findRequestMock;
     @Mock

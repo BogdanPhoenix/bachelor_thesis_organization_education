@@ -5,13 +5,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.general.user.LecturerRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 
+import java.util.Set;
 import java.util.UUID;
 import java.security.Principal;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users/lecturer")
@@ -42,6 +45,22 @@ public class LecturerController extends ResourceController<LecturerService> {
     public ResponseEntity<Response> get(Principal principal) {
         var uuid = UUID.fromString(principal.getName());
         return this.get(uuid);
+    }
+
+    @GetMapping("/disciplines")
+    public ResponseEntity<Set<Response>> getDisciplines(Principal principal) {
+        var uuid = UUID.fromString(principal.getName());
+        return getDisciplines(uuid);
+    }
+
+    @GetMapping("/disciplines/{lecturerId}")
+    public ResponseEntity<Set<Response>> getDisciplines(@PathVariable UUID lecturerId) {
+        var responses = service.getDisciplines(lecturerId)
+                .stream()
+                .map(BaseTableInfo::getResponse)
+                .collect(Collectors.toSet());
+
+        return ResponseEntity.ok(responses);
     }
 
     @PutMapping

@@ -1,19 +1,16 @@
 package com.bachelor.thesis.organization_education.controllers;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.PageRequest;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * A base controller for handling RESTful endpoints related to a resource.
@@ -43,11 +40,13 @@ public abstract class ResourceController<T extends CrudService> {
     }
 
     @GetMapping("/all")
-    public Set<Response> getAll() {
-        return service.getAll()
-                .stream()
-                .map(BaseTableInfo::getResponse)
-                .collect(Collectors.toSet());
+    public Page<Response> getAll(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize
+    ) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        return service.getAll(pageable)
+                .map(BaseTableInfo::getResponse);
     }
 
     protected <I extends UpdateRequest> ResponseEntity<Response> updateEntity(UUID id, I request) {

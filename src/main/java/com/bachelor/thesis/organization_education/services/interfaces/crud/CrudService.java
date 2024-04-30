@@ -1,6 +1,8 @@
 package com.bachelor.thesis.organization_education.services.interfaces.crud;
 
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
@@ -9,7 +11,6 @@ import com.bachelor.thesis.organization_education.requests.update.abstracts.Upda
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -67,9 +68,10 @@ public interface CrudService {
     /**
      * Returns the set of all table entities.
      *
+     * @param pageable page settings
      * @return a set of entities.
      */
-    Set<BaseTableInfo> getAll();
+    Page<BaseTableInfo> getAll(Pageable pageable);
 
     /**
      * Updates the attributes of the selected entity.

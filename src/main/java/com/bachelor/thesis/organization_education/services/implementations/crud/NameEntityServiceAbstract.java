@@ -3,10 +3,10 @@ package com.bachelor.thesis.organization_education.services.implementations.crud
 import lombok.NonNull;
 import org.springframework.context.ApplicationContext;
 import com.bachelor.thesis.organization_education.dto.abstract_type.NameEntity;
-import com.bachelor.thesis.organization_education.repositories.NameEntityRepository;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
+import com.bachelor.thesis.organization_education.repositories.abstracts.NameEntityRepository;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.NameEntityRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEntityFindRequest;
 

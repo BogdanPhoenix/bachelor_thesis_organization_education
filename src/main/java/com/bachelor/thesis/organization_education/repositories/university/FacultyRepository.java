@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.bachelor.thesis.organization_education.dto.Faculty;
 import com.bachelor.thesis.organization_education.dto.University;
-import com.bachelor.thesis.organization_education.repositories.NameEntityRepository;
+import com.bachelor.thesis.organization_education.repositories.abstracts.NameEntityRepository;
 
 import java.util.List;
 

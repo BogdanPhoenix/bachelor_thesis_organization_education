@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
 import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.repositories.user.LecturerRepository;
 import com.bachelor.thesis.organization_education.requests.general.user.LecturerRequest;
@@ -22,7 +23,9 @@ import com.bachelor.thesis.organization_education.services.implementations.crud.
 import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerRepository> implements LecturerService {
@@ -111,5 +114,14 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     protected void selectedForDeactivateChild(UUID id) {
         var entity = findEntityById(id);
         deactivatedChild(entity.getGroups(), GroupService.class);
+    }
+
+    @Override
+    public Set<AcademicDiscipline> getDisciplines(@NonNull UUID lecturerId) throws NotFindEntityInDataBaseException {
+        return findValueById(lecturerId)
+                .getDisciplines()
+                .stream()
+                .filter(BaseTableInfo::isEnabled)
+                .collect(Collectors.toSet());
     }
 }
