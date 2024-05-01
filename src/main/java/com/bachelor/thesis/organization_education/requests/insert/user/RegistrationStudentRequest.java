@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class RegistrationStudentUserRequest extends RegistrationRequest {
+public class RegistrationStudentRequest extends RegistrationRequest {
     @NotNull
     private Group group;
 }

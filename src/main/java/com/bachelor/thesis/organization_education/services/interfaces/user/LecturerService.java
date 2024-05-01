@@ -1,12 +1,11 @@
 package com.bachelor.thesis.organization_education.services.interfaces.user;
 
 import lombok.NonNull;
-import com.bachelor.thesis.organization_education.dto.Lecturer;
 import org.springframework.transaction.annotation.Transactional;
 import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
-import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 
@@ -25,25 +24,7 @@ public interface LecturerService extends CrudService {
      * @param userId user ID
      * @throws DuplicateException if the table contains an entity value that is passed in the query.
      */
-    void registration(@NonNull RegistrationRequest request, @NonNull UUID userId) throws DuplicateException;
-
-    /**
-     * Updates the teacher data with the specified ID based on the received request.
-     *
-     * @param id teacher identifier
-     * @param request update request
-     * @return updated teacher data
-     * @throws NotFindEntityInDataBaseException if the teacher is not found in the database
-     */
-    Lecturer updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException;
-
-    /**
-     * Searches for an entity in the database by the specified query and deletes it completely.
-     *
-     * @param userId unique identifier of the user.
-     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
-     */
-    void deleteValue(@NonNull UUID userId);
+    BaseTableInfo registration(@NonNull RegistrationRequest request, @NonNull UUID userId) throws DuplicateException;
 
     /**
      * Adds a discipline to the database for the specified lecturer.

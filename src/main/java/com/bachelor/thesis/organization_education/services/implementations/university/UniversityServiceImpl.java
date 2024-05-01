@@ -95,7 +95,9 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
 
     @Override
     protected void selectedForDeactivateChild(UUID id) {
-        var entity = findEntityById(id);
-        deactivatedChild(entity.getFaculties(), FacultyService.class);
+        var entity = repository.findById(id);
+        entity.ifPresent(e -> {
+            deactivatedChild(e.getFaculties(), FacultyService.class);
+        });
     }
 }

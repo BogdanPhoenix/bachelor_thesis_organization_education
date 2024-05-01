@@ -83,7 +83,6 @@ class CrudServiceAbstractTest {
         @BeforeEach
         void init() {
             when(updateDataMock.getFindRequest()).thenReturn(findRequestMock);
-            when(findRequestMock.skip()).thenReturn(false);
             doCallRealMethod()
                     .when(serviceMock)
                     .updateValue(ID, updateDataMock);

@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import com.bachelor.thesis.organization_education.responces.user.StudentResponse;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 
 import java.util.UUID;
 
@@ -34,7 +34,11 @@ public class Student extends BaseTableInfo {
     private Group group;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public StudentResponse getResponse() {
+        var builder = StudentResponse.builder();
+        super.initResponse(builder);
+        return builder
+                .group(group.getResponse())
+                .build();
     }
 }

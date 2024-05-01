@@ -1,9 +1,9 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Specialty;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
@@ -63,7 +63,9 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
 
     @Override
     protected void selectedForDeactivateChild(UUID id) {
-        var entity = findEntityById(id);
-        deactivatedChild(entity.getGroups(), GroupService.class);
+        var entity = repository.findById(id);
+        entity.ifPresent(e -> {
+            deactivatedChild(e.getGroups(), GroupService.class);
+        });
     }
 }

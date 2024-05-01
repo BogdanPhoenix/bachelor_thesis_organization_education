@@ -19,9 +19,4 @@ public class FacultyFindRequest extends NameEntityFindRequest {
     @NotNull
     @NonNull
     private University university;
-
-    @Override
-    public boolean skip() {
-        return true;
-    }
 }

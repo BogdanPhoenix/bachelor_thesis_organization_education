@@ -77,8 +77,10 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
 
     @Override
     protected void selectedForDeactivateChild(UUID id) {
-       var entity = findEntityById(id);
-       deactivatedChild(entity.getGroups(), GroupService.class);
-       deactivatedChild(entity.getLecturers(), LecturerService.class);
+       var entity = repository.findById(id);
+       entity.ifPresent(e -> {
+           deactivatedChild(e.getGroups(), GroupService.class);
+           deactivatedChild(e.getLecturers(), LecturerService.class);
+       });
     }
 }

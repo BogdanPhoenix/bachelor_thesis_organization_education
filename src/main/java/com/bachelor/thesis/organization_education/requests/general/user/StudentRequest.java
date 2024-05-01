@@ -6,9 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.NotNull;
-import com.bachelor.thesis.organization_education.dto.Faculty;
-import com.bachelor.thesis.organization_education.enums.AcademicTitle;
-import com.bachelor.thesis.organization_education.enums.AcademicDegree;
+import com.bachelor.thesis.organization_education.dto.Group;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 
@@ -21,19 +19,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-@GroupSequence({LecturerRequest.class, InsertRequest.class, UpdateRequest.class})
-public class LecturerRequest implements InsertRequest, UpdateRequest {
+@GroupSequence({StudentRequest.class, InsertRequest.class, UpdateRequest.class})
+public class StudentRequest implements InsertRequest, UpdateRequest {
     @ValidNotUpdate(groups = UpdateRequest.class)
     private UUID userId;
 
     @NotNull(groups = InsertRequest.class)
-    private AcademicTitle title;
-
-    @NotNull(groups = InsertRequest.class)
-    private AcademicDegree degree;
-
-    @NotNull(groups = InsertRequest.class)
-    private Faculty faculty;
+    private Group group;
 
     @Override
     public UserFindRequest getFindRequest() {
@@ -42,15 +34,7 @@ public class LecturerRequest implements InsertRequest, UpdateRequest {
                 .build();
     }
 
-    public boolean titleIsEmpty() {
-        return title == null;
-    }
-
-    public boolean degreeIsEmpty() {
-        return degree == null;
-    }
-
-    public boolean facultyIsEmpty() {
-        return faculty == null;
+    public boolean groupIsEmpty() {
+        return group == null;
     }
 }

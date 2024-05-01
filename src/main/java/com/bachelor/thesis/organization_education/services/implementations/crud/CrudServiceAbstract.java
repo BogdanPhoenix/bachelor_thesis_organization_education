@@ -68,7 +68,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
     }
 
     private void validateDuplicate(FindRequest request, UUID entityId) throws DuplicateException {
-        if(!request.skip() && isDuplicate(request, entityId)){
+        if(isDuplicate(request, entityId)){
             messageDuplicate(request);
         }
     }
@@ -92,7 +92,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
     }
 
     @Override
-    public void activate(@NonNull UUID id) throws NotFindEntityInDataBaseException {
+    public void activate(@NonNull UUID id) {
         updateEnabled(id, true);
     }
 
@@ -102,11 +102,13 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
         updateEnabled(id, false);
     }
 
-    protected void updateEnabled(UUID id, boolean value) throws NotFindEntityInDataBaseException {
-        var entity = findEntityById(id);
-        entity.setEnabled(value);
-        entity.setUpdateDate(LocalDateTime.now());
-        repository.save(entity);
+    protected void updateEnabled(UUID id, boolean value) {
+        var entity = repository.findById(id);
+        entity.ifPresent(e -> {
+            e.setEnabled(value);
+            e.setUpdateDate(LocalDateTime.now());
+            repository.save(e);
+        });
     }
 
     @Override
@@ -132,9 +134,9 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
     }
 
     @Override
-    public void deleteValue(@NonNull UUID id) throws NotFindEntityInDataBaseException {
-        var entity = findEntityById(id);
-        repository.delete(entity);
+    public void deleteValue(@NonNull UUID id) {
+        var entity = repository.findById(id);
+        entity.ifPresent(repository::delete);
     }
 
     protected <B extends BaseTableInfo, C extends CrudService> void deactivatedChild(Collection<B> collection, Class<C> serviceClass) {

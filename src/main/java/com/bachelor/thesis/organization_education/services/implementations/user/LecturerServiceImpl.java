@@ -8,15 +8,16 @@ import com.bachelor.thesis.organization_education.dto.Lecturer;
 import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.requests.find.user.UserFindRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.repositories.user.LecturerRepository;
 import com.bachelor.thesis.organization_education.requests.general.user.LecturerRequest;
-import com.bachelor.thesis.organization_education.requests.find.user.LecturerFindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
+import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
@@ -49,7 +50,7 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    public void registration(@NonNull RegistrationRequest request, @NonNull UUID userId) throws DuplicateException {
+    public BaseTableInfo registration(@NonNull RegistrationRequest request, @NonNull UUID userId) throws DuplicateException {
         var lectureRegistrationRequest = (RegistrationLecturerRequest) request;
         var lectureRequest = LecturerRequest.builder()
                 .userId(userId)
@@ -58,13 +59,21 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
                 .faculty(lectureRegistrationRequest.getFaculty())
                 .build();
 
-        super.addValue(lectureRequest);
+        return super.addValue(lectureRequest);
     }
 
     @Override
     protected List<Lecturer> findAllEntitiesByRequest(@NonNull FindRequest request) {
-        var findRequest = (LecturerFindRequest) request;
+        var findRequest = (UserFindRequest) request;
         return repository.findAllById(findRequest.getUserId());
+    }
+
+    @Override
+    public Lecturer updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException {
+        var findRequest = new UserFindRequest(id);
+        var entity = getValue(findRequest);
+
+        return super.updateValue(entity, request);
     }
 
     @Override
@@ -78,16 +87,9 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
             entity.setDegree(lectureRequest.getDegree());
         }
         if(!lectureRequest.facultyIsEmpty()) {
-            entity.setFaculty(lectureRequest.getFaculty());
+            var faculty = super.getValue(lectureRequest.getFaculty(), FacultyService.class);
+            entity.setFaculty(faculty);
         }
-    }
-
-    @Override
-    public Lecturer updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException {
-        var findRequest = new LecturerFindRequest(id);
-        var entity = getValue(findRequest);
-
-        return updateValue(entity, request);
     }
 
     @Override
@@ -112,8 +114,10 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
 
     @Override
     protected void selectedForDeactivateChild(UUID id) {
-        var entity = findEntityById(id);
-        deactivatedChild(entity.getGroups(), GroupService.class);
+        var entity = repository.findById(id);
+        entity.ifPresent(e -> {
+            deactivatedChild(e.getGroups(), GroupService.class);
+        });
     }
 
     @Override

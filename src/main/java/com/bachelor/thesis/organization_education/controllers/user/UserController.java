@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import com.bachelor.thesis.organization_education.enums.Role;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.bachelor.thesis.organization_education.responces.user.UserResponse;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
@@ -16,7 +17,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationUserRequest;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
-import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentUserRequest;
+import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentRequest;
 
 import java.util.UUID;
 import java.security.Principal;
@@ -29,21 +30,21 @@ public class UserController {
     private final UserService service;
 
     @PostMapping("/register-other/student")
-    public ResponseEntity<UserRepresentation> registerAccountForStudent(@Validated @RequestBody RegistrationStudentUserRequest registrationRequest) {
+    public ResponseEntity<UserResponse> registerAccountForStudent(@Validated @RequestBody RegistrationStudentRequest registrationRequest) {
         return registration(registrationRequest, Role.STUDENT);
     }
 
     @PostMapping("/register-other/lecture")
-    public ResponseEntity<UserRepresentation> registerAccountForLecture(@Validated @RequestBody RegistrationLecturerRequest registrationRequest) {
+    public ResponseEntity<UserResponse> registerAccountForLecture(@Validated @RequestBody RegistrationLecturerRequest registrationRequest) {
         return registration(registrationRequest, Role.LECTURER);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRepresentation> registerUser(@Validated @RequestBody RegistrationUserRequest registrationRequest) {
+    public ResponseEntity<UserResponse> registerUser(@Validated @RequestBody RegistrationUserRequest registrationRequest) {
         return registration(registrationRequest, Role.UNIVERSITY_ADMIN);
     }
 
-    private ResponseEntity<UserRepresentation> registration(
+    private ResponseEntity<UserResponse> registration(
             RegistrationRequest registrationRequest,
             Role role
     ) {
@@ -60,13 +61,15 @@ public class UserController {
     }
 
     @GetMapping
-    public UserRepresentation getUser(Principal principal) {
-        return service.getUserById(principal.getName());
+    public ResponseEntity<UserRepresentation> getUser(Principal principal) {
+        var user = service.getUserById(principal.getName());
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/{userId}")
-    public UserRepresentation getUser(@PathVariable String userId) {
-        return service.getUserById(userId);
+    public ResponseEntity<UserRepresentation> getUser(@PathVariable String userId) {
+        var user = service.getUserById(userId);
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping("/update-password")

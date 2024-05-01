@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.keycloak.representations.idm.UserRepresentation;
 import com.bachelor.thesis.organization_education.enums.Role;
 import org.springframework.transaction.annotation.Transactional;
+import com.bachelor.thesis.organization_education.responces.user.UserResponse;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
@@ -30,7 +31,7 @@ public interface UserService {
      * @throws UserCreatingException if during registration it was not possible to create a user account.
      * @throws DuplicateException if the table contains an entity value that is passed in the query.
      */
-    UserRepresentation registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException, DuplicateException;
+    UserResponse registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException, DuplicateException;
 
     /**
      * Manages the login process based on the provided authorization request.

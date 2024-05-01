@@ -3,7 +3,6 @@ package com.bachelor.thesis.organization_education.requests.find.user;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.NotNull;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 
 import java.util.UUID;
@@ -16,13 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class LecturerFindRequest implements FindRequest {
-    @NotNull
+public class UserFindRequest implements FindRequest {
     @NonNull
     private UUID userId;
-
-    @Override
-    public boolean skip() {
-        return true;
-    }
 }

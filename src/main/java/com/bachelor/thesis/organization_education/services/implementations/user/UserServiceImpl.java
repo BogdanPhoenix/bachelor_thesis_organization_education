@@ -18,11 +18,14 @@ import org.keycloak.representations.idm.UserRepresentation;
 import com.bachelor.thesis.organization_education.enums.Role;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import com.bachelor.thesis.organization_education.responces.user.UserResponse;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.user.StudentService;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
@@ -37,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
     private final UniversityService universityService;
     private final LecturerService lecturerService;
+    private final StudentService studentService;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String jwtIssuerURI;
@@ -74,21 +78,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRepresentation registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException, DuplicateException {
+    public UserResponse registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException, DuplicateException {
         String userId = "";
         try {
-            var user = getUserRepresentation(request, role);
+            UserRepresentation user = getUserRepresentation(request, role);
             userId = createUser(user);
-            var uuid = UUID.fromString(userId);
+            UUID uuid = UUID.fromString(userId);
+            UserRepresentation userInfo = getUserById(userId);
+            BaseTableInfo otherInfo = null;
 
             if(role == Role.LECTURER) {
-                lecturerService.registration(request, uuid);
+                otherInfo = lecturerService.registration(request, uuid);
+            } else if(role == Role.STUDENT) {
+                otherInfo = studentService.registration(request, uuid);
             }
 
             assignRole(userId, role.name());
             emailVerification(userId);
 
-            return getUserById(userId);
+            return UserResponse.builder()
+                    .userInfo(userInfo)
+                    .otherInfo(
+                            otherInfo == null
+                                    ? new com.bachelor.thesis.organization_education.responces.abstract_type.Response() {}
+                                    : otherInfo.getResponse()
+                    )
+                    .build();
         } catch (DuplicateException ex) {
             if(!userId.isBlank()) {
                 deleteUserById(UUID.fromString(userId));
@@ -181,6 +196,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(@NonNull UUID userId) {
         getUsersResource().delete(userId.toString());
         lecturerService.deleteValue(userId);
+        studentService.deleteValue(userId);
     }
 
     @Override
@@ -188,12 +204,14 @@ public class UserServiceImpl implements UserService {
         var uuid = UUID.fromString(userId);
         universityService.deactivateUserEntity(uuid);
         lecturerService.deactivate(uuid);
+        studentService.deactivate(uuid);
         updateEnable(uuid, false);
     }
 
     @Override
     public void activate(@NonNull UUID userId) {
         lecturerService.activate(userId);
+        studentService.activate(userId);
         updateEnable(userId, true);
     }
 

@@ -24,12 +24,7 @@ public class UserUpdateRequest implements UpdateRequest {
     private String lastName;
 
     @Setter(AccessLevel.PRIVATE)
-    private FindRequest findRequest = new FindRequest() {
-        @Override
-        public boolean skip() {
-            return true;
-        }
-    };
+    private FindRequest findRequest = new FindRequest() {};
 
     public boolean firstNameIsEmpty() {
         return firstName == null;

@@ -35,17 +35,15 @@ public interface CrudService {
      * Makes the entity active for further interaction with the program.
      *
      * @param id unique identifier of the entity.
-     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    void activate(@NonNull UUID id) throws NotFindEntityInDataBaseException;
+    void activate(@NonNull UUID id);
 
     /**
      * Makes the entity inactive, which does not allow the program to interact with it.
      *
      * @param id unique identifier of the entity.
-     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    void deactivate(@NonNull UUID id) throws NotFindEntityInDataBaseException ;
+    void deactivate(@NonNull UUID id);
 
     /**
      * Searches for an entity in the database by the specified query.
@@ -88,7 +86,6 @@ public interface CrudService {
      * Searches for an entity in the database by the specified query and deletes it completely.
      *
      * @param id unique identifier of the entity.
-     * @throws NotFindEntityInDataBaseException if the entity could not be found in the table by the specified query.
      */
-    void deleteValue(@NonNull UUID id) throws NotFindEntityInDataBaseException;
+    void deleteValue(@NonNull UUID id);
 }
