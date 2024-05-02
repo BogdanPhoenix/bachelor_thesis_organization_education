@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.responces.university.StudentEvaluationResponse;
 
 import java.util.UUID;
 
@@ -31,12 +31,13 @@ public class StudentEvaluation extends BaseTableInfo {
 
     @NonNull
     @ManyToOne
-    @JoinColumn(name = "record_id", nullable = false)
-    private ClassRecording classRecording;
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
 
     @NonNull
-    @Column(name = "student_id", nullable = false)
-    private UUID studentId;
+    @ManyToOne
+    @JoinColumn(name = "record_id", nullable = false)
+    private ClassRecording classRecording;
 
     @Column(name = "evaluation")
     private short evaluation;
@@ -45,7 +46,14 @@ public class StudentEvaluation extends BaseTableInfo {
     private boolean present;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public StudentEvaluationResponse getResponse() {
+        var builder = StudentEvaluationResponse.builder();
+        super.initResponse(builder);
+        return builder
+                .student(student.getResponse())
+                .classRecording(classRecording.getResponse())
+                .evaluation(evaluation)
+                .present(present)
+                .build();
     }
 }

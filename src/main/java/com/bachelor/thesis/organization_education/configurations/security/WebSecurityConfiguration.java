@@ -35,13 +35,13 @@ public class WebSecurityConfiguration {
 
     private static final Map<Role, List<RequestMatcherConfig>> ROLE_REQUEST_MATCHERS = Map.of(
             Role.STUDENT, List.of(
-                    new RequestMatcherConfig(HttpMethod.GET, "/users/student"),
+                    new RequestMatcherConfig(HttpMethod.GET, "/users/student", "/students-evaluations/student"),
                     new RequestMatcherConfig(HttpMethod.PUT, "/users/student")
             ),
             Role.LECTURER, List.of(
-                    new RequestMatcherConfig(HttpMethod.GET, "/users/lecturer"),
-                    new RequestMatcherConfig(HttpMethod.PUT, "/users/lecturer", "/class-recordings/*"),
-                    new RequestMatcherConfig(HttpMethod.POST, "/class-recordings"),
+                    new RequestMatcherConfig(HttpMethod.GET, "/users/lecturer", "/students-evaluations/recording/*"),
+                    new RequestMatcherConfig(HttpMethod.PUT, "/users/lecturer", "/class-recordings/*", "/students-evaluations/*"),
+                    new RequestMatcherConfig(HttpMethod.POST, "/class-recordings", "/students-evaluations"),
                     new RequestMatcherConfig(HttpMethod.DELETE, "/class-recordings/*")
             ),
             Role.UNIVERSITY_ADMIN, List.of(
