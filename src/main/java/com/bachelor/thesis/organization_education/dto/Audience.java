@@ -37,14 +37,17 @@ public class Audience extends BaseTableInfo {
     @JoinColumn(name = "university_id", nullable = false)
     private University university;
 
+    @NonNull
     @Column(name = "num_floor", nullable = false)
-    private short numFloor;
+    private Short numFloor;
 
+    @NonNull
     @Column(name = "num_audience", nullable = false)
-    private short numAudience;
+    private Short numAudience;
 
+    @NonNull
     @Column(name = "num_seats", nullable = false)
-    private short numSeats;
+    private Short numSeats;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

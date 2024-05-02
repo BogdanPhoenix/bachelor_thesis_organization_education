@@ -46,13 +46,15 @@ public class WebSecurityConfiguration {
             ),
             Role.UNIVERSITY_ADMIN, List.of(
                     new RequestMatcherConfig(HttpMethod.POST, "/users/register-other/*", "/faculties", "/groups", "/universities", "/groups-disciplines",
-                            "/audiences"),
+                            "/audiences", "/academic-years"
+                    ),
                     new RequestMatcherConfig(HttpMethod.PUT, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*/connect-with-lecturer/*",
                             "/disciplines/*/disconnect-lecturer/*", "/users/lecturer/*/connect-with-discipline/*", "/users/lecturer/*/disconnect-discipline/*",
-                            "/groups-disciplines/*", "/audiences/*"
+                            "/groups-disciplines/*", "/audiences/*", "/academic-years/*"
                     ),
                     new RequestMatcherConfig(HttpMethod.DELETE, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*", "/groups-disciplines/*",
-                            "/audiences/*")
+                            "/audiences/*", "/academic-years/*"
+                    )
             ),
             Role.ADMIN, List.of(
                     new RequestMatcherConfig(HttpMethod.DELETE, "*/delete/*"),

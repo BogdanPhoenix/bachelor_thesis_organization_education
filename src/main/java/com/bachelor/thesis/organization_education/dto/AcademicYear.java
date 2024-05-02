@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.responces.university.AcademicYearResponse;
 
 import java.util.Set;
 import java.util.UUID;
@@ -51,7 +51,13 @@ public class AcademicYear extends BaseTableInfo {
     private Set<Semester> semesters;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public AcademicYearResponse getResponse() {
+        var builder = AcademicYearResponse.builder();
+        super.initResponse(builder);
+        return builder
+                .university(university.getResponse())
+                .startYear(startYear)
+                .endYear(endYear)
+                .build();
     }
 }

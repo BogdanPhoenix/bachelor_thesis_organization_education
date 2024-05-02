@@ -42,11 +42,13 @@ public class GroupDiscipline extends BaseTableInfo {
     @JoinColumn(name = "discipline_id", nullable = false)
     private AcademicDiscipline discipline;
 
+    @NonNull
     @Column(name = "amount_practical", nullable = false)
-    private short amountPractical;
+    private Short amountPractical;
 
+    @NonNull
     @Column(name = "amount_lecture", nullable = false)
-    private short amountLecture;
+    private Short amountLecture;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

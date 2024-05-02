@@ -30,8 +30,9 @@ public class Specialty extends NameEntity {
     @Column(name = "id")
     protected UUID id;
 
+    @NonNull
     @Column(name = "number", nullable = false, unique = true)
-    private short number;
+    private Short number;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

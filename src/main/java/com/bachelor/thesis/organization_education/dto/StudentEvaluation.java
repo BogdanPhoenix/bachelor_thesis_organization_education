@@ -39,8 +39,9 @@ public class StudentEvaluation extends BaseTableInfo {
     @JoinColumn(name = "record_id", nullable = false)
     private ClassRecording classRecording;
 
+    @NonNull
     @Column(name = "evaluation")
-    private short evaluation;
+    private Short evaluation;
 
     @Column(name = "present")
     private boolean present;
