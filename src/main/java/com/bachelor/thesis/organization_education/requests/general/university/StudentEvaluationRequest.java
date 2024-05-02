@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import com.bachelor.thesis.organization_education.dto.Student;
 import com.bachelor.thesis.organization_education.dto.ClassRecording;
-import com.bachelor.thesis.organization_education.annotations.ValidNotUpdate;
+import com.bachelor.thesis.organization_education.annotations.ProhibitValueAssignment;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.StudentEvaluationFindRequest;
@@ -23,11 +23,11 @@ import com.bachelor.thesis.organization_education.requests.find.university.Stude
 @GroupSequence({StudentEvaluationRequest.class, InsertRequest.class, UpdateRequest.class})
 public class StudentEvaluationRequest implements InsertRequest, UpdateRequest {
     @NotNull(groups = InsertRequest.class)
-    @ValidNotUpdate(groups = UpdateRequest.class)
+    @ProhibitValueAssignment(groups = UpdateRequest.class)
     private Student student;
 
     @NotNull(groups = InsertRequest.class)
-    @ValidNotUpdate(groups = UpdateRequest.class)
+    @ProhibitValueAssignment(groups = UpdateRequest.class)
     private ClassRecording classRecording;
 
     @Min(value = 0, groups = {InsertRequest.class, UpdateRequest.class})

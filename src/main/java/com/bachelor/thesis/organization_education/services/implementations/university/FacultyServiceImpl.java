@@ -51,11 +51,10 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
     }
 
     @Override
-    public BaseTableInfo updateValue(@NonNull String adminId, @NonNull UUID entityId, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
-        var updateRequest = (FacultyRequest) request;
+    public BaseTableInfo updateValue(@NonNull String adminId, @NonNull UUID entityId, @NonNull FacultyRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
         var university = getUniversity(adminId);
-        updateRequest.setUniversity(university);
-        return super.updateValue(entityId, updateRequest);
+        request.setUniversity(university);
+        return super.updateValue(entityId, request);
     }
 
     private University getUniversity(String adminId) {

@@ -1,6 +1,6 @@
 package com.bachelor.thesis.organization_education.requests.general.user;
 
-import com.bachelor.thesis.organization_education.annotations.ValidNotUpdate;
+import com.bachelor.thesis.organization_education.annotations.ProhibitValueAssignment;
 import com.bachelor.thesis.organization_education.requests.find.user.UserFindRequest;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -23,7 +23,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @GroupSequence({LecturerRequest.class, InsertRequest.class, UpdateRequest.class})
 public class LecturerRequest implements InsertRequest, UpdateRequest {
-    @ValidNotUpdate(groups = UpdateRequest.class)
+    @ProhibitValueAssignment(groups = UpdateRequest.class)
     private UUID userId;
 
     @NotNull(groups = InsertRequest.class)

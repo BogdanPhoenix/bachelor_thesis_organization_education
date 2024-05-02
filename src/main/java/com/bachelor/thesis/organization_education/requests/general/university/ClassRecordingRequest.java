@@ -7,8 +7,8 @@ import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
 import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
-import com.bachelor.thesis.organization_education.annotations.ValidNotUpdate;
 import com.bachelor.thesis.organization_education.annotations.ValidAllowedChars;
+import com.bachelor.thesis.organization_education.annotations.ProhibitValueAssignment;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.ClassRecordingFindRequest;
@@ -23,7 +23,7 @@ import com.bachelor.thesis.organization_education.requests.find.university.Class
 @GroupSequence({ClassRecordingRequest.class, InsertRequest.class, UpdateRequest.class})
 public class ClassRecordingRequest implements InsertRequest, UpdateRequest {
     @NotNull(groups = InsertRequest.class)
-    @ValidNotUpdate(groups = UpdateRequest.class)
+    @ProhibitValueAssignment(groups = UpdateRequest.class)
     private GroupDiscipline magazine;
 
     @NotNull(groups = InsertRequest.class)

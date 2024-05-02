@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.responces.university.AudienceResponse;
 
 import java.util.Set;
 import java.util.UUID;
@@ -52,7 +52,14 @@ public class Audience extends BaseTableInfo {
     private Set<Schedule> schedules;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public AudienceResponse getResponse() {
+        var builder = AudienceResponse.builder();
+        super.initResponse(builder);
+        return builder
+                .university(university.getResponse())
+                .numFloor(numFloor)
+                .numAudience(numAudience)
+                .numSeats(numSeats)
+                .build();
     }
 }
