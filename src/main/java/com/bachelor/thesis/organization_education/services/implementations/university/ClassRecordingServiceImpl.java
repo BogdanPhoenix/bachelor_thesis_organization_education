@@ -14,6 +14,7 @@ import com.bachelor.thesis.organization_education.requests.general.university.Cl
 import com.bachelor.thesis.organization_education.requests.find.university.ClassRecordingFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.ClassRecordingService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
+import com.bachelor.thesis.organization_education.services.interfaces.university.StudentEvaluationService;
 
 import java.util.List;
 import java.util.UUID;
@@ -63,5 +64,8 @@ public class ClassRecordingServiceImpl extends CrudServiceAbstract<ClassRecordin
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) { }
+    protected void selectedForDeactivateChild(UUID id) {
+        var entity = repository.findById(id);
+        entity.ifPresent(e -> deactivatedChild(e.getStudentEvaluations(), StudentEvaluationService.class));
+    }
 }

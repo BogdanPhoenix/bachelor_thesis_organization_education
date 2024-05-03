@@ -6,17 +6,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.services.interfaces.university.*;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
-import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 import com.bachelor.thesis.organization_education.repositories.university.GroupDisciplineRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.GroupDisciplineRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.GroupDisciplineFindRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
-import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
 
 import java.util.List;
 import java.util.UUID;
@@ -79,5 +77,11 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) { }
+    protected void selectedForDeactivateChild(UUID id) {
+        var entity = repository.findById(id);
+        entity.ifPresent(e -> {
+            deactivatedChild(e.getClassRecordings(), ClassRecordingService.class);
+            deactivatedChild(e.getSchedules(), ScheduleService.class);
+        });
+    }
 }

@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.context.ApplicationContext;
 import com.bachelor.thesis.organization_education.dto.Group;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.repositories.university.GroupRepository;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.general.university.GroupRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.requests.find.university.GroupFindRequest;
@@ -16,6 +16,7 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
+import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
 
 import java.util.List;
 import java.util.UUID;
@@ -86,5 +87,8 @@ public class GroupServiceImpl extends CrudServiceAbstract<Group, GroupRepository
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) { }
+    protected void selectedForDeactivateChild(UUID id) {
+        var entity = repository.findById(id);
+        entity.ifPresent(e -> deactivatedChild(e.getGroupsDisciplines(), GroupDisciplineService.class));
+    }
 }

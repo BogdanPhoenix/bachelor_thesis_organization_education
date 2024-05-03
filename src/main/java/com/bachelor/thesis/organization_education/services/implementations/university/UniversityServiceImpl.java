@@ -14,6 +14,7 @@ import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInData
 import com.bachelor.thesis.organization_education.repositories.university.UniversityRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.UniversityRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
+import com.bachelor.thesis.organization_education.services.interfaces.university.AudienceService;
 import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
@@ -88,6 +89,14 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     }
 
     @Override
+    public void deleteUserEntity(UUID userId) {
+        var university = repository.findByAdminId(userId);
+        university.ifPresent(entity ->
+                deleteValue(entity.getId())
+        );
+    }
+
+    @Override
     public University findByUser(@NonNull UUID adminId) throws NotFindEntityInDataBaseException {
         return repository.findByAdminId(adminId)
                 .orElseThrow(() -> new NotFindEntityInDataBaseException("Unable to find a university where the user with the specified ID \"" + adminId + "\" is an administrator."));
@@ -98,6 +107,7 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
         var entity = repository.findById(id);
         entity.ifPresent(e -> {
             deactivatedChild(e.getFaculties(), FacultyService.class);
+            deactivatedChild(e.getAudiences(), AudienceService.class);
         });
     }
 }

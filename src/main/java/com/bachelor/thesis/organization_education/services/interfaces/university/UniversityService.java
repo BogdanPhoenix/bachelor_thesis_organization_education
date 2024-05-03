@@ -54,4 +54,11 @@ public interface UniversityService extends CrudService {
      * @throws NotFindEntityInDataBaseException if the entity could not be found.
      */
     BaseTableInfo updateValue(@NonNull String adminId, @NonNull UUID entityId, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException;
+
+    /**
+     * Delete the university entity associated with the user.
+     *
+     * @param userId identifier of the university administrator.
+     */
+    void deleteUserEntity(UUID userId) ;
 }

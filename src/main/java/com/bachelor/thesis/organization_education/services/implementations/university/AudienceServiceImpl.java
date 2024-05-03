@@ -16,6 +16,7 @@ import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInData
 import com.bachelor.thesis.organization_education.requests.general.university.AudienceRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.AudienceFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AudienceService;
+import com.bachelor.thesis.organization_education.services.interfaces.university.ScheduleService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 
@@ -86,6 +87,7 @@ public class AudienceServiceImpl extends CrudServiceAbstract<Audience, AudienceR
 
     @Override
     protected void selectedForDeactivateChild(UUID id) {
-
+        var entity = repository.findById(id);
+        entity.ifPresent(e -> deactivatedChild(e.getSchedules(), ScheduleService.class));
     }
 }

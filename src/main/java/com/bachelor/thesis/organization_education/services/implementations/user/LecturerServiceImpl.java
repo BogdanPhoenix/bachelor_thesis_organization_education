@@ -19,6 +19,7 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.university.ScheduleService;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
@@ -117,6 +118,7 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
         var entity = repository.findById(id);
         entity.ifPresent(e -> {
             deactivatedChild(e.getGroups(), GroupService.class);
+            deactivatedChild(e.getSchedules(), ScheduleService.class);
         });
     }
 

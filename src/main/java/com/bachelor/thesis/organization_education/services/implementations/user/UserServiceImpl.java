@@ -200,6 +200,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(@NonNull UUID userId) {
         lecturerService.deleteValue(userId);
         studentService.deleteValue(userId);
+        universityService.deleteUserEntity(userId);
         getUsersResource().delete(userId.toString());
     }
 

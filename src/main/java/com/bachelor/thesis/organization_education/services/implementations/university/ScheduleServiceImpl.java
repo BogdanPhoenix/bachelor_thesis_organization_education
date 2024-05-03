@@ -1,18 +1,18 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Schedule;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.repositories.university.ScheduleRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.ScheduleRequest;
+import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.find.university.ScheduleFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AudienceService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.ScheduleService;

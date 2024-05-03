@@ -10,6 +10,7 @@ import com.bachelor.thesis.organization_education.services.interfaces.user.Lectu
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.repositories.university.AcademicDisciplineRepository;
+import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
 import com.bachelor.thesis.organization_education.requests.general.university.AcademicDisciplineRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
@@ -47,7 +48,10 @@ public class AcademicDisciplineServiceImpl extends NameEntityServiceAbstract<Aca
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) { }
+    protected void selectedForDeactivateChild(UUID id) {
+        var entity = repository.findById(id);
+        entity.ifPresent(e -> deactivatedChild(e.getGroupsDisciplines(), GroupDisciplineService.class));
+    }
 
     @Override
     public void addLecturer(@NonNull UUID disciplineId, @NonNull UUID lecturerId) throws NotFindEntityInDataBaseException {
