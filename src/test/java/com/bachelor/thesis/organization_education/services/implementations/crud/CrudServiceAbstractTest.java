@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
@@ -26,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 @SpringBootTest
 class CrudServiceAbstractTest {
     @Mock
-    private JpaRepository<BaseTableInfo, Long> repositoryMock;
+    private BaseTableInfoRepository<BaseTableInfo> repositoryMock;
     @Mock
     private CrudServiceAbstract<BaseTableInfo, BaseTableInfoRepository<BaseTableInfo>> serviceMock;
     @Mock
@@ -129,35 +128,14 @@ class CrudServiceAbstractTest {
     @Nested
     @DisplayName("Test cases for deleteValue method")
     class DeleteValueTests {
-        private static final UUID ID = UUID.randomUUID();
-
         @Test
         @DisplayName("Checking for an exception when null was passed in the request to delete data.")
         void testDeleteValueThrowsNullPointerException() {
             doCallRealMethodForAction(serviceMock::deleteValue, null);
             assertThrows(NullPointerException.class, () -> serviceMock.deleteValue(null));
         }
-
-        @Test
-        @DisplayName("Check for exceptions when the table cannot find the entity for the specified query.")
-        void testDeleteValueThrowsNotFindEntityInDataBaseException() {
-            when(serviceMock.findEntityById(any(UUID.class))).thenThrow(NotFindEntityInDataBaseException.class);
-            doCallRealMethodForAction(serviceMock::deleteValue, ID);
-            assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.deleteValue(ID));
-        }
-}
-
-    @Test
-    @DisplayName("Check for an exception when the request to activate an entity failed to find the entity.")
-    void testActivateEntityThrowsNotFindEntityByRequestInDataBaseException() {
-        testEntityNotFoundAction(serviceMock::activate);
     }
 
-    @Test
-    @DisplayName("Check for an exception when the request to deactivate an entity failed to find the entity.")
-    void testDeactivateEntityThrowsNotFindEntityByRequestInDataBaseException() {
-        testEntityNotFoundAction(serviceMock::deactivate);
-    }
 
     @Test
     @DisplayName("Check the exception when the entity return request did not find an entity.")

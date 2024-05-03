@@ -97,7 +97,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
     }
 
     @Override
-    public void deactivate(@NonNull UUID id) throws NotFindEntityInDataBaseException {
+    public void deactivate(@NonNull UUID id) {
         selectedForDeactivateChild(id);
         updateEnabled(id, false);
     }

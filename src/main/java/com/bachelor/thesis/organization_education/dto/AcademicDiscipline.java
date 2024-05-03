@@ -44,11 +44,6 @@ public class AcademicDiscipline extends NameEntity {
     @OneToMany(mappedBy = "discipline", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Set<GroupDiscipline> groupsDisciplines;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "discipline", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<Schedule> schedules;
-
     @Override
     public AcademicDisciplineResponse getResponse() {
         var builder = AcademicDisciplineResponse.builder();

@@ -9,7 +9,7 @@ import com.bachelor.thesis.organization_education.enums.DayWeek;
 import com.bachelor.thesis.organization_education.enums.Frequency;
 import com.bachelor.thesis.organization_education.enums.TypeClass;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.responces.university.ScheduleResponse;
 
 import java.sql.Time;
 import java.util.UUID;
@@ -25,7 +25,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "schedules",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"discipline_id", "group_id", "teacher_id", "type_class"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"group_discipline_id", "lecturer_id", "type_class"})
 )
 public class Schedule extends BaseTableInfo {
     @Id
@@ -35,17 +35,12 @@ public class Schedule extends BaseTableInfo {
 
     @NonNull
     @ManyToOne
-    @JoinColumn(name = "discipline_id", nullable = false)
-    private AcademicDiscipline discipline;
+    @JoinColumn(name = "group_discipline_id", nullable = false)
+    private GroupDiscipline groupDiscipline;
 
     @NonNull
     @ManyToOne
-    @JoinColumn(name = "group_id", nullable = false)
-    private Group group;
-
-    @NonNull
-    @ManyToOne
-    @JoinColumn(name = "teacher_id", nullable = false)
+    @JoinColumn(name = "lecturer_id", nullable = false)
     private Lecturer lecturer;
 
     @NonNull
@@ -77,7 +72,18 @@ public class Schedule extends BaseTableInfo {
     private Time endTime;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public ScheduleResponse getResponse() {
+        var builder = ScheduleResponse.builder();
+        super.initResponse(builder);
+        return builder
+                .groupDiscipline(groupDiscipline.getResponse())
+                .lecturer(lecturer.getResponse())
+                .audience(audience.getResponse())
+                .typeClass(typeClass)
+                .dayWeek(dayWeek)
+                .frequency(frequency)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
     }
 }

@@ -9,7 +9,9 @@ import com.bachelor.thesis.organization_education.enums.AcademicTitle;
 import com.bachelor.thesis.organization_education.enums.AcademicDegree;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.user.LecturerResponse;
+import com.bachelor.thesis.organization_education.responces.university.AcademicDisciplineResponse;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.List;
 import java.util.UUID;
@@ -71,7 +73,9 @@ public class Lecturer extends BaseTableInfo {
     @Override
     public LecturerResponse getResponse() {
         var builder = LecturerResponse.builder();
-        var disciplinesResponse = disciplines
+        var disciplinesResponse = disciplines == null
+                ? new ArrayList<AcademicDisciplineResponse>()
+                : disciplines
                 .stream()
                 .map(AcademicDiscipline::getResponse)
                 .toList();

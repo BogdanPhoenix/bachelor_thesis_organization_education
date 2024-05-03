@@ -42,6 +42,7 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
         return GroupDiscipline.builder()
                 .group(insertRequest.getGroup())
                 .discipline(insertRequest.getDiscipline())
+                .semester(insertRequest.getSemester())
                 .amountLecture(insertRequest.getAmountLecture())
                 .amountPractical(insertRequest.getAmountPractical())
                 .build();
@@ -71,6 +72,9 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
         }
         if(!updateRequest.amountPracticalIsEmpty()) {
             entity.setAmountPractical(updateRequest.getAmountPractical());
+        }
+        if(!updateRequest.semesterIsEmpty()) {
+            entity.setSemester(updateRequest.getSemester());
         }
     }
 

@@ -81,21 +81,15 @@ public class UserServiceImpl implements UserService {
     public UserResponse registration(@NonNull RegistrationRequest request, Role role) throws UserCreatingException, DuplicateException {
         String userId = "";
         try {
-            UserRepresentation user = getUserRepresentation(request, role);
+            var user = getUserRepresentation(request, role);
             userId = createUser(user);
-            UUID uuid = UUID.fromString(userId);
-            UserRepresentation userInfo = getUserById(userId);
-            BaseTableInfo otherInfo = null;
-
-            if(role == Role.LECTURER) {
-                otherInfo = lecturerService.registration(request, uuid);
-            } else if(role == Role.STUDENT) {
-                otherInfo = studentService.registration(request, uuid);
-            }
+            var uuid = UUID.fromString(userId);
+            var otherInfo = getAdditionalInfo(role, request, uuid);
 
             assignRole(userId, role.name());
             emailVerification(userId);
 
+            var userInfo = getUserById(userId);
             return UserResponse.builder()
                     .userInfo(userInfo)
                     .otherInfo(
@@ -104,11 +98,12 @@ public class UserServiceImpl implements UserService {
                                     : otherInfo.getResponse()
                     )
                     .build();
-        } catch (DuplicateException ex) {
-            if(!userId.isBlank()) {
+        } catch (RuntimeException ex) {
+            if (!userId.isBlank()) {
                 deleteUserById(UUID.fromString(userId));
             }
-            throw new DuplicateException(ex.getMessage());
+
+            throw ex;
         }
     }
 
@@ -169,6 +164,15 @@ public class UserServiceImpl implements UserService {
         return parts[parts.length - 1];
     }
 
+    private BaseTableInfo getAdditionalInfo(Role role, RegistrationRequest request, UUID uuid) {
+        if (role == Role.LECTURER) {
+            return lecturerService.registration(request, uuid);
+        } else if (role == Role.STUDENT) {
+            return studentService.registration(request, uuid);
+        }
+        return null;
+    }
+
     private void assignRole(String userId, String roleName) {
         var userResource = getUserResource(userId);
         var rolesResource = getRolesResource();
@@ -194,9 +198,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(@NonNull UUID userId) {
-        getUsersResource().delete(userId.toString());
         lecturerService.deleteValue(userId);
         studentService.deleteValue(userId);
+        getUsersResource().delete(userId.toString());
     }
 
     @Override

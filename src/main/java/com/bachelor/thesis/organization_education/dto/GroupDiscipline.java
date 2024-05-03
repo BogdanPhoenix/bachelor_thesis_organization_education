@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import com.bachelor.thesis.organization_education.enums.SemesterNumber;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.university.GroupDisciplineResponse;
 
@@ -43,6 +44,11 @@ public class GroupDiscipline extends BaseTableInfo {
     private AcademicDiscipline discipline;
 
     @NonNull
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "semester", nullable = false)
+    private SemesterNumber semester;
+
+    @NonNull
     @Column(name = "amount_practical", nullable = false)
     private Short amountPractical;
 
@@ -55,6 +61,11 @@ public class GroupDiscipline extends BaseTableInfo {
     @OneToMany(mappedBy = "magazine", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Set<ClassRecording> classRecordings;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "groupDiscipline", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
+    private Set<Schedule> schedules;
+
     @Override
     public GroupDisciplineResponse getResponse() {
         var builder = GroupDisciplineResponse.builder();
@@ -62,6 +73,7 @@ public class GroupDiscipline extends BaseTableInfo {
         return builder
                 .group(group.getResponse())
                 .discipline(discipline.getResponse())
+                .semester(semester)
                 .amountLecture(amountLecture)
                 .amountPractical(amountPractical)
                 .build();

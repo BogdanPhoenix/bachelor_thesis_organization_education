@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import com.bachelor.thesis.organization_education.dto.Group;
+import com.bachelor.thesis.organization_education.enums.SemesterNumber;
 import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.annotations.ProhibitValueAssignment;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
@@ -30,6 +31,9 @@ public class GroupDisciplineRequest implements InsertRequest, UpdateRequest {
     @ProhibitValueAssignment(groups = UpdateRequest.class)
     private AcademicDiscipline discipline;
 
+    @NotNull(groups = InsertRequest.class)
+    private SemesterNumber semester;
+
     @Min(value = 0, groups = {InsertRequest.class, UpdateRequest.class})
     @Max(value = 100, groups = {InsertRequest.class, UpdateRequest.class})
     private short amountPractical;
@@ -52,5 +56,9 @@ public class GroupDisciplineRequest implements InsertRequest, UpdateRequest {
 
     public boolean amountLectureIsEmpty() {
         return amountLecture <= 0;
+    }
+
+    public boolean semesterIsEmpty() {
+        return semester == null;
     }
 }

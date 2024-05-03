@@ -9,48 +9,40 @@ import com.bachelor.thesis.organization_education.controllers.ResourceController
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
-import com.bachelor.thesis.organization_education.requests.general.university.AcademicYearRequest;
-import com.bachelor.thesis.organization_education.requests.find.university.AcademicYearFindRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicYearService;
+import com.bachelor.thesis.organization_education.requests.general.university.ScheduleRequest;
+import com.bachelor.thesis.organization_education.requests.find.university.ScheduleFindRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.university.ScheduleService;
 
 import java.util.UUID;
-import java.security.Principal;
 
 @RestController
-@RequestMapping("/academic-years")
+@RequestMapping("/schedules")
 @Validated
-public class AcademicYearController extends ResourceController<AcademicYearService> {
+public class ScheduleController extends ResourceController<ScheduleService> {
     @Autowired
-    public AcademicYearController(AcademicYearService service) {
+    public ScheduleController(ScheduleService service) {
         super(service);
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(
-            @Validated(InsertRequest.class) @RequestBody AcademicYearRequest request,
-            Principal principal
-    ) {
-        var response = service.addResource(request, principal.getName())
+    public ResponseEntity<Response> add(@Validated(InsertRequest.class) @RequestBody ScheduleRequest request) {
+        var response = service.addValue(request)
                 .getResponse();
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
 
     @GetMapping
-    public ResponseEntity<Response> get(@Validated @RequestBody AcademicYearFindRequest request) {
+    public ResponseEntity<Response> get(@Validated @RequestBody ScheduleFindRequest request) {
         return super.get(request);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
             @PathVariable UUID id,
-            @Validated(UpdateRequest.class) @RequestBody AcademicYearRequest request
+            @Validated(UpdateRequest.class) @RequestBody ScheduleRequest request
     ) {
-        var response = service.updateValue(id, request)
-                .getResponse();
-
-        return ResponseEntity.ok(response);
+        return super.updateEntity(id, request);
     }
 }

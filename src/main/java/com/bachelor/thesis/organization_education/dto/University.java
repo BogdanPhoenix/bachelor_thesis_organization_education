@@ -50,11 +50,6 @@ public class University extends NameEntity {
     @OneToMany(mappedBy = "university", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private Set<Faculty> faculties;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "university", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<AcademicYear> academicYears;
-
     @Override
     public UniversityResponse getResponse() {
         var responseBuilder = UniversityResponse.builder();

@@ -4,27 +4,28 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
-import com.bachelor.thesis.organization_education.dto.University;
+import com.bachelor.thesis.organization_education.dto.Lecturer;
+import com.bachelor.thesis.organization_education.enums.TypeClass;
+import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 
 @Getter
 @Setter
 @SuperBuilder
 @MappedSuperclass
-@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class AcademicYearFindRequest implements FindRequest {
-    @NotNull
+public class ScheduleFindRequest implements FindRequest {
     @NonNull
-    private University university;
+    @NotNull
+    private GroupDiscipline groupDiscipline;
 
-    @NotNull
     @NonNull
-    private Short startYear;
+    @NotNull
+    private Lecturer lecturer;
 
-    @NotNull
     @NonNull
-    private Short endYear;
+    @NotNull
+    private TypeClass typeClass;
 }
