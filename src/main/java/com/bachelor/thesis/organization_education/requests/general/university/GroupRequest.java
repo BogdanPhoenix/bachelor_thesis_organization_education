@@ -10,8 +10,9 @@ import com.bachelor.thesis.organization_education.dto.Lecturer;
 import com.bachelor.thesis.organization_education.dto.Specialty;
 import com.bachelor.thesis.organization_education.annotations.ValidYear;
 import com.bachelor.thesis.organization_education.annotations.ProhibitValueAssignment;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.YearRange;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.GroupFindRequest;
 
 @Getter
@@ -22,7 +23,7 @@ import com.bachelor.thesis.organization_education.requests.find.university.Group
 @ToString
 @EqualsAndHashCode
 @GroupSequence({GroupRequest.class, InsertRequest.class, UpdateRequest.class})
-public class GroupRequest implements InsertRequest, UpdateRequest {
+public class GroupRequest implements InsertRequest, UpdateRequest, YearRange {
     @NotNull(groups = InsertRequest.class)
     private Lecturer curator;
 
@@ -33,13 +34,15 @@ public class GroupRequest implements InsertRequest, UpdateRequest {
     @NotNull(groups = InsertRequest.class)
     private Faculty faculty;
 
+    @NotNull(groups = InsertRequest.class)
     @Min(value = 1900, groups = InsertRequest.class)
     @ValidYear(groups = UpdateRequest.class)
-    private short yearStart;
+    private Short yearStart;
 
+    @NotNull(groups = InsertRequest.class)
     @Min(value = 1900, groups = InsertRequest.class)
     @ValidYear(groups = UpdateRequest.class)
-    private short yearEnd;
+    private Short yearEnd;
 
     private boolean reducedForm;
 
@@ -65,10 +68,10 @@ public class GroupRequest implements InsertRequest, UpdateRequest {
     }
 
     public boolean yearStartIsEmpty() {
-        return yearStart <= 0;
+        return yearStart == null;
     }
 
     public boolean yearEndIsEmpty() {
-        return yearEnd <= 0;
+        return yearEnd == null;
     }
 }

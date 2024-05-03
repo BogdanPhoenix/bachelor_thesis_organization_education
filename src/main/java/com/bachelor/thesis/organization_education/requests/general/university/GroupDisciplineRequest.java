@@ -34,13 +34,15 @@ public class GroupDisciplineRequest implements InsertRequest, UpdateRequest {
     @NotNull(groups = InsertRequest.class)
     private SemesterNumber semester;
 
-    @Min(value = 0, groups = {InsertRequest.class, UpdateRequest.class})
+    @NotNull(groups = InsertRequest.class)
+    @Min(value = 1, groups = {InsertRequest.class, UpdateRequest.class})
     @Max(value = 100, groups = {InsertRequest.class, UpdateRequest.class})
-    private short amountPractical;
+    private Short amountPractical;
 
-    @Min(value = 0, groups = {InsertRequest.class, UpdateRequest.class})
+    @NotNull(groups = InsertRequest.class)
+    @Min(value = 1, groups = {InsertRequest.class, UpdateRequest.class})
     @Max(value = 100, groups = {InsertRequest.class, UpdateRequest.class})
-    private short amountLecture;
+    private Short amountLecture;
 
     @Override
     public GroupDisciplineFindRequest getFindRequest() {
@@ -51,11 +53,11 @@ public class GroupDisciplineRequest implements InsertRequest, UpdateRequest {
     }
 
     public boolean amountPracticalIsEmpty() {
-        return amountPractical <= 0;
+        return amountPractical == null;
     }
 
     public boolean amountLectureIsEmpty() {
-        return amountLecture <= 0;
+        return amountLecture == null;
     }
 
     public boolean semesterIsEmpty() {

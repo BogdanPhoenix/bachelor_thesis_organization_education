@@ -5,6 +5,7 @@ import lombok.experimental.SuperBuilder;
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.NameEntityRequest;
@@ -19,9 +20,10 @@ import com.bachelor.thesis.organization_education.requests.find.university.Speci
 @EqualsAndHashCode(callSuper = true)
 @GroupSequence({SpecialtyRequest.class, InsertRequest.class, UpdateRequest.class})
 public class SpecialtyRequest extends NameEntityRequest {
-    @Min(value = 0, groups = {InsertRequest.class, UpdateRequest.class})
+    @NotNull(groups = InsertRequest.class)
+    @Min(value = 1, groups = {InsertRequest.class, UpdateRequest.class})
     @Max(value = 999, groups = {InsertRequest.class, UpdateRequest.class})
-    private short number;
+    private Short number;
 
     @Override
     public SpecialtyFindRequest getFindRequest() {
@@ -33,6 +35,6 @@ public class SpecialtyRequest extends NameEntityRequest {
     }
 
     public boolean numberIsEmpty() {
-        return number <= 0;
+        return number == null;
     }
 }

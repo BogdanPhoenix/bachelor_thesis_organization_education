@@ -21,8 +21,9 @@ public class GroupFindRequest implements FindRequest {
     @NonNull
     private Specialty specialty;
 
+    @NotNull
     @Min(1900)
-    private short yearStart;
+    private Short yearStart;
 
     private boolean reducedForm;
 }

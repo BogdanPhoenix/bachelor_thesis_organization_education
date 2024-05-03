@@ -1,5 +1,6 @@
 package com.bachelor.thesis.organization_education.requests.general.university;
 
+import com.bachelor.thesis.organization_education.requests.general.abstracts.TimeRange;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.validation.GroupSequence;
@@ -25,7 +26,7 @@ import java.sql.Time;
 @ToString
 @EqualsAndHashCode
 @GroupSequence({ScheduleRequest.class, InsertRequest.class, UpdateRequest.class})
-public class ScheduleRequest implements InsertRequest, UpdateRequest {
+public class ScheduleRequest implements InsertRequest, UpdateRequest, TimeRange {
     @NotNull(groups = InsertRequest.class)
     @ProhibitValueAssignment(groups = UpdateRequest.class)
     private GroupDiscipline groupDiscipline;
