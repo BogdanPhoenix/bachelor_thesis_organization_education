@@ -9,11 +9,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum AccreditationLevel {
-    EMPTY("", ""),
-    FIRST("First", "Перший"),
-    SECOND("Second", "Другий"),
-    THIRD("Third", "Третій"),
-    FOURTH("Fourth", "Четвертий");
+    FIRST("1st", "1-й"),
+    SECOND("2nd", "2-й"),
+    THIRD("3rd", "3-й"),
+    FOURTH("4th", "4-й");
 
     private final String enName;
     private final String uaName;

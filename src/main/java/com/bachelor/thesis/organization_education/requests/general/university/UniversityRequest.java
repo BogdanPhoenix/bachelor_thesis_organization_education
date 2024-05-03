@@ -38,6 +38,6 @@ public class UniversityRequest extends NameEntityRequest {
     }
 
     public boolean accreditationLevelIsEmpty() {
-        return accreditationLevel == null || accreditationLevel == AccreditationLevel.EMPTY;
+        return accreditationLevel == null;
     }
 }

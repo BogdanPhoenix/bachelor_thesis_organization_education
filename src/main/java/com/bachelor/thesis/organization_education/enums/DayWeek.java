@@ -3,10 +3,12 @@ package com.bachelor.thesis.organization_education.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Enum representing days of the week with their English and Ukrainian names.
+ */
 @Getter
 @RequiredArgsConstructor
 public enum DayWeek {
-    EMPTY("", ""),
     MONDAY("Monday", "Понеділок"),
     TUESDAY("Tuesday", "Вівторок"),
     WEDNESDAY("Wednesday", "Середа"),

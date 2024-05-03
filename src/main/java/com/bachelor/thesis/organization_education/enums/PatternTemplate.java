@@ -3,6 +3,10 @@ package com.bachelor.thesis.organization_education.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Enum defining various pattern templates for validation.
+ * Each pattern template corresponds to a specific type of data validation.
+ */
 @Getter
 @RequiredArgsConstructor
 public enum PatternTemplate {

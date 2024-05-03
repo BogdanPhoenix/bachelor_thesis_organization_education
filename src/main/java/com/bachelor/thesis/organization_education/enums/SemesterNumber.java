@@ -3,6 +3,9 @@ package com.bachelor.thesis.organization_education.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Enumeration representing semester numbers with their English and Ukrainian names.
+ */
 @Getter
 @RequiredArgsConstructor
 public enum SemesterNumber {
