@@ -43,6 +43,10 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
         return repository.save(newEntity);
     }
 
+    protected void objectFormation(InsertRequest request) {
+        //You need to override only in classes where it is required.
+    }
+
     protected void validateDuplicate(FindRequest request) throws DuplicateException {
         if(isDuplicate(request)){
             messageDuplicate(request);
@@ -100,6 +104,10 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
     public void deactivate(@NonNull UUID id) {
         selectedForDeactivateChild(id);
         updateEnabled(id, false);
+    }
+
+    protected void selectedForDeactivateChild(UUID id) {
+        //You need to override only in classes where it is required.
     }
 
     protected void updateEnabled(UUID id, boolean value) {
@@ -175,9 +183,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
                 );
     }
 
-    protected abstract void objectFormation(InsertRequest request);
     protected abstract T createEntity(InsertRequest request);
     protected abstract List<T> findAllEntitiesByRequest(@NonNull FindRequest request);
     protected abstract void updateEntity(T entity, UpdateRequest request);
-    protected abstract void selectedForDeactivateChild(UUID id);
 }

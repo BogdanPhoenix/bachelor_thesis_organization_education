@@ -26,11 +26,6 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
     }
 
     @Override
-    protected void objectFormation(InsertRequest request) {
-
-    }
-
-    @Override
     protected Specialty createEntity(InsertRequest request) {
         var specialtyRequest = (SpecialtyRequest) request;
         var builder = Specialty.builder();

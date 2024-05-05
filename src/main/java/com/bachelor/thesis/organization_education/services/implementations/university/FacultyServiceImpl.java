@@ -31,9 +31,6 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
     }
 
     @Override
-    protected void objectFormation(InsertRequest request) { }
-
-    @Override
     protected Faculty createEntity(InsertRequest request) {
         var facultyRequest = (FacultyRequest) request;
         var builder = Faculty.builder();

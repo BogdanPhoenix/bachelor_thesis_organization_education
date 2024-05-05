@@ -157,11 +157,6 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
         }
     }
 
-    @Override
-    protected void selectedForDeactivateChild(UUID id) {
-
-    }
-
     private enum FindBy {
         LECTURER, AUDIENCE
     }

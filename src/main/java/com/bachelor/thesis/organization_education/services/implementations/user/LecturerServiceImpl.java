@@ -37,9 +37,6 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    protected void objectFormation(InsertRequest request) { }
-
-    @Override
     protected Lecturer createEntity(InsertRequest request) {
         var lectureRequest = (LecturerRequest) request;
         return Lecturer.builder()

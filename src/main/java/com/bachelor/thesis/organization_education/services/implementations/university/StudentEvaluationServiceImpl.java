@@ -81,11 +81,6 @@ public class StudentEvaluationServiceImpl extends CrudServiceAbstract<StudentEva
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) {
-
-    }
-
-    @Override
     public Page<StudentEvaluation> getStudentEvaluations(@NonNull UUID studentId, @NonNull Pageable pageable) throws NotFindEntityInDataBaseException {
         var studentService = super.getBeanByClass(StudentService.class);
         var student = (Student) studentService.getValue(studentId);

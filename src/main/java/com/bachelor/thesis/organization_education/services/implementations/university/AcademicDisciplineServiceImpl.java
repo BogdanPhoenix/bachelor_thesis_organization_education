@@ -25,9 +25,6 @@ public class AcademicDisciplineServiceImpl extends NameEntityServiceAbstract<Aca
     }
 
     @Override
-    protected void objectFormation(InsertRequest request) { }
-
-    @Override
     protected AcademicDiscipline createEntity(InsertRequest request) {
         var disciplineRequest = (AcademicDisciplineRequest) request;
         var builder = AcademicDiscipline.builder();

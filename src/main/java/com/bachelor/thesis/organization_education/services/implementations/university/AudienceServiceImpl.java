@@ -31,11 +31,6 @@ public class AudienceServiceImpl extends CrudServiceAbstract<Audience, AudienceR
     }
 
     @Override
-    protected void objectFormation(InsertRequest request) {
-
-    }
-
-    @Override
     protected Audience createEntity(InsertRequest request) {
         var insertRequest = (AudienceRequest) request;
         return Audience.builder()
