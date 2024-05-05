@@ -43,7 +43,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
         return repository.save(newEntity);
     }
 
-    private void validateDuplicate(FindRequest request) throws DuplicateException {
+    protected void validateDuplicate(FindRequest request) throws DuplicateException {
         if(isDuplicate(request)){
             messageDuplicate(request);
         }
