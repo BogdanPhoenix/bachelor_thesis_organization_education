@@ -72,9 +72,9 @@ public class Group extends BaseTableInfo {
     public GroupResponse getResponse() {
         var builder = GroupResponse.builder();
         super.initResponse(builder);
-        return builder.curator(curator.getResponse())
-                .specialty(specialty.getResponse())
-                .faculty(faculty.getResponse())
+        return builder.curator(curator.getId())
+                .specialty(specialty.getId())
+                .faculty(faculty.getId())
                 .yearStart(yearStart)
                 .yearEnd(yearEnd)
                 .reducedForm(reducedForm)

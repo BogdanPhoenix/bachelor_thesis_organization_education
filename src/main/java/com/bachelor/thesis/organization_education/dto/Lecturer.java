@@ -84,7 +84,7 @@ public class Lecturer extends BaseTableInfo {
         return builder
                 .title(title)
                 .degree(degree)
-                .faculty(faculty.getResponse())
+                .faculty(faculty.getId())
                 .disciplines(disciplinesResponse)
                 .build();
     }

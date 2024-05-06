@@ -51,8 +51,8 @@ public class StudentEvaluation extends BaseTableInfo {
         var builder = StudentEvaluationResponse.builder();
         super.initResponse(builder);
         return builder
-                .student(student.getResponse())
-                .classRecording(classRecording.getResponse())
+                .student(student.getId())
+                .classRecording(classRecording.getId())
                 .evaluation(evaluation)
                 .present(present)
                 .build();

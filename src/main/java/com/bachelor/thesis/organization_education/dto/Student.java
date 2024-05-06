@@ -46,7 +46,7 @@ public class Student extends BaseTableInfo {
         var builder = StudentResponse.builder();
         super.initResponse(builder);
         return builder
-                .group(group.getResponse())
+                .group(group.getId())
                 .build();
     }
 }

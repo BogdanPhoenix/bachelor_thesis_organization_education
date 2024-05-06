@@ -10,6 +10,7 @@ import com.bachelor.thesis.organization_education.responces.university.FacultyRe
 import com.bachelor.thesis.organization_education.responces.university.AcademicDisciplineResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -27,7 +28,7 @@ public class LecturerResponse extends Response {
     private AcademicDegree degree;
 
     @NonNull
-    private FacultyResponse faculty;
+    private UUID faculty;
 
     @NonNull
     private List<AcademicDisciplineResponse> disciplines;

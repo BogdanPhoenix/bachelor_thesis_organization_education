@@ -9,6 +9,7 @@ import com.bachelor.thesis.organization_education.enums.TypeClass;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 
 import java.sql.Time;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,10 +21,10 @@ import java.sql.Time;
 @EqualsAndHashCode(callSuper = true)
 public class ScheduleResponse extends Response {
     @NonNull
-    private GroupDisciplineResponse groupDiscipline;
+    private UUID groupDiscipline;
 
     @NonNull
-    private AudienceResponse audience;
+    private UUID audience;
 
     @NonNull
     private TypeClass typeClass;

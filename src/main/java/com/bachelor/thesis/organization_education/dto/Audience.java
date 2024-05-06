@@ -59,7 +59,7 @@ public class Audience extends BaseTableInfo {
         var builder = AudienceResponse.builder();
         super.initResponse(builder);
         return builder
-                .university(university.getResponse())
+                .university(university.getId())
                 .numFloor(numFloor)
                 .numAudience(numAudience)
                 .numSeats(numSeats)

@@ -63,7 +63,7 @@ public class ClassRecording extends BaseTableInfo {
         var builder = ClassRecordingResponse.builder();
         super.initResponse(builder);
         return builder
-                .magazine(magazine.getResponse())
+                .magazine(magazine.getId())
                 .classTopic(classTopic)
                 .description(description)
                 .build();

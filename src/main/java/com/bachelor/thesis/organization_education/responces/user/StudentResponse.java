@@ -6,6 +6,8 @@ import jakarta.persistence.MappedSuperclass;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.responces.university.GroupResponse;
 
+import java.util.UUID;
+
 @Setter
 @Getter
 @SuperBuilder
@@ -16,5 +18,5 @@ import com.bachelor.thesis.organization_education.responces.university.GroupResp
 @EqualsAndHashCode(callSuper = true)
 public class StudentResponse extends Response {
     @NonNull
-    private GroupResponse group;
+    private UUID group;
 }

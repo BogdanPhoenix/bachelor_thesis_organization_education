@@ -76,9 +76,9 @@ public class GroupDiscipline extends BaseTableInfo {
         var builder = GroupDisciplineResponse.builder();
         super.initResponse(builder);
         return builder
-                .group(group.getResponse())
-                .discipline(discipline.getResponse())
-                .lecturer(lecturer.getResponse())
+                .group(group.getId())
+                .discipline(discipline.getId())
+                .lecturer(lecturer.getId())
                 .semester(semester)
                 .amountLecture(amountLecture)
                 .amountPractical(amountPractical)

@@ -52,7 +52,7 @@ public class Faculty extends NameEntity {
         var responseBuilder = FacultyResponse.builder();
         super.initResponse(responseBuilder);
         return responseBuilder
-                .university(university.getResponse())
+                .university(university.getId())
                 .build();
     }
 }

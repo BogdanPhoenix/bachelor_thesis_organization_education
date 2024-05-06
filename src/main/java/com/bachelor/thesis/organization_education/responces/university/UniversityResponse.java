@@ -1,10 +1,10 @@
 package com.bachelor.thesis.organization_education.responces.university;
 
-import com.bachelor.thesis.organization_education.enums.AccreditationLevel;
-import com.bachelor.thesis.organization_education.responces.abstract_type.NameEntityResponse;
-import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.persistence.MappedSuperclass;
+import com.bachelor.thesis.organization_education.enums.AccreditationLevel;
+import com.bachelor.thesis.organization_education.responces.abstract_type.NameEntityResponse;
 
 import java.util.UUID;
 
@@ -19,6 +19,7 @@ import java.util.UUID;
 public class UniversityResponse extends NameEntityResponse {
     @NonNull
     private AccreditationLevel accreditationLevel;
+
     @NonNull
     private UUID adminId;
 }

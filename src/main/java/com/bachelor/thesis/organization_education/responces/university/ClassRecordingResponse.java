@@ -5,6 +5,8 @@ import lombok.experimental.SuperBuilder;
 import jakarta.persistence.MappedSuperclass;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -15,7 +17,7 @@ import com.bachelor.thesis.organization_education.responces.abstract_type.Respon
 @EqualsAndHashCode(callSuper = true)
 public class ClassRecordingResponse extends Response {
     @NonNull
-    private GroupDisciplineResponse magazine;
+    private UUID magazine;
 
     @NonNull
     private String classTopic;

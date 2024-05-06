@@ -1,9 +1,11 @@
 package com.bachelor.thesis.organization_education.responces.university;
 
-import com.bachelor.thesis.organization_education.responces.abstract_type.NameEntityResponse;
-import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.persistence.MappedSuperclass;
+import com.bachelor.thesis.organization_education.responces.abstract_type.NameEntityResponse;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,5 +17,5 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class FacultyResponse extends NameEntityResponse {
     @NonNull
-    private UniversityResponse university;
+    private UUID university;
 }

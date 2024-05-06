@@ -71,8 +71,8 @@ public class Schedule extends BaseTableInfo {
         var builder = ScheduleResponse.builder();
         super.initResponse(builder);
         return builder
-                .groupDiscipline(groupDiscipline.getResponse())
-                .audience(audience.getResponse())
+                .groupDiscipline(groupDiscipline.getId())
+                .audience(audience.getId())
                 .typeClass(typeClass)
                 .dayWeek(dayWeek)
                 .frequency(frequency)

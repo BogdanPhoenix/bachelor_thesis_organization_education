@@ -3,8 +3,9 @@ package com.bachelor.thesis.organization_education.responces.university;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.MappedSuperclass;
-import com.bachelor.thesis.organization_education.responces.user.StudentResponse;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,10 +17,10 @@ import com.bachelor.thesis.organization_education.responces.abstract_type.Respon
 @EqualsAndHashCode(callSuper = true)
 public class StudentEvaluationResponse extends Response {
     @NonNull
-    private StudentResponse student;
+    private UUID student;
 
     @NonNull
-    private ClassRecordingResponse classRecording;
+    private UUID classRecording;
 
     private short evaluation;
     private boolean present;
