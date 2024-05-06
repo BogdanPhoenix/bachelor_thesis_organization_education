@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import com.bachelor.thesis.organization_education.dto.Group;
+import com.bachelor.thesis.organization_education.dto.Lecturer;
 import com.bachelor.thesis.organization_education.enums.SemesterNumber;
 import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.annotations.ProhibitValueAssignment;
@@ -32,6 +33,9 @@ public class GroupDisciplineRequest implements InsertRequest, UpdateRequest {
     private AcademicDiscipline discipline;
 
     @NotNull(groups = InsertRequest.class)
+    private Lecturer lecturer;
+
+    @NotNull(groups = InsertRequest.class)
     private SemesterNumber semester;
 
     @NotNull(groups = InsertRequest.class)
@@ -50,6 +54,10 @@ public class GroupDisciplineRequest implements InsertRequest, UpdateRequest {
                 .group(group)
                 .discipline(discipline)
                 .build();
+    }
+
+    public boolean lecturerIsEmpty() {
+        return lecturer == null;
     }
 
     public boolean amountPracticalIsEmpty() {

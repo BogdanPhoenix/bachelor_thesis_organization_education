@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
-import com.bachelor.thesis.organization_education.dto.Lecturer;
 import com.bachelor.thesis.organization_education.enums.TypeClass;
 import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
@@ -20,10 +19,6 @@ public class ScheduleFindRequest implements FindRequest {
     @NonNull
     @NotNull
     private GroupDiscipline groupDiscipline;
-
-    @NonNull
-    @NotNull
-    private Lecturer lecturer;
 
     @NonNull
     @NotNull

@@ -1,17 +1,16 @@
 package com.bachelor.thesis.organization_education.requests.general.university;
 
-import com.bachelor.thesis.organization_education.requests.general.abstracts.TimeRange;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.NotNull;
 import com.bachelor.thesis.organization_education.dto.Audience;
-import com.bachelor.thesis.organization_education.dto.Lecturer;
 import com.bachelor.thesis.organization_education.enums.DayWeek;
 import com.bachelor.thesis.organization_education.enums.Frequency;
 import com.bachelor.thesis.organization_education.enums.TypeClass;
 import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
 import com.bachelor.thesis.organization_education.annotations.ProhibitValueAssignment;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.TimeRange;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.ScheduleFindRequest;
@@ -30,9 +29,6 @@ public class ScheduleRequest implements InsertRequest, UpdateRequest, TimeRange 
     @NotNull(groups = InsertRequest.class)
     @ProhibitValueAssignment(groups = UpdateRequest.class)
     private GroupDiscipline groupDiscipline;
-
-    @NotNull(groups = InsertRequest.class)
-    private Lecturer lecturer;
 
     @NotNull(groups = InsertRequest.class)
     private Audience audience;
@@ -57,13 +53,8 @@ public class ScheduleRequest implements InsertRequest, UpdateRequest, TimeRange 
     public ScheduleFindRequest getFindRequest() {
         return ScheduleFindRequest.builder()
                 .groupDiscipline(groupDiscipline)
-                .lecturer(lecturer)
                 .typeClass(typeClass)
                 .build();
-    }
-
-    public boolean lecturerIsEmpty() {
-        return lecturer == null;
     }
 
     public boolean audienceIsEmpty() {

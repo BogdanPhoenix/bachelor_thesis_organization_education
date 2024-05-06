@@ -54,7 +54,8 @@ public class WebSecurityConfiguration {
                     ),
                     new RequestMatcherConfig(HttpMethod.DELETE, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*", "/groups-disciplines/*",
                             "/audiences/*", "/schedules/*"
-                    )
+                    ),
+                    new RequestMatcherConfig(HttpMethod.GET, "/groups-disciplines/**")
             ),
             Role.ADMIN, List.of(
                     new RequestMatcherConfig(HttpMethod.DELETE, "*/delete/*"),

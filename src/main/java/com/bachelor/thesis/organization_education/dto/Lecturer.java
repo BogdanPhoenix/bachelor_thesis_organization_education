@@ -68,7 +68,7 @@ public class Lecturer extends BaseTableInfo {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "lecturer", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<Schedule> schedules;
+    private Set<GroupDiscipline> groupDisciplines;
 
     @Override
     public LecturerResponse getResponse() {

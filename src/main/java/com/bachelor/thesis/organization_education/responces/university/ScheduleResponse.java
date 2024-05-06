@@ -6,7 +6,6 @@ import jakarta.persistence.MappedSuperclass;
 import com.bachelor.thesis.organization_education.enums.DayWeek;
 import com.bachelor.thesis.organization_education.enums.Frequency;
 import com.bachelor.thesis.organization_education.enums.TypeClass;
-import com.bachelor.thesis.organization_education.responces.user.LecturerResponse;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 
 import java.sql.Time;
@@ -22,9 +21,6 @@ import java.sql.Time;
 public class ScheduleResponse extends Response {
     @NonNull
     private GroupDisciplineResponse groupDiscipline;
-
-    @NonNull
-    private LecturerResponse lecturer;
 
     @NonNull
     private AudienceResponse audience;

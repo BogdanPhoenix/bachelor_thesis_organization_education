@@ -44,6 +44,11 @@ public class GroupDiscipline extends BaseTableInfo {
     private AcademicDiscipline discipline;
 
     @NonNull
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id", nullable = false)
+    private Lecturer lecturer;
+
+    @NonNull
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "semester", nullable = false)
     private SemesterNumber semester;
@@ -73,6 +78,7 @@ public class GroupDiscipline extends BaseTableInfo {
         return builder
                 .group(group.getResponse())
                 .discipline(discipline.getResponse())
+                .lecturer(lecturer.getResponse())
                 .semester(semester)
                 .amountLecture(amountLecture)
                 .amountPractical(amountPractical)

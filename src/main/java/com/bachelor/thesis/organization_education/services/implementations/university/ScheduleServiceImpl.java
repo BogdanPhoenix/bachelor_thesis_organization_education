@@ -10,7 +10,6 @@ import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.repositories.university.ScheduleRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.ScheduleRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
@@ -34,7 +33,6 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
     protected void objectFormation(InsertRequest request) {
         var insertRequest = (ScheduleRequest) request;
         insertRequest.setGroupDiscipline(super.getValue(insertRequest.getGroupDiscipline(), GroupDisciplineService.class));
-        insertRequest.setLecturer(super.getValue(insertRequest.getLecturer(), LecturerService.class));
         insertRequest.setAudience(super.getValue(insertRequest.getAudience(), AudienceService.class));
     }
 
@@ -43,7 +41,6 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
         var insertRequest = (ScheduleRequest) request;
         return Schedule.builder()
                 .groupDiscipline(insertRequest.getGroupDiscipline())
-                .lecturer(insertRequest.getLecturer())
                 .audience(insertRequest.getAudience())
                 .typeClass(insertRequest.getTypeClass())
                 .dayWeek(insertRequest.getDayWeek())
@@ -56,9 +53,8 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
     @Override
     protected List<Schedule> findAllEntitiesByRequest(@NonNull FindRequest request) {
         var findRequest = (ScheduleFindRequest) request;
-        return repository.findAllByGroupDisciplineAndLecturerAndTypeClass(
+        return repository.findAllByGroupDisciplineAndTypeClass(
                 findRequest.getGroupDiscipline(),
-                findRequest.getLecturer(),
                 findRequest.getTypeClass()
         );
     }
@@ -89,7 +85,7 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
 
     private void validateMatchesSchedulesByLecturer(ScheduleRequest request) {
         var schedules = repository.findForMatchesByLecturer(
-                request.getLecturer(),
+                request.getGroupDiscipline().getLecturer(),
                 request.getDayWeek(),
                 request.getStartTime(),
                 request.getEndTime()
@@ -137,9 +133,6 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
     protected void updateEntity(Schedule entity, UpdateRequest request) {
         var updateRequest = (ScheduleRequest) request;
 
-        if(!updateRequest.lecturerIsEmpty()) {
-            entity.setLecturer(updateRequest.getLecturer());
-        }
         if(!updateRequest.audienceIsEmpty()) {
             entity.setAudience(updateRequest.getAudience());
         }

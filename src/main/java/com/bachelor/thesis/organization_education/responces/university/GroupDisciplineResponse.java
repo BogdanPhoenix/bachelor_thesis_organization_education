@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.MappedSuperclass;
 import com.bachelor.thesis.organization_education.enums.SemesterNumber;
+import com.bachelor.thesis.organization_education.responces.user.LecturerResponse;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 
 @Getter
@@ -20,6 +21,9 @@ public class GroupDisciplineResponse extends Response {
 
     @NonNull
     private AcademicDisciplineResponse discipline;
+
+    @NonNull
+    private LecturerResponse lecturer;
 
     @NonNull
     private SemesterNumber semester;

@@ -25,7 +25,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "schedules",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"group_discipline_id", "lecturer_id", "type_class"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"group_discipline_id", "type_class"})
 )
 public class Schedule extends BaseTableInfo {
     @Id
@@ -37,11 +37,6 @@ public class Schedule extends BaseTableInfo {
     @ManyToOne
     @JoinColumn(name = "group_discipline_id", nullable = false)
     private GroupDiscipline groupDiscipline;
-
-    @NonNull
-    @ManyToOne
-    @JoinColumn(name = "lecturer_id", nullable = false)
-    private Lecturer lecturer;
 
     @NonNull
     @ManyToOne
@@ -77,7 +72,6 @@ public class Schedule extends BaseTableInfo {
         super.initResponse(builder);
         return builder
                 .groupDiscipline(groupDiscipline.getResponse())
-                .lecturer(lecturer.getResponse())
                 .audience(audience.getResponse())
                 .typeClass(typeClass)
                 .dayWeek(dayWeek)

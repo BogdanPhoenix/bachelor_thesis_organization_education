@@ -8,6 +8,7 @@ import com.bachelor.thesis.organization_education.dto.Lecturer;
 import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.services.interfaces.university.*;
 import com.bachelor.thesis.organization_education.requests.find.user.UserFindRequest;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.repositories.user.LecturerRepository;
@@ -15,14 +16,10 @@ import com.bachelor.thesis.organization_education.requests.general.user.Lecturer
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
-import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
-import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.university.ScheduleService;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
-import com.bachelor.thesis.organization_education.services.interfaces.university.AcademicDisciplineService;
 
 import java.util.List;
 import java.util.Set;
@@ -115,7 +112,7 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
         var entity = repository.findById(id);
         entity.ifPresent(e -> {
             deactivatedChild(e.getGroups(), GroupService.class);
-            deactivatedChild(e.getSchedules(), ScheduleService.class);
+            deactivatedChild(e.getGroupDisciplines(), GroupDisciplineService.class);
         });
     }
 

@@ -16,11 +16,12 @@ import java.util.List;
 
 @Repository
 public interface ScheduleRepository extends BaseTableInfoRepository<Schedule> {
-    List<Schedule> findAllByGroupDisciplineAndLecturerAndTypeClass(GroupDiscipline groupDiscipline, Lecturer lecturer, TypeClass typeClass);
+    List<Schedule> findAllByGroupDisciplineAndTypeClass(GroupDiscipline groupDiscipline, TypeClass typeClass);
 
     @Query("""
         SELECT s FROM Schedule s
-        WHERE s.lecturer = :lecturer
+        JOIN GroupDiscipline gd ON s.groupDiscipline = gd
+        WHERE gd.lecturer = :lecturer
         AND s.dayWeek = :dayWeek
         AND ((s.startTime <= :startTime AND s.endTime >= :startTime)
         OR (s.startTime <= :endTime AND s.endTime >= :endTime))

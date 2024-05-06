@@ -30,7 +30,7 @@ public class StudentEvaluationRequest implements InsertRequest, UpdateRequest {
     @ProhibitValueAssignment(groups = UpdateRequest.class)
     private ClassRecording classRecording;
 
-    @Min(value = 1, groups = {InsertRequest.class, UpdateRequest.class})
+    @Min(value = 0, groups = {InsertRequest.class, UpdateRequest.class})
     @Max(value = 100, groups = {InsertRequest.class, UpdateRequest.class})
     @NotNull(groups = InsertRequest.class)
     private Short evaluation;
