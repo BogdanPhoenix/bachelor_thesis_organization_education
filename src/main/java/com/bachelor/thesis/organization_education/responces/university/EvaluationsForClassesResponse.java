@@ -14,10 +14,10 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class MagazineResponse {
+public class EvaluationsForClassesResponse {
     @NonNull
-    private GroupDisciplineResponse groupDiscipline;
+    private ClassRecordingResponse classRecording;
 
     @NonNull
-    private Set<EvaluationsForClassesResponse> evaluationsForClasses;
+    private Set<StudentEvaluationResponse> studentEvaluations;
 }

@@ -13,7 +13,6 @@ import com.bachelor.thesis.organization_education.services.implementations.crud.
 import com.bachelor.thesis.organization_education.requests.general.university.ClassRecordingRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.ClassRecordingFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.ClassRecordingService;
-import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.StudentEvaluationService;
 
 import java.util.List;
@@ -24,12 +23,6 @@ public class ClassRecordingServiceImpl extends CrudServiceAbstract<ClassRecordin
     @Autowired
     public ClassRecordingServiceImpl(ClassRecordingRepository repository, ApplicationContext context) {
         super(repository, "Class recordings", context);
-    }
-
-    @Override
-    protected void objectFormation(InsertRequest request) {
-        var insertRequest = (ClassRecordingRequest) request;
-        insertRequest.setMagazine(super.getValue(insertRequest.getMagazine(), GroupDisciplineService.class));
     }
 
     @Override

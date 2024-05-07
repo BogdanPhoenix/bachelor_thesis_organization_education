@@ -35,11 +35,11 @@ public class WebSecurityConfiguration {
 
     private static final Map<Role, List<RequestMatcherConfig>> ROLE_REQUEST_MATCHERS = Map.of(
             Role.STUDENT, List.of(
-                    new RequestMatcherConfig(HttpMethod.GET, "/users/student", "/students-evaluations/student"),
+                    new RequestMatcherConfig(HttpMethod.GET, "/users/student", "/groups-disciplines/for-student/magazines/*"),
                     new RequestMatcherConfig(HttpMethod.PUT, "/users/student")
             ),
             Role.LECTURER, List.of(
-                    new RequestMatcherConfig(HttpMethod.GET, "/users/lecturer", "/students-evaluations/recording/*"),
+                    new RequestMatcherConfig(HttpMethod.GET, "/users/lecturer", "/students-evaluations/recording/*", "/for-lecturer/magazines/*"),
                     new RequestMatcherConfig(HttpMethod.PUT, "/users/lecturer", "/class-recordings/*", "/students-evaluations/*"),
                     new RequestMatcherConfig(HttpMethod.POST, "/class-recordings", "/students-evaluations"),
                     new RequestMatcherConfig(HttpMethod.DELETE, "/class-recordings/*")
@@ -55,7 +55,7 @@ public class WebSecurityConfiguration {
                     new RequestMatcherConfig(HttpMethod.DELETE, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*", "/groups-disciplines/*",
                             "/audiences/*", "/schedules/*"
                     ),
-                    new RequestMatcherConfig(HttpMethod.GET, "/groups-disciplines/**")
+                    new RequestMatcherConfig(HttpMethod.GET, "/groups-disciplines/magazines", "/groups-disciplines/magazines/*", "/groups-disciplines/*")
             ),
             Role.ADMIN, List.of(
                     new RequestMatcherConfig(HttpMethod.DELETE, "*/delete/*"),

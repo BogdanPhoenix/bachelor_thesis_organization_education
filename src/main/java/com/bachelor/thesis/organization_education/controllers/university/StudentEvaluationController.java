@@ -17,7 +17,6 @@ import com.bachelor.thesis.organization_education.requests.find.university.Stude
 import com.bachelor.thesis.organization_education.services.interfaces.university.StudentEvaluationService;
 
 import java.util.UUID;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/students-evaluations")
@@ -41,18 +40,6 @@ public class StudentEvaluationController extends ResourceController<StudentEvalu
     @GetMapping
     public ResponseEntity<Response> get(@Validated @RequestBody StudentEvaluationFindRequest request) {
         return super.get(request);
-    }
-
-    @GetMapping("/student")
-    public Page<Response> getStudentEvaluations(
-            Principal principal,
-            @RequestParam(defaultValue = "0") int pageNumber,
-            @RequestParam(defaultValue = "30") int pageSize
-    ) {
-        var uuid = UUID.fromString(principal.getName());
-        var pageable = PageRequest.of(pageNumber, pageSize);
-        return service.getStudentEvaluations(uuid, pageable)
-                .map(BaseTableInfo::getResponse);
     }
 
     @GetMapping("/recording/{id}")

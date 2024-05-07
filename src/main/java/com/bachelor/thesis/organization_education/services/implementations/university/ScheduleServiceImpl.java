@@ -14,10 +14,8 @@ import com.bachelor.thesis.organization_education.repositories.university.Schedu
 import com.bachelor.thesis.organization_education.requests.general.university.ScheduleRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.find.university.ScheduleFindRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.university.AudienceService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.ScheduleService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
-import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,13 +25,6 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
     @Autowired
     public ScheduleServiceImpl(ScheduleRepository repository, ApplicationContext context) {
         super(repository, "Schedules", context);
-    }
-
-    @Override
-    protected void objectFormation(InsertRequest request) {
-        var insertRequest = (ScheduleRequest) request;
-        insertRequest.setGroupDiscipline(super.getValue(insertRequest.getGroupDiscipline(), GroupDisciplineService.class));
-        insertRequest.setAudience(super.getValue(insertRequest.getAudience(), AudienceService.class));
     }
 
     @Override
@@ -64,7 +55,6 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
         var insertRequest = (ScheduleRequest) request;
 
         validateDuplicate(request.getFindRequest());
-        objectFormation(request);
         validateMatchesSchedulesByLecturer(insertRequest);
         validateMatchesSchedulesByAudience(insertRequest);
 

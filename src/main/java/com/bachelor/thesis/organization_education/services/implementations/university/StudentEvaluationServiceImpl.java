@@ -6,12 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.bachelor.thesis.organization_education.dto.Student;
 import com.bachelor.thesis.organization_education.dto.ClassRecording;
 import com.bachelor.thesis.organization_education.dto.StudentEvaluation;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.user.StudentService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
@@ -30,13 +28,6 @@ public class StudentEvaluationServiceImpl extends CrudServiceAbstract<StudentEva
     @Autowired
     public StudentEvaluationServiceImpl(StudentEvaluationRepository repository, ApplicationContext context) {
         super(repository, "Students evaluations", context);
-    }
-
-    @Override
-    protected void objectFormation(InsertRequest request) {
-        var insertRequest = (StudentEvaluationRequest) request;
-        insertRequest.setStudent(super.getValue(insertRequest.getStudent(), StudentService.class));
-        insertRequest.setClassRecording(super.getValue(insertRequest.getClassRecording(), ClassRecordingService.class));
     }
 
     @Override
@@ -78,13 +69,6 @@ public class StudentEvaluationServiceImpl extends CrudServiceAbstract<StudentEva
         if(entity.isPresent() != updateRequest.isPresent()) {
             entity.setPresent(updateRequest.isPresent());
         }
-    }
-
-    @Override
-    public Page<StudentEvaluation> getStudentEvaluations(@NonNull UUID studentId, @NonNull Pageable pageable) throws NotFindEntityInDataBaseException {
-        var studentService = super.getBeanByClass(StudentService.class);
-        var student = (Student) studentService.getValue(studentId);
-        return repository.findAllByStudent(student, pageable);
     }
 
     @Override

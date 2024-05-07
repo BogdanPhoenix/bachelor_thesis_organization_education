@@ -29,14 +29,6 @@ public class GroupServiceImpl extends CrudServiceAbstract<Group, GroupRepository
     }
 
     @Override
-    protected void objectFormation(InsertRequest request) {
-        var groupRequest = (GroupRequest) request;
-        groupRequest.setCurator(super.getValue(groupRequest.getCurator(), LecturerService.class));
-        groupRequest.setSpecialty(super.getValue(groupRequest.getSpecialty(), SpecialtyService.class));
-        groupRequest.setFaculty(super.getValue(groupRequest.getFaculty(), FacultyService.class));
-    }
-
-    @Override
     protected Group createEntity(InsertRequest request) {
         var groupRequest = (GroupRequest) request;
         return Group.builder()

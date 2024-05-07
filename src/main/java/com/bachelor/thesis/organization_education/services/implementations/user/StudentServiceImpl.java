@@ -32,12 +32,6 @@ public class StudentServiceImpl extends CrudServiceAbstract<Student, StudentRepo
     }
 
     @Override
-    protected void objectFormation(InsertRequest request) {
-        var insertRequest = (StudentRequest) request;
-        insertRequest.setGroup(super.getValue(insertRequest.getGroup(), GroupService.class));
-    }
-
-    @Override
     protected Student createEntity(InsertRequest request) {
         var insertRequest = (StudentRequest) request;
         return Student.builder()

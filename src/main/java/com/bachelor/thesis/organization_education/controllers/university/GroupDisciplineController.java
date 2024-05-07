@@ -3,7 +3,6 @@ package com.bachelor.thesis.organization_education.controllers.university;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
@@ -17,6 +16,7 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 
 import java.util.List;
 import java.util.UUID;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/groups-disciplines")
@@ -42,19 +42,32 @@ public class GroupDisciplineController extends ResourceController<GroupDisciplin
         return super.get(request);
     }
 
-    @GetMapping("/magazines/{id}")
+    @GetMapping({"/for-lecturer/magazines/{id}", "/magazines/{id}"})
     public ResponseEntity<MagazineResponse> getMagazine(@PathVariable UUID id) {
         var response = service.getMagazine(id);
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/for-lecturer/magazines")
+    public ResponseEntity<List<MagazineResponse>> getMagazines(Principal principal) {
+        var uuid = UUID.fromString(principal.getName());
+        var response = service.getMagazinesByLecturer(uuid);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/magazines")
-    public ResponseEntity<List<MagazineResponse>> getMagazines(
-            @RequestParam(defaultValue = "0") int pageNumber,
-            @RequestParam(defaultValue = "30") int pageSize
+    public ResponseEntity<List<MagazineResponse>> getMagazines() {
+        var response = service.getAllMagazine();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/for-student/magazines/{id}")
+    public ResponseEntity<MagazineResponse> getMagazine(
+            Principal principal,
+            @PathVariable UUID id
     ) {
-        var pageable = PageRequest.of(pageNumber, pageSize);
-        var response = service.getAllMagazine(pageable);
+        var uuid = UUID.fromString(principal.getName());
+        var response = service.getMagazine(uuid, id);
         return ResponseEntity.ok(response);
     }
 

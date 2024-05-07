@@ -6,7 +6,6 @@ import jakarta.persistence.MappedSuperclass;
 import com.bachelor.thesis.organization_education.enums.AcademicTitle;
 import com.bachelor.thesis.organization_education.enums.AcademicDegree;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import com.bachelor.thesis.organization_education.responces.university.FacultyResponse;
 import com.bachelor.thesis.organization_education.responces.university.AcademicDisciplineResponse;
 
 import java.util.List;

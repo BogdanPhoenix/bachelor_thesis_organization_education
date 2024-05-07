@@ -15,16 +15,6 @@ import java.util.UUID;
  */
 public interface StudentEvaluationService extends CrudService {
     /**
-     * Retrieves a page of evaluations for a specific student.
-     *
-     * @param studentId The UUID of the student.
-     * @param pageable  The pagination information.
-     * @return A page of StudentEvaluation objects.
-     * @throws NotFindEntityInDataBaseException if the student entity is not found in the database.
-     */
-    Page<StudentEvaluation> getStudentEvaluations(@NonNull UUID studentId, @NonNull Pageable pageable) throws NotFindEntityInDataBaseException;
-
-    /**
      * Retrieves a page of evaluations associated with a specific recording.
      *
      * @param recordingId The UUID of the recording.

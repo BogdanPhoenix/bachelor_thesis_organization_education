@@ -2,23 +2,21 @@ package com.bachelor.thesis.organization_education.services.implementations.univ
 
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
 import com.bachelor.thesis.organization_education.dto.StudentEvaluation;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.services.interfaces.university.*;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.responces.university.MagazineResponse;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
-import com.bachelor.thesis.organization_education.responces.university.ClassRecordingResponse;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
-import com.bachelor.thesis.organization_education.responces.university.StudentEvaluationResponse;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 import com.bachelor.thesis.organization_education.repositories.university.GroupDisciplineRepository;
+import com.bachelor.thesis.organization_education.responces.university.EvaluationsForClassesResponse;
 import com.bachelor.thesis.organization_education.requests.general.university.GroupDisciplineRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.GroupDisciplineFindRequest;
 
@@ -30,14 +28,6 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
     @Autowired
     public GroupDisciplineServiceImpl(GroupDisciplineRepository repository, ApplicationContext context) {
         super(repository, "Groups disciplines", context);
-    }
-
-    @Override
-    protected void objectFormation(InsertRequest request) {
-        var insertRequest = (GroupDisciplineRequest) request;
-        insertRequest.setGroup(super.getValue(insertRequest.getGroup(), GroupService.class));
-        insertRequest.setDiscipline(super.getValue(insertRequest.getDiscipline(), AcademicDisciplineService.class));
-        insertRequest.setLecturer(super.getValue(insertRequest.getLecturer(), LecturerService.class));
     }
 
     @Override
@@ -97,26 +87,44 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
     }
 
     @Override
+    public MagazineResponse getMagazine(@NonNull UUID studentId, @NonNull UUID entityId) throws NotFindEntityInDataBaseException {
+        var magazine = getMagazine(entityId);
+
+        for(var evaluation : magazine.getEvaluationsForClasses()) {
+            evaluation.getStudentEvaluations()
+                    .removeIf(studentEvaluation -> !studentEvaluation.getStudent()
+                            .equals(studentId)
+                    );
+        }
+
+        return magazine;
+    }
+
+    @Override
     public MagazineResponse getMagazine(@NonNull UUID id) throws NotFindEntityInDataBaseException {
         var entity = findValueById(id);
         return getMagazine(entity);
     }
 
     @Override
-    public List<MagazineResponse> getAllMagazine(Pageable pageable) {
-        var entities = getAll(pageable);
-        var list = new ArrayList<MagazineResponse>();
+    public List<MagazineResponse> getMagazinesByLecturer(@NonNull UUID lecturerId) throws NotFindEntityInDataBaseException {
+        return getAllMagazine()
+                .stream()
+                .filter(entity -> entity.getGroupDiscipline().getLecturer().equals(lecturerId))
+                .toList();
+    }
 
-        for(var entity : entities) {
-            var magazine = (GroupDiscipline) entity;
-            list.add(getMagazine(magazine));
-        }
-
-        return list;
+    @Override
+    public List<MagazineResponse> getAllMagazine() {
+       return repository.findAll()
+               .stream()
+               .filter(BaseTableInfo::isEnabled)
+               .map(this::getMagazine)
+               .toList();
     }
 
     private MagazineResponse getMagazine(GroupDiscipline groupDiscipline) {
-        var map = new HashMap<ClassRecordingResponse, Set<StudentEvaluationResponse>>();
+        var set = new HashSet<EvaluationsForClassesResponse>();
 
         for(var classRecording : groupDiscipline.getClassRecordings()) {
             var key = classRecording.getResponse();
@@ -125,12 +133,17 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
                     .map(StudentEvaluation::getResponse)
                     .collect(Collectors.toSet());
 
-            map.put(key, value);
+            var classInfo = EvaluationsForClassesResponse.builder()
+                    .classRecording(key)
+                    .studentEvaluations(value)
+                    .build();
+
+           set.add(classInfo);
         }
 
         return MagazineResponse.builder()
                 .groupDiscipline(groupDiscipline.getResponse())
-                .evaluationMap(map)
+                .evaluationsForClasses(set)
                 .build();
     }
 }
