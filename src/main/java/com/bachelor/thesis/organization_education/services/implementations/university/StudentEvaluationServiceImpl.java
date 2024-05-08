@@ -53,14 +53,11 @@ public class StudentEvaluationServiceImpl extends CrudServiceAbstract<StudentEva
     protected void updateEntity(StudentEvaluation entity, UpdateRequest request) {
         var updateRequest = (StudentEvaluationRequest) request;
 
+        updateIfPresent(updateRequest::getEvaluation, entity::setEvaluation);
+        updateIfPresent(updateRequest::isPresent, entity::setPresent);
+
         if(!updateRequest.isPresent()) {
             entity.setEvaluation((short) 0);
-        } else if(!updateRequest.evaluationIsEmpty()) {
-            entity.setEvaluation(updateRequest.getEvaluation());
-        }
-
-        if(entity.isPresent() != updateRequest.isPresent()) {
-            entity.setPresent(updateRequest.isPresent());
         }
     }
 

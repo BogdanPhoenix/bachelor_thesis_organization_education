@@ -37,7 +37,7 @@ public class Specialty extends NameEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "specialty", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<Group> groups;
+    private Set<UniversityGroup> groups;
 
     @Override
     public SpecialtyResponse getResponse() {

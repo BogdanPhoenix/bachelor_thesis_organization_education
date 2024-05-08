@@ -1,10 +1,10 @@
 package com.bachelor.thesis.organization_education.requests.insert.user;
 
-import com.bachelor.thesis.organization_education.dto.Group;
-import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.validation.constraints.NotNull;
+import com.bachelor.thesis.organization_education.dto.UniversityGroup;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 
 @Getter
 @Setter
@@ -15,5 +15,5 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class RegistrationStudentRequest extends RegistrationRequest {
     @NotNull
-    private Group group;
+    private UniversityGroup group;
 }

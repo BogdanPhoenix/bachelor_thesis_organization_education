@@ -65,18 +65,11 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
 
     @Override
     protected void updateEntity(Lecturer entity, UpdateRequest request) {
-        var lectureRequest = (LecturerRequest) request;
+        var updateRequest = (LecturerRequest) request;
 
-        if(!lectureRequest.titleIsEmpty()) {
-            entity.setTitle(lectureRequest.getTitle());
-        }
-        if (!lectureRequest.degreeIsEmpty()) {
-            entity.setDegree(lectureRequest.getDegree());
-        }
-        if(!lectureRequest.facultyIsEmpty()) {
-            var faculty = super.getValue(lectureRequest.getFaculty(), FacultyService.class);
-            entity.setFaculty(faculty);
-        }
+        updateIfPresent(updateRequest::getTitle, entity::setTitle);
+        updateIfPresent(updateRequest::getDegree, entity::setDegree);
+        updateIfPresent(updateRequest::getFaculty, entity::setFaculty);
     }
 
     @Override
@@ -103,7 +96,7 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     protected void selectedForDeactivateChild(UUID id) {
         var entity = repository.findById(id);
         entity.ifPresent(e -> {
-            deactivatedChild(e.getGroups(), GroupService.class);
+            deactivatedChild(e.getGroups(), UniversityGroupService.class);
             deactivatedChild(e.getGroupDisciplines(), GroupDisciplineService.class);
         });
     }

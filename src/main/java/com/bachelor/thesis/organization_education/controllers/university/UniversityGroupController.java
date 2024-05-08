@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.requests.general.ListRequest;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
-import com.bachelor.thesis.organization_education.requests.general.university.GroupRequest;
-import com.bachelor.thesis.organization_education.requests.find.university.GroupFindRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
+import com.bachelor.thesis.organization_education.requests.general.university.UniversityGroupRequest;
+import com.bachelor.thesis.organization_education.requests.find.university.UniversityGroupFindRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityGroupService;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,14 +21,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/groups")
 @Validated
-public class GroupController extends ResourceController<GroupService> {
+public class UniversityGroupController extends ResourceController<UniversityGroupService> {
     @Autowired
-    public GroupController(GroupService service) {
+    public UniversityGroupController(UniversityGroupService service) {
         super(service);
     }
 
     @PostMapping("/stream")
-    public ResponseEntity<List<Response>> addStream(@Valid @RequestBody ListRequest<GroupRequest> requests) {
+    public ResponseEntity<List<Response>> addStream(@Valid @RequestBody ListRequest<UniversityGroupRequest> requests) {
         var response = service.addValue(requests.collection());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -36,7 +36,7 @@ public class GroupController extends ResourceController<GroupService> {
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(@Validated(InsertRequest.class) @RequestBody GroupRequest request) {
+    public ResponseEntity<Response> add(@Validated(InsertRequest.class) @RequestBody UniversityGroupRequest request) {
         var response = service.addValue(request)
                 .getResponse();
 
@@ -46,14 +46,14 @@ public class GroupController extends ResourceController<GroupService> {
     }
 
     @GetMapping
-    public ResponseEntity<Response> get(@Validated @RequestBody GroupFindRequest request) {
+    public ResponseEntity<Response> get(@Validated @RequestBody UniversityGroupFindRequest request) {
         return super.get(request);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
             @PathVariable UUID id,
-            @Validated(UpdateRequest.class) @RequestBody GroupRequest request
+            @Validated(UpdateRequest.class) @RequestBody UniversityGroupRequest request
     ) {
         return super.updateEntity(id, request);
     }

@@ -58,13 +58,9 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
 
     @Override
     protected void updateEntity(University entity, UpdateRequest request) {
+        var updateRequest = (UniversityRequest) request;
+        updateIfPresent(updateRequest::getAccreditationLevel, entity::setAccreditationLevel);
         super.updateEntity(entity, request);
-
-        var universityRequest = (UniversityRequest) request;
-
-        if(!universityRequest.accreditationLevelIsEmpty()) {
-            entity.setAccreditationLevel(universityRequest.getAccreditationLevel());
-        }
     }
 
     @Override

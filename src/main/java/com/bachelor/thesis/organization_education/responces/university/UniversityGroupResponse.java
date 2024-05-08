@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class GroupResponse extends Response {
+public class UniversityGroupResponse extends Response {
     @NonNull
     private UUID curator;
 

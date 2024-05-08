@@ -6,5 +6,5 @@ import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudS
  * Service for managing resource groups.
  * Implements CRUD operations and additional functionality.
  */
-public interface GroupService extends CrudService {
+public interface UniversityGroupService extends CrudService {
 }

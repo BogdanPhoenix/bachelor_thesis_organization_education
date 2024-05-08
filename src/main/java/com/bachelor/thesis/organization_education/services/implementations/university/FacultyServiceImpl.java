@@ -15,10 +15,10 @@ import com.bachelor.thesis.organization_education.services.interfaces.user.Lectu
 import com.bachelor.thesis.organization_education.repositories.university.FacultyRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.FacultyRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
-import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
+import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityGroupService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
 import java.util.UUID;
@@ -83,7 +83,7 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
     protected void selectedForDeactivateChild(UUID id) {
        var entity = repository.findById(id);
        entity.ifPresent(e -> {
-           deactivatedChild(e.getGroups(), GroupService.class);
+           deactivatedChild(e.getGroups(), UniversityGroupService.class);
            deactivatedChild(e.getLecturers(), LecturerService.class);
        });
     }

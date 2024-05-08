@@ -45,12 +45,4 @@ public class ClassRecordingRequest implements InsertRequest, UpdateRequest {
                 .classTopic(classTopic)
                 .build();
     }
-
-    public boolean classTopicIsEmpty() {
-        return classTopic == null || classTopic.isBlank();
-    }
-
-    public boolean descriptionIsEmpty() {
-        return description == null || description.isBlank();
-    }
 }

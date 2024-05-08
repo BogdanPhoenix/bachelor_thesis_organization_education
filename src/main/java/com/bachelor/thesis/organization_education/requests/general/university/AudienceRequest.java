@@ -49,8 +49,4 @@ public class AudienceRequest implements InsertRequest, UpdateRequest {
                 .numAudience(numAudience)
                 .build();
     }
-
-    public boolean numSeatsIsEmpty() {
-        return numSeats == 0;
-    }
 }

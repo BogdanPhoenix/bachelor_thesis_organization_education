@@ -47,13 +47,8 @@ public class ClassRecordingServiceImpl extends CrudServiceAbstract<ClassRecordin
     @Override
     protected void updateEntity(ClassRecording entity, UpdateRequest request) {
         var updateRequest = (ClassRecordingRequest) request;
-
-        if(!updateRequest.classTopicIsEmpty()) {
-            entity.setClassTopic(updateRequest.getClassTopic());
-        }
-        if(!updateRequest.descriptionIsEmpty()) {
-            entity.setDescription(updateRequest.getDescription());
-        }
+        updateIfPresent(updateRequest::getClassTopic, entity::setClassTopic);
+        updateIfPresent(updateRequest::getDescription, entity::setDescription);
     }
 
     @Override

@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.responces.university.GroupResponse;
+import com.bachelor.thesis.organization_education.responces.university.UniversityGroupResponse;
 
 import java.util.Set;
 import java.util.UUID;
@@ -26,7 +26,7 @@ import static jakarta.persistence.CascadeType.*;
 @Table(name = "groups",
         uniqueConstraints = @UniqueConstraint(columnNames = {"specialty_id", "year_start", "reduced_form"})
 )
-public class Group extends BaseTableInfo {
+public class UniversityGroup extends BaseTableInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
@@ -69,8 +69,8 @@ public class Group extends BaseTableInfo {
     private Set<Student> students;
 
     @Override
-    public GroupResponse getResponse() {
-        var builder = GroupResponse.builder();
+    public UniversityGroupResponse getResponse() {
+        var builder = UniversityGroupResponse.builder();
         super.initResponse(builder);
         return builder.curator(curator.getId())
                 .specialty(specialty.getId())

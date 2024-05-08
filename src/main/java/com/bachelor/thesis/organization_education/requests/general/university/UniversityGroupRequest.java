@@ -13,7 +13,7 @@ import com.bachelor.thesis.organization_education.annotations.ProhibitValueAssig
 import com.bachelor.thesis.organization_education.requests.general.abstracts.YearRange;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
-import com.bachelor.thesis.organization_education.requests.find.university.GroupFindRequest;
+import com.bachelor.thesis.organization_education.requests.find.university.UniversityGroupFindRequest;
 
 @Getter
 @Setter
@@ -22,8 +22,8 @@ import com.bachelor.thesis.organization_education.requests.find.university.Group
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-@GroupSequence({GroupRequest.class, InsertRequest.class, UpdateRequest.class})
-public class GroupRequest implements InsertRequest, UpdateRequest, YearRange {
+@GroupSequence({UniversityGroupRequest.class, InsertRequest.class, UpdateRequest.class})
+public class UniversityGroupRequest implements InsertRequest, UpdateRequest, YearRange {
     @NotNull(groups = InsertRequest.class)
     private Lecturer curator;
 
@@ -47,31 +47,11 @@ public class GroupRequest implements InsertRequest, UpdateRequest, YearRange {
     private boolean reducedForm;
 
     @Override
-    public GroupFindRequest getFindRequest() {
-        return GroupFindRequest.builder()
+    public UniversityGroupFindRequest getFindRequest() {
+        return UniversityGroupFindRequest.builder()
                 .specialty(specialty)
                 .yearStart(yearStart)
                 .reducedForm(reducedForm)
                 .build();
-    }
-
-    public boolean curatorIsEmpty() {
-        return curator == null;
-    }
-
-    public boolean specialtyIsEmpty() {
-        return specialty == null;
-    }
-
-    public boolean facultyIsEmpty() {
-        return faculty == null;
-    }
-
-    public boolean yearStartIsEmpty() {
-        return yearStart == null;
-    }
-
-    public boolean yearEndIsEmpty() {
-        return yearEnd == null;
     }
 }

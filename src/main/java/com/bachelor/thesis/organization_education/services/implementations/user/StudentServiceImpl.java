@@ -14,7 +14,6 @@ import com.bachelor.thesis.organization_education.requests.general.user.StudentR
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.StudentService;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
@@ -59,11 +58,7 @@ public class StudentServiceImpl extends CrudServiceAbstract<Student, StudentRepo
     @Override
     protected void updateEntity(Student entity, UpdateRequest request) {
         var updateRequest = (StudentRequest) request;
-
-        if(!updateRequest.groupIsEmpty()) {
-            var group = super.getValue(updateRequest.getGroup(), GroupService.class);
-            entity.setGroup(group);
-        }
+        updateIfPresent(updateRequest::getGroup, entity::setGroup);
     }
 
     @Override

@@ -36,8 +36,4 @@ public class UniversityRequest extends NameEntityRequest {
                 .adminId(adminId)
                 .build();
     }
-
-    public boolean accreditationLevelIsEmpty() {
-        return accreditationLevel == null;
-    }
 }

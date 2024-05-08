@@ -76,10 +76,7 @@ public class AudienceServiceImpl extends CrudServiceAbstract<Audience, AudienceR
     @Override
     protected void updateEntity(Audience entity, UpdateRequest request) {
         var updateRequest = (AudienceRequest) request;
-
-        if(!updateRequest.numSeatsIsEmpty()) {
-            entity.setNumSeats(updateRequest.getNumSeats());
-        }
+        updateIfPresent(updateRequest::getNumSeats, entity::setNumSeats);
     }
 
     @Override

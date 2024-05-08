@@ -46,8 +46,4 @@ public class StudentEvaluationRequest implements InsertRequest, UpdateRequest {
                 .classRecording(classRecording)
                 .build();
     }
-
-    public boolean evaluationIsEmpty() {
-        return evaluation == null;
-    }
 }

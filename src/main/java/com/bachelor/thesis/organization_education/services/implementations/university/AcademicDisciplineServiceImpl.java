@@ -42,13 +42,9 @@ public class AcademicDisciplineServiceImpl extends NameEntityServiceAbstract<Aca
 
     @Override
     protected void updateEntity(AcademicDiscipline entity, UpdateRequest request) {
+        var updateRequest = (AcademicDisciplineRequest) request;
+        updateIfPresent(updateRequest::getAmountCredits, entity::setAmountCredits);
         super.updateEntity(entity, request);
-
-        var disciplineRequest = (AcademicDisciplineRequest) request;
-
-        if(!disciplineRequest.amountCreditsIsEmpty()) {
-            entity.setAmountCredits(disciplineRequest.getAmountCredits());
-        }
     }
 
     @Override

@@ -56,18 +56,10 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
     protected void updateEntity(GroupDiscipline entity, UpdateRequest request) {
         var updateRequest = (GroupDisciplineRequest) request;
 
-        if(!updateRequest.lecturerIsEmpty()) {
-            entity.setLecturer(updateRequest.getLecturer());
-        }
-        if(!updateRequest.amountLectureIsEmpty()) {
-            entity.setAmountLecture(updateRequest.getAmountLecture());
-        }
-        if(!updateRequest.amountPracticalIsEmpty()) {
-            entity.setAmountPractical(updateRequest.getAmountPractical());
-        }
-        if(!updateRequest.semesterIsEmpty()) {
-            entity.setSemester(updateRequest.getSemester());
-        }
+        updateIfPresent(updateRequest::getLecturer, entity::setLecturer);
+        updateIfPresent(updateRequest::getAmountLecture, entity::setAmountLecture);
+        updateIfPresent(updateRequest::getAmountPractical, entity::setAmountPractical);
+        updateIfPresent(updateRequest::getSemester, entity::setSemester);
     }
 
     @Override

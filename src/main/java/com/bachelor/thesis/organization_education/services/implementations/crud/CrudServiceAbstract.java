@@ -1,6 +1,7 @@
 package com.bachelor.thesis.organization_education.services.implementations.crud;
 
 import lombok.NonNull;
+import org.springframework.util.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationContext;
@@ -16,7 +17,9 @@ import com.bachelor.thesis.organization_education.repositories.abstracts.BaseTab
 
 import java.util.*;
 import java.time.LocalDateTime;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static com.bachelor.thesis.organization_education.services.implementations.tools.ExceptionTools.throwRuntimeException;
 
@@ -64,10 +67,6 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
     @Override
     public T updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException {
         var entity = findValueById(id);
-        return updateValue(entity, request);
-    }
-
-    protected T updateValue(T entity, UpdateRequest request) {
         updateEntity(entity, request);
         entity.setUpdateDate(LocalDateTime.now());
         return repository.save(entity);
@@ -183,6 +182,12 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
                             return new NotFindEntityInDataBaseException(message);
                         }
                 );
+    }
+
+    protected <R> void updateIfPresent(Supplier<R> value, Consumer<R> setterFunction) {
+        Optional.ofNullable(value.get())
+                .filter(val -> !ObjectUtils.isEmpty(val))
+                .ifPresent(setterFunction);
     }
 
     protected abstract T createEntity(InsertRequest request);

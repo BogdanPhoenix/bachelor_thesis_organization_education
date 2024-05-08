@@ -16,7 +16,7 @@ import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRe
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class GroupFindRequest implements FindRequest {
+public class UniversityGroupFindRequest implements FindRequest {
     @NotNull
     @NonNull
     private Specialty specialty;

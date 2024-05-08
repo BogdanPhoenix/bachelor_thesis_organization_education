@@ -9,11 +9,11 @@ import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRe
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.repositories.university.SpecialtyRepository;
-import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.general.university.SpecialtyRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.SpecialtyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
+import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityGroupService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
 import java.util.List;
@@ -43,12 +43,8 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
 
     @Override
     protected void updateEntity(Specialty entity, UpdateRequest request) {
-        var specialtyRequest = (SpecialtyRequest) request;
-
-        if(!specialtyRequest.numberIsEmpty()) {
-            entity.setNumber(specialtyRequest.getNumber());
-        }
-
+        var updateRequest = (SpecialtyRequest) request;
+        updateIfPresent(updateRequest::getNumber, entity::setNumber);
         super.updateEntity(entity, request);
     }
 
@@ -67,7 +63,7 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
     protected void selectedForDeactivateChild(UUID id) {
         var entity = repository.findById(id);
         entity.ifPresent(e ->
-                deactivatedChild(e.getGroups(), GroupService.class)
+                deactivatedChild(e.getGroups(), UniversityGroupService.class)
         );
     }
 }

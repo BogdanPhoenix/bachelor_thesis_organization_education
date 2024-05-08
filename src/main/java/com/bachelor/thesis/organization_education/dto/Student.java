@@ -34,7 +34,7 @@ public class Student extends BaseTableInfo {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
-    private Group group;
+    private UniversityGroup group;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

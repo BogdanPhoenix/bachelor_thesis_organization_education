@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
-import com.bachelor.thesis.organization_education.dto.Group;
+import com.bachelor.thesis.organization_education.dto.UniversityGroup;
 import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 
@@ -18,7 +18,7 @@ import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRe
 public class GroupDisciplineFindRequest implements FindRequest {
     @NotNull
     @NonNull
-    private Group group;
+    private UniversityGroup group;
 
     @NotNull
     @NonNull

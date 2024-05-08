@@ -11,10 +11,10 @@ import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInf
 import com.bachelor.thesis.organization_education.responces.user.LecturerResponse;
 import com.bachelor.thesis.organization_education.responces.university.AcademicDisciplineResponse;
 
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -63,7 +63,7 @@ public class Lecturer extends BaseTableInfo {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "curator", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<Group> groups;
+    private Set<UniversityGroup> groups;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

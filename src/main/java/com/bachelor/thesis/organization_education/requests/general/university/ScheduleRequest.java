@@ -56,24 +56,4 @@ public class ScheduleRequest implements InsertRequest, UpdateRequest, TimeRange 
                 .typeClass(typeClass)
                 .build();
     }
-
-    public boolean audienceIsEmpty() {
-        return audience == null;
-    }
-
-    public boolean dayWeekIsEmpty() {
-        return dayWeek == null;
-    }
-
-    public boolean frequencyIsEmpty() {
-        return frequency == null;
-    }
-
-    public boolean startTimeIsEmpty() {
-        return startTime == null;
-    }
-
-    public boolean endTimeIsEmpty() {
-        return endTime == null;
-    }
 }

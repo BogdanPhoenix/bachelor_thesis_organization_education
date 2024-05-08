@@ -43,11 +43,7 @@ public abstract class NameEntityServiceAbstract<T extends NameEntity, J extends 
     protected void updateEntity(T entity, UpdateRequest request) {
         var nameEntityRequest = (NameEntityRequest) request;
 
-        if(!nameEntityRequest.enNameIsEmpty()) {
-            entity.setEnName(nameEntityRequest.getEnName());
-        }
-        if(!nameEntityRequest.uaNameIsEmpty()) {
-            entity.setUaName(nameEntityRequest.getUaName());
-        }
+        updateIfPresent(nameEntityRequest::getEnName, entity::setEnName);
+        updateIfPresent(nameEntityRequest::getUaName, entity::setUaName);
     }
 }

@@ -34,12 +34,4 @@ public abstract class NameEntityRequest implements InsertRequest, UpdateRequest 
     @Size(max = 255, groups = {InsertRequest.class, UpdateRequest.class})
     @ValidNameEntity(groups = {InsertRequest.class, UpdateRequest.class})
     private String uaName;
-
-    public boolean enNameIsEmpty() {
-        return enName == null || enName.isBlank();
-    }
-
-    public boolean uaNameIsEmpty() {
-        return uaName == null || uaName.isBlank();
-    }
 }

@@ -32,8 +32,4 @@ public class AcademicDisciplineRequest extends NameEntityRequest {
                 .uaName(getUaName())
                 .build();
     }
-
-    public boolean amountCreditsIsEmpty() {
-        return amountCredits == null;
-    }
 }

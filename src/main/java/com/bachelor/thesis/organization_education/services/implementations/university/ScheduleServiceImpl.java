@@ -54,12 +54,10 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
     public Schedule addValue(@NonNull InsertRequest request) throws DuplicateException, NullPointerException {
         var insertRequest = (ScheduleRequest) request;
 
-        validateDuplicate(request.getFindRequest());
         validateMatchesSchedulesByLecturer(insertRequest);
         validateMatchesSchedulesByAudience(insertRequest);
 
-        var newEntity = createEntity(request);
-        return repository.save(newEntity);
+        return super.addValue(request);
     }
 
     @Override
@@ -122,21 +120,11 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
     protected void updateEntity(Schedule entity, UpdateRequest request) {
         var updateRequest = (ScheduleRequest) request;
 
-        if(!updateRequest.audienceIsEmpty()) {
-            entity.setAudience(updateRequest.getAudience());
-        }
-        if(!updateRequest.dayWeekIsEmpty()) {
-            entity.setDayWeek(updateRequest.getDayWeek());
-        }
-        if(!updateRequest.frequencyIsEmpty()) {
-            entity.setFrequency(updateRequest.getFrequency());
-        }
-        if(!updateRequest.startTimeIsEmpty()) {
-            entity.setStartTime(updateRequest.getStartTime());
-        }
-        if(!updateRequest.endTimeIsEmpty()) {
-            entity.setEndTime(updateRequest.getEndTime());
-        }
+        updateIfPresent(updateRequest::getAudience, entity::setAudience);
+        updateIfPresent(updateRequest::getDayWeek, entity::setDayWeek);
+        updateIfPresent(updateRequest::getFrequency, entity::setFrequency);
+        updateIfPresent(updateRequest::getStartTime, entity::setStartTime);
+        updateIfPresent(updateRequest::getEndTime, entity::setEndTime);
     }
 
     private enum FindBy {
