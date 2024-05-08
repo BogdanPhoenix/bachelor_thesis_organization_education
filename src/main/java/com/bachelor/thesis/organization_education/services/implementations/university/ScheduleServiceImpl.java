@@ -69,8 +69,7 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
         validateMatchesSchedulesByLecturer(updateRequest);
         validateMatchesSchedulesByAudience(updateRequest);
 
-        var entity = findValueById(id);
-        return super.updateValue(entity, request);
+        return super.updateValue(id, request);
     }
 
     private void validateMatchesSchedulesByLecturer(ScheduleRequest request) {

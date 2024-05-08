@@ -8,7 +8,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.ClassRecording;
 import com.bachelor.thesis.organization_education.dto.StudentEvaluation;
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
@@ -48,12 +47,6 @@ public class StudentEvaluationServiceImpl extends CrudServiceAbstract<StudentEva
                 findRequest.getStudent(),
                 findRequest.getClassRecording()
         );
-    }
-
-    @Override
-    public StudentEvaluation updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
-        var entity = findValueById(id);
-        return super.updateValue(entity, request);
     }
 
     @Override

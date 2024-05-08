@@ -13,7 +13,6 @@ import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRe
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.repositories.university.AudienceRepository;
-import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.general.university.AudienceRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.AudienceFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AudienceService;
@@ -55,12 +54,6 @@ public class AudienceServiceImpl extends CrudServiceAbstract<Audience, AudienceR
         var university = getUniversity(adminId);
         request.setUniversity(university);
         return super.addValue(request);
-    }
-
-    @Override
-    public Audience updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
-        var entity = findValueById(id);
-        return updateValue(entity, request);
     }
 
     private University getUniversity(String adminId) {

@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
 import com.bachelor.thesis.organization_education.dto.StudentEvaluation;
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.services.interfaces.university.*;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
@@ -42,12 +41,6 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
                 .amountLecture(insertRequest.getAmountLecture())
                 .amountPractical(insertRequest.getAmountPractical())
                 .build();
-    }
-
-    @Override
-    public GroupDiscipline updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
-        var entity = findValueById(id);
-        return updateValue(entity, request);
     }
 
     @Override

@@ -90,10 +90,9 @@ public interface CrudService {
      * @param id unique identifier of the entity.
      * @param request with new data.
      * @return the updated entity.
-     * @throws DuplicateException if the table already contains the data that is passed in the query.
      * @throws NotFindEntityInDataBaseException if the entity could not be found.
      */
-    BaseTableInfo updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException;
+    BaseTableInfo updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException;
 
     /**
      * Searches for an entity in the database by the specified query and deletes it completely.

@@ -90,14 +90,14 @@ class CrudServiceAbstractTest {
         @Test
         @DisplayName("Check for an exception when the data update request contains data that already exists in the table.")
         void testUpdateValueThrowsDuplicateException() {
-            when(serviceMock.isDuplicate(any(FindRequest.class), any(UUID.class))).thenReturn(true);
+            when(serviceMock.isDuplicate(any(UUID.class), any(FindRequest.class))).thenReturn(true);
             assertThrows(DuplicateException.class, () -> serviceMock.updateValue(ID, updateDataMock));
         }
 
         @Test
         @DisplayName("Check for an exception when the data update request contains data that is not in the table.")
         void testUpdateValueThrowsNotFindEntityInDataBaseException() {
-            when(serviceMock.isDuplicate(any(FindRequest.class), any(UUID.class))).thenReturn(false);
+            when(serviceMock.isDuplicate(any(UUID.class), any(FindRequest.class))).thenReturn(false);
             when(serviceMock.findValueById(any(UUID.class))).thenThrow(NotFindEntityInDataBaseException.class);
 
             assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.updateValue(ID, updateDataMock));
@@ -108,7 +108,7 @@ class CrudServiceAbstractTest {
         void testUpdateValueCorrect() throws IllegalAccessException {
             FieldUtils.writeField(serviceMock, "repository", repositoryMock, true);
 
-            when(serviceMock.isDuplicate(any(FindRequest.class), any(UUID.class))).thenReturn(false);
+            when(serviceMock.isDuplicate(any(UUID.class), any(FindRequest.class))).thenReturn(false);
             when(serviceMock.findValueById(any(UUID.class))).thenReturn(tableInfoMock);
 
             doNothing()

@@ -1,5 +1,8 @@
 package com.bachelor.thesis.organization_education.services.interfaces.university;
 
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import lombok.NonNull;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
@@ -27,4 +30,16 @@ public interface AcademicDisciplineService extends CrudService {
      * @throws NotFindEntityInDataBaseException exception thrown if the corresponding entity is not found in the database
      */
     void disconnectLecturer(@NonNull UUID disciplineId, @NonNull UUID lecturerId) throws NotFindEntityInDataBaseException;
+
+    /**
+     * Updates the attributes of the selected entity.
+     *
+     * @param id unique identifier of the entity.
+     * @param request with new data.
+     * @return the updated entity.
+     * @throws DuplicateException if the table already contains the data that is passed in the query.
+     * @throws NotFindEntityInDataBaseException if the entity could not be found.
+     */
+    @Override
+    BaseTableInfo updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException;
 }

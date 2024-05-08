@@ -14,7 +14,6 @@ import com.bachelor.thesis.organization_education.requests.general.user.StudentR
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.StudentService;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
-import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentRequest;
@@ -55,14 +54,6 @@ public class StudentServiceImpl extends CrudServiceAbstract<Student, StudentRepo
     protected List<Student> findAllEntitiesByRequest(@NonNull FindRequest request) {
         var findRequest = (UserFindRequest) request;
         return repository.findAllById(findRequest.getUserId());
-    }
-
-    @Override
-    public Student updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
-        var findRequest = new UserFindRequest(id);
-        var entity = getValue(findRequest);
-
-        return super.updateValue(entity, request);
     }
 
     @Override

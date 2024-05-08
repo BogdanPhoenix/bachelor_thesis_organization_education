@@ -10,6 +10,7 @@ import com.bachelor.thesis.organization_education.requests.update.abstracts.Upda
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.repositories.university.SpecialtyRepository;
 import com.bachelor.thesis.organization_education.services.interfaces.university.GroupService;
+import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.general.university.SpecialtyRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.SpecialtyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
@@ -32,6 +33,12 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
         return super.initEntity(builder, request)
                 .number(specialtyRequest.getNumber())
                 .build();
+    }
+
+    @Override
+    public Specialty updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException {
+        validateDuplicate(id, request.getFindRequest());
+        return super.updateValue(id, request);
     }
 
     @Override
@@ -59,8 +66,8 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
     @Override
     protected void selectedForDeactivateChild(UUID id) {
         var entity = repository.findById(id);
-        entity.ifPresent(e -> {
-            deactivatedChild(e.getGroups(), GroupService.class);
-        });
+        entity.ifPresent(e ->
+                deactivatedChild(e.getGroups(), GroupService.class)
+        );
     }
 }

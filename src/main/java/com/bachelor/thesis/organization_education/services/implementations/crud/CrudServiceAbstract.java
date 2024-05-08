@@ -62,10 +62,8 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
     }
 
     @Override
-    public T updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
-        validateDuplicate(request.getFindRequest(), id);
+    public T updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException {
         var entity = findValueById(id);
-
         return updateValue(entity, request);
     }
 
@@ -75,13 +73,13 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
         return repository.save(entity);
     }
 
-    private void validateDuplicate(FindRequest request, UUID entityId) throws DuplicateException {
-        if(isDuplicate(request, entityId)){
+    protected void validateDuplicate(UUID entityId, FindRequest request) throws DuplicateException {
+        if(isDuplicate(entityId, request)){
             messageDuplicate(request);
         }
     }
 
-    boolean isDuplicate(FindRequest request, UUID entityId) {
+    boolean isDuplicate(UUID entityId, FindRequest request) {
         var entities = findAllEntitiesByRequest(request);
 
         if(entities.size() > 1) {

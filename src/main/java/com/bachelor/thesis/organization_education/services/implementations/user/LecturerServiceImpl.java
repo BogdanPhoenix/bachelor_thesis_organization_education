@@ -64,14 +64,6 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
     }
 
     @Override
-    public Lecturer updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException {
-        var findRequest = new UserFindRequest(id);
-        var entity = getValue(findRequest);
-
-        return super.updateValue(entity, request);
-    }
-
-    @Override
     protected void updateEntity(Lecturer entity, UpdateRequest request) {
         var lectureRequest = (LecturerRequest) request;
 

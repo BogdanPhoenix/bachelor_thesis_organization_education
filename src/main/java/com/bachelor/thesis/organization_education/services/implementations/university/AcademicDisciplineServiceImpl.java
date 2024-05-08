@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
@@ -31,6 +32,12 @@ public class AcademicDisciplineServiceImpl extends NameEntityServiceAbstract<Aca
         return super.initEntity(builder, request)
                 .amountCredits(disciplineRequest.getAmountCredits())
                 .build();
+    }
+
+    @Override
+    public AcademicDiscipline updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
+        validateDuplicate(id, request.getFindRequest());
+        return super.updateValue(id, request);
     }
 
     @Override
