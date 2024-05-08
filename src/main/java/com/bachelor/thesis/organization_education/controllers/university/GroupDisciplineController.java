@@ -1,10 +1,12 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.bachelor.thesis.organization_education.requests.general.ListRequest;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.responces.university.MagazineResponse;
@@ -25,6 +27,14 @@ public class GroupDisciplineController extends ResourceController<GroupDisciplin
     @Autowired
     public GroupDisciplineController(GroupDisciplineService service) {
         super(service);
+    }
+
+    @PostMapping("/stream")
+    public ResponseEntity<List<Response>> addStream(@Valid @RequestBody ListRequest<GroupDisciplineRequest> requests) {
+        var response = service.addValue(requests.collection());
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @PostMapping

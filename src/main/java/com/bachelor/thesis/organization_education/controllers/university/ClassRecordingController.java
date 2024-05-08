@@ -1,10 +1,12 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.bachelor.thesis.organization_education.requests.general.ListRequest;
 import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
@@ -13,6 +15,7 @@ import com.bachelor.thesis.organization_education.requests.general.university.Cl
 import com.bachelor.thesis.organization_education.requests.find.university.ClassRecordingFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.ClassRecordingService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,6 +25,14 @@ public class ClassRecordingController extends ResourceController<ClassRecordingS
     @Autowired
     public ClassRecordingController(ClassRecordingService service) {
         super(service);
+    }
+
+    @PostMapping("/stream")
+    public ResponseEntity<List<Response>> addStream(@Valid @RequestBody ListRequest<ClassRecordingRequest> requests) {
+        var response = service.addValue(requests.collection());
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @PostMapping

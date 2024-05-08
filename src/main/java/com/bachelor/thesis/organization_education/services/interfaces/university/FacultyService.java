@@ -4,16 +4,29 @@ import lombok.NonNull;
 import com.bachelor.thesis.organization_education.dto.Faculty;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.general.university.FacultyRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
 import java.util.UUID;
+import java.util.List;
+import java.util.Collection;
 
 /**
  * Service interface for managing faculties, extending basic CRUD operations.
  */
 public interface FacultyService extends CrudService {
+    /**
+     * Creates objects based on specified queries from the collection for the university to which the administrator belongs.
+     *
+     * @param requests collection of insert queries to process.
+     * @param adminId identifier of the university administrator.
+     * @return the list of responses after adding values.
+     * @throws DuplicateException if the table contains one of the entity values that is passed in the collection.
+     * @throws NullPointerException if null was passed to the request.
+     */
+    List<Response> addValue(@NonNull Collection<FacultyRequest> requests, @NonNull String adminId) throws NullPointerException, DuplicateException;
     /**
      * Adds a new faculty resource based on the provided request and user ID.
      *

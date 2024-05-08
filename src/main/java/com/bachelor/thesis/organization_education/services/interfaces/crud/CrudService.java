@@ -6,12 +6,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
 import java.util.UUID;
+import java.util.List;
+import java.util.Collection;
 
 /**
  * This interface represents a CRUD (Create, Read, Update, Delete) service
@@ -21,6 +24,16 @@ import java.util.UUID;
  */
 @Transactional
 public interface CrudService {
+    /**
+     * Creates objects based on the specified queries from the collection.
+     *
+     * @param requests collection of insert queries to process.
+     * @return the list of responses after adding values.
+     * @throws DuplicateException if the table contains one of the entity values that is passed in the collection.
+     * @throws NullPointerException if null was passed to the request.
+     */
+    List<Response> addValue(@NonNull Collection<? extends InsertRequest> requests) throws DuplicateException, NullPointerException;
+
     /**
      * Creates an object according to the specified request.
      *

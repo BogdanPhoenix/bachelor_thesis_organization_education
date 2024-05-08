@@ -8,6 +8,7 @@ import com.bachelor.thesis.organization_education.dto.Faculty;
 import com.bachelor.thesis.organization_education.dto.University;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
@@ -20,8 +21,9 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
-import java.util.List;
 import java.util.UUID;
+import java.util.List;
+import java.util.Collection;
 
 @Service
 public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, FacultyRepository> implements FacultyService {
@@ -37,6 +39,13 @@ public class FacultyServiceImpl extends NameEntityServiceAbstract<Faculty, Facul
         return super.initEntity(builder, request)
                 .university(facultyRequest.getUniversity())
                 .build();
+    }
+
+    @Override
+    public List<Response> addValue(@NonNull Collection<FacultyRequest> requests, @NonNull String adminId) throws NullPointerException, DuplicateException {
+        var university = getUniversity(adminId);
+        requests.forEach(entity -> entity.setUniversity(university));
+        return super.addValue(requests);
     }
 
     @Override

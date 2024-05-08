@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationContext;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
@@ -33,6 +34,14 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
         this.repository = repository;
         this.tableName = tableName;
         this.context = context;
+    }
+
+    @Override
+    public List<Response> addValue(@NonNull Collection<? extends InsertRequest> requests) throws DuplicateException, NullPointerException {
+        return requests.stream()
+                .map(this::addValue)
+                .map(BaseTableInfo::getResponse)
+                .toList();
     }
 
     @Override

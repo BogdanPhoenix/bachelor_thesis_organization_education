@@ -41,12 +41,12 @@ public class WebSecurityConfiguration {
             Role.LECTURER, List.of(
                     new RequestMatcherConfig(HttpMethod.GET, "/users/lecturer", "/students-evaluations/recording/*", "/for-lecturer/magazines/*"),
                     new RequestMatcherConfig(HttpMethod.PUT, "/users/lecturer", "/class-recordings/*", "/students-evaluations/*"),
-                    new RequestMatcherConfig(HttpMethod.POST, "/class-recordings", "/students-evaluations"),
+                    new RequestMatcherConfig(HttpMethod.POST, "/class-recordings", "/class-recordings/stream", "/students-evaluations", "/students-evaluations/stream"),
                     new RequestMatcherConfig(HttpMethod.DELETE, "/class-recordings/*")
             ),
             Role.UNIVERSITY_ADMIN, List.of(
-                    new RequestMatcherConfig(HttpMethod.POST, "/users/register-other/*", "/faculties", "/groups", "/universities", "/groups-disciplines",
-                            "/audiences", "/schedules"
+                    new RequestMatcherConfig(HttpMethod.POST, "/users/register-other/*", "/faculties", "/faculties/stream", "/groups", "/groups/stream", "/universities",
+                            "/groups-disciplines", "/groups-disciplines/stream", "/audiences", "/audiences/stream", "/schedules", "/schedules/stream"
                     ),
                     new RequestMatcherConfig(HttpMethod.PUT, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*/connect-with-lecturer/*",
                             "/disciplines/*/disconnect-lecturer/*", "/users/lecturer/*/connect-with-discipline/*", "/users/lecturer/*/disconnect-discipline/*",
@@ -60,7 +60,7 @@ public class WebSecurityConfiguration {
             Role.ADMIN, List.of(
                     new RequestMatcherConfig(HttpMethod.DELETE, "*/delete/*"),
                     new RequestMatcherConfig(HttpMethod.PUT, "*/activate/*", "/specialties/*", "/disciplines/*"),
-                    new RequestMatcherConfig(HttpMethod.POST, "/specialties", "/disciplines")
+                    new RequestMatcherConfig(HttpMethod.POST, "/specialties", "/specialties/stream", "/disciplines", "/disciplines/stream")
             )
     );
 
