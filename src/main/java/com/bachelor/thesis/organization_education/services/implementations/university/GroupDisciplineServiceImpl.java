@@ -1,18 +1,23 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.bachelor.thesis.organization_education.dto.Lecturer;
+import com.bachelor.thesis.organization_education.dto.ClassRecording;
 import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
 import com.bachelor.thesis.organization_education.dto.StudentEvaluation;
-import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.services.interfaces.university.*;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.responces.university.MagazineResponse;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
+import com.bachelor.thesis.organization_education.responces.university.StudentEvaluationResponse;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 import com.bachelor.thesis.organization_education.repositories.university.GroupDisciplineRepository;
 import com.bachelor.thesis.organization_education.responces.university.EvaluationsForClassesResponse;
@@ -92,43 +97,41 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
     }
 
     @Override
-    public List<MagazineResponse> getMagazinesByLecturer(@NonNull UUID lecturerId) throws NotFindEntityInDataBaseException {
-        return getAllMagazine()
-                .stream()
-                .filter(entity -> entity.getGroupDiscipline().getLecturer().equals(lecturerId))
-                .toList();
+    public Page<MagazineResponse> getMagazinesByLecturer(@NonNull UUID lecturerId, @NonNull Pageable pageable) throws NotFindEntityInDataBaseException {
+        var entity = (Lecturer) getBeanByClass(LecturerService.class)
+                .getValue(lecturerId);
+
+        return repository.findAllByLecturer(entity, pageable)
+                .map(this::getMagazine);
     }
 
     @Override
-    public List<MagazineResponse> getAllMagazine() {
-       return repository.findAll()
-               .stream()
-               .filter(BaseTableInfo::isEnabled)
-               .map(this::getMagazine)
-               .toList();
+    public Page<MagazineResponse> getAllMagazine(@NonNull Pageable pageable) {
+       return repository.findAllActive(pageable)
+               .map(this::getMagazine);
     }
 
     private MagazineResponse getMagazine(GroupDiscipline groupDiscipline) {
-        var set = new HashSet<EvaluationsForClassesResponse>();
+        var evaluations = groupDiscipline.getClassRecordings()
+                .stream()
+                .map(classRecording -> {
+                    var key = classRecording.getResponse();
+                    var value = mapToStudentEvaluationResponse(classRecording);
 
-        for(var classRecording : groupDiscipline.getClassRecordings()) {
-            var key = classRecording.getResponse();
-            var value = classRecording.getStudentEvaluations()
-                    .stream()
-                    .map(StudentEvaluation::getResponse)
-                    .collect(Collectors.toSet());
-
-            var classInfo = EvaluationsForClassesResponse.builder()
-                    .classRecording(key)
-                    .studentEvaluations(value)
-                    .build();
-
-           set.add(classInfo);
-        }
+                    return new EvaluationsForClassesResponse(key, value);
+                })
+                .collect(Collectors.toSet());
 
         return MagazineResponse.builder()
                 .groupDiscipline(groupDiscipline.getResponse())
-                .evaluationsForClasses(set)
+                .evaluationsForClasses(evaluations)
                 .build();
+    }
+
+    private Set<StudentEvaluationResponse> mapToStudentEvaluationResponse(ClassRecording classRecording) {
+        return classRecording.getStudentEvaluations()
+                .stream()
+                .map(StudentEvaluation::getResponse)
+                .collect(Collectors.toSet());
     }
 }

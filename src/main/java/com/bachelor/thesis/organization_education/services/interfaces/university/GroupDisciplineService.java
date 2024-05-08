@@ -1,11 +1,12 @@
 package com.bachelor.thesis.organization_education.services.interfaces.university;
 
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.responces.university.MagazineResponse;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -36,14 +37,16 @@ public interface GroupDisciplineService extends CrudService {
      * Returns all journals that belong to the specified teacher.
      *
      * @param lecturerId unique identifier of the lecturer.
+     * @param pageable page settings
      * @return a list of magazines response.
      */
-    List<MagazineResponse> getMagazinesByLecturer(@NonNull UUID lecturerId);
+    Page<MagazineResponse> getMagazinesByLecturer(@NonNull UUID lecturerId, @NonNull Pageable pageable);
 
     /**
      * Retrieves all magazines with pagination support.
      *
+     * @param pageable page settings
      * @return A list of magazine responses with pagination applied.
      */
-    List<MagazineResponse> getAllMagazine();
+    Page<MagazineResponse> getAllMagazine(@NonNull Pageable pageable);
 }

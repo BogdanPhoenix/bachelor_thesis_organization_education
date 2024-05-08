@@ -2,8 +2,10 @@ package com.bachelor.thesis.organization_education.controllers.university;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.requests.general.ListRequest;
@@ -59,15 +61,24 @@ public class GroupDisciplineController extends ResourceController<GroupDisciplin
     }
 
     @GetMapping("/for-lecturer/magazines")
-    public ResponseEntity<List<MagazineResponse>> getMagazines(Principal principal) {
+    public ResponseEntity<Page<MagazineResponse>> getMagazines(
+            Principal principal,
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize
+    ) {
         var uuid = UUID.fromString(principal.getName());
-        var response = service.getMagazinesByLecturer(uuid);
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var response = service.getMagazinesByLecturer(uuid, pageable);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/magazines")
-    public ResponseEntity<List<MagazineResponse>> getMagazines() {
-        var response = service.getAllMagazine();
+    public ResponseEntity<Page<MagazineResponse>> getMagazines(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize
+    ) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var response = service.getAllMagazine(pageable);
         return ResponseEntity.ok(response);
     }
 
