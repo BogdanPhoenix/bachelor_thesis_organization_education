@@ -31,15 +31,22 @@ keycloak:
   realm: spring-boot-keycloak
   domain: localhost:8081
   adminClientId: admin-cli
-  adminClientSecret: IqM3dZ0UlZUtUGWeJXdVCBXVJXJxIR1W
+  adminClientSecret: ${ADMIN_CLIENT_SECRET}
   client: authenticationClientId
   urls:
     auth: http://${keycloak.domain}
 
 server:
-  port: 8181
+  port: 8443
   servlet:
     context-path: /organization-education
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:keystore/keystore.p12
+    key-store-password: ${TLS_PASSWORD}
+    protocol: TLS
+    enabled-protocols: TLSv1.3
 
 logging:
   file:

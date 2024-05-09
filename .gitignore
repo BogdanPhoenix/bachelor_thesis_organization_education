@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 logs/
+src/main/resources/keystore/*
+
+.env
 
 ### STS ###
 .apt_generated
