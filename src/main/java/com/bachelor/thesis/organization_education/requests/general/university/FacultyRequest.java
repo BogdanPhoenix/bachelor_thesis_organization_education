@@ -27,6 +27,7 @@ public class FacultyRequest extends NameEntityRequest {
         return FacultyFindRequest.builder()
                 .university(university)
                 .enName(this.getEnName())
+                .uaName(this.getUaName())
                 .build();
     }
 }

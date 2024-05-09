@@ -6,6 +6,7 @@ import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
+import com.bachelor.thesis.organization_education.annotations.Trimmed;
 import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
 import com.bachelor.thesis.organization_education.annotations.ValidAllowedChars;
 import com.bachelor.thesis.organization_education.annotations.ProhibitValueAssignment;
@@ -30,12 +31,14 @@ public class ClassRecordingRequest implements InsertRequest, UpdateRequest {
     @NotBlank(groups = InsertRequest.class)
     @Size(max = 255, groups = {InsertRequest.class, UpdateRequest.class})
     @ValidAllowedChars(groups = {InsertRequest.class, UpdateRequest.class})
+    @Trimmed
     private String classTopic;
 
     @NotNull(groups = InsertRequest.class)
     @NotBlank(groups = InsertRequest.class)
     @Size(max = 1000, groups = {InsertRequest.class, UpdateRequest.class})
     @ValidAllowedChars(groups = {InsertRequest.class, UpdateRequest.class})
+    @Trimmed
     private String description;
 
     @Override

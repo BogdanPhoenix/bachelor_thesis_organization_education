@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.validation.annotation.Validated;
+import com.bachelor.thesis.organization_education.annotations.Trimmed;
 import com.bachelor.thesis.organization_education.annotations.ValidEmail;
 import com.bachelor.thesis.organization_education.annotations.ValidNameUser;
 
@@ -28,17 +29,20 @@ public abstract class RegistrationRequest extends PasswordRequest{
     @NotBlank(message = "The email should not be empty or contain only one space.")
     @Size(min = 3, max = 255, message = "Email should be between 3 and 255 characters")
     @ValidEmail
+    @Trimmed
     private String username;
 
     @NotNull
     @NotBlank(message = "The first name should not be empty or contain only one space.")
     @Size(min = 2, max = 255, message = "First name should be between 2 and 255 characters")
     @ValidNameUser
+    @Trimmed
     private String firstName;
 
     @NotNull
     @NotBlank(message = "The last name should not be empty")
     @Size(min = 2, max = 255, message = "Last name should be between 2 and 255 characters")
     @ValidNameUser
+    @Trimmed
     private String lastName;
 }

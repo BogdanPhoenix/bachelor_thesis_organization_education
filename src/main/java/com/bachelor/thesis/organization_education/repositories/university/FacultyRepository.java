@@ -5,12 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.bachelor.thesis.organization_education.dto.Faculty;
 import com.bachelor.thesis.organization_education.dto.University;
-import com.bachelor.thesis.organization_education.repositories.abstracts.NameEntityRepository;
+import com.bachelor.thesis.organization_education.repositories.abstracts.BaseTableInfoRepository;
 
 import java.util.List;
 
 @Repository
-public interface FacultyRepository extends NameEntityRepository<Faculty> {
+public interface FacultyRepository extends BaseTableInfoRepository<Faculty> {
     @Query("SELECT f FROM Faculty f WHERE f.university = :university AND (f.enName LIKE :enName OR f.uaName LIKE :uaName)")
     List<Faculty> findAllFaculty(
             @Param("university") University university,

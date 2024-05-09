@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.validation.constraints.Size;
 import jakarta.persistence.MappedSuperclass;
+import com.bachelor.thesis.organization_education.annotations.Trimmed;
 import com.bachelor.thesis.organization_education.annotations.ValidNameEntity;
 
 /**
@@ -24,8 +25,11 @@ import com.bachelor.thesis.organization_education.annotations.ValidNameEntity;
 public abstract class NameEntityFindRequest implements FindRequest {
     @ValidNameEntity
     @Size(max = 255)
+    @Trimmed
     private String enName;
+
     @ValidNameEntity
     @Size(max = 255)
+    @Trimmed
     private String uaName;
 }
