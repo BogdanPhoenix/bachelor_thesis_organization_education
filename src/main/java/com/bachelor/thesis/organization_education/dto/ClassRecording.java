@@ -56,7 +56,7 @@ public class ClassRecording extends BaseTableInfo {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "classRecording", cascade = {MERGE, REMOVE, REFRESH, DETACH}, fetch = FetchType.LAZY)
-    private Set<File> files;
+    private Set<Storage> storages;
 
     @Override
     public ClassRecordingResponse getResponse() {

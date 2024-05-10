@@ -11,6 +11,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import com.bachelor.thesis.organization_education.exceptions.FileException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
@@ -22,6 +23,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class Handler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({
+            FileException.class,
             NotFoundException.class,
             DuplicateException.class,
             RestClientException.class,

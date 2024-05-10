@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
+import com.bachelor.thesis.organization_education.responces.university.StorageResponse;
 
 import java.util.UUID;
 
@@ -20,8 +20,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "files")
-public class File extends BaseTableInfo {
+@Table(name = "files",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "record_id", "file_name"})
+)
+public class Storage extends BaseTableInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
@@ -37,11 +39,26 @@ public class File extends BaseTableInfo {
     private ClassRecording classRecording;
 
     @NonNull
-    @Column(name = "path_to_file", nullable = false, unique = true)
-    private String pathToFile;
+    @Column(name = "file_name", nullable = false)
+    private String fileName;
+
+    @NonNull
+    @Column(name = "file_type", nullable = false)
+    private String fileType;
+
+    @Lob
+    @Column(name = "file_data", nullable = false)
+    private byte[] fileData;
 
     @Override
-    public Response getResponse() {
-        return null;
+    public StorageResponse getResponse() {
+        var builder = StorageResponse.builder();
+        super.initResponse(builder);
+        return builder
+                .userId(userId)
+                .classRecording(classRecording.getId())
+                .fileName(fileName)
+                .fileType(fileType)
+                .build();
     }
 }

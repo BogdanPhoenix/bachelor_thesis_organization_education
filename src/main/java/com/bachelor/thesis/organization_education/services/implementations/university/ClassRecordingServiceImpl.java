@@ -8,6 +8,7 @@ import com.bachelor.thesis.organization_education.dto.ClassRecording;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
+import com.bachelor.thesis.organization_education.services.interfaces.university.StorageService;
 import com.bachelor.thesis.organization_education.repositories.university.ClassRecordingRepository;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 import com.bachelor.thesis.organization_education.requests.general.university.ClassRecordingRequest;
@@ -54,6 +55,9 @@ public class ClassRecordingServiceImpl extends CrudServiceAbstract<ClassRecordin
     @Override
     protected void selectedForDeactivateChild(UUID id) {
         var entity = repository.findById(id);
-        entity.ifPresent(e -> deactivatedChild(e.getStudentEvaluations(), StudentEvaluationService.class));
+        entity.ifPresent(e -> {
+            deactivatedChild(e.getStudentEvaluations(), StudentEvaluationService.class);
+            deactivatedChild(e.getStorages(), StorageService.class);
+        });
     }
 }

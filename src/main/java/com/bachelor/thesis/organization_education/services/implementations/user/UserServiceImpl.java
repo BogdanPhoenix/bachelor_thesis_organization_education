@@ -27,6 +27,7 @@ import com.bachelor.thesis.organization_education.services.interfaces.user.UserS
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.StudentService;
 import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
+import com.bachelor.thesis.organization_education.services.interfaces.university.StorageService;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
     private final UniversityService universityService;
     private final LecturerService lecturerService;
     private final StudentService studentService;
+    private final StorageService storageService;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String jwtIssuerURI;
@@ -201,15 +203,20 @@ public class UserServiceImpl implements UserService {
         lecturerService.deleteValue(userId);
         studentService.deleteValue(userId);
         universityService.deleteUserEntity(userId);
+        storageService.deleteByUserId(userId);
+
         getUsersResource().delete(userId.toString());
     }
 
     @Override
     public void deactivateUserById(@NonNull String userId) {
         var uuid = UUID.fromString(userId);
+
         universityService.deactivateUserEntity(uuid);
         lecturerService.deactivate(uuid);
         studentService.deactivate(uuid);
+        storageService.deactivateByUserId(uuid);
+
         updateEnable(uuid, false);
     }
 

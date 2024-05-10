@@ -58,8 +58,8 @@ public class WebSecurityConfiguration {
                     new RequestMatcherConfig(HttpMethod.GET, "/groups-disciplines/magazines", "/groups-disciplines/magazines/*", "/groups-disciplines/*")
             ),
             Role.ADMIN, List.of(
-                    new RequestMatcherConfig(HttpMethod.DELETE, "*/delete/*"),
-                    new RequestMatcherConfig(HttpMethod.PUT, "*/activate/*", "/specialties/*", "/disciplines/*"),
+                    new RequestMatcherConfig(HttpMethod.DELETE, "*/delete/*", "/class-recordings/files/delete/*"),
+                    new RequestMatcherConfig(HttpMethod.PUT, "*/activate/*", "/class-recordings/files/activate/*", "/specialties/*", "/disciplines/*"),
                     new RequestMatcherConfig(HttpMethod.POST, "/specialties", "/specialties/stream", "/disciplines", "/disciplines/stream")
             )
     );
