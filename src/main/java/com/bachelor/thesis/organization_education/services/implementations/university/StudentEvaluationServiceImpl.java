@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.ClassRecording;
 import com.bachelor.thesis.organization_education.dto.StudentEvaluation;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
@@ -41,6 +42,17 @@ public class StudentEvaluationServiceImpl extends CrudServiceAbstract<StudentEva
     }
 
     @Override
+    public StudentEvaluation addValue(@NonNull InsertRequest request) throws DuplicateException, NullPointerException {
+        var insertRequest = (StudentEvaluationRequest) request;
+        var uuid = super.getAuthenticationUUID();
+        var classRecording = (ClassRecording) super.getBeanByClass(ClassRecordingService.class)
+                .getValue(insertRequest.getClassRecording().getId());
+
+        checkLecturer(classRecording.getMagazine().getLecturer(), uuid);
+        return super.addValue(request);
+    }
+
+    @Override
     protected List<StudentEvaluation> findAllEntitiesByRequest(@NonNull FindRequest request) {
         var findRequest = (StudentEvaluationFindRequest) request;
         return repository.findByStudentAndClassRecording(
@@ -59,6 +71,15 @@ public class StudentEvaluationServiceImpl extends CrudServiceAbstract<StudentEva
         if(!updateRequest.isPresent()) {
             entity.setEvaluation((short) 0);
         }
+    }
+
+    @Override
+    protected boolean checkOwner(StudentEvaluation entity, UUID userId) {
+        return entity.getClassRecording()
+                .getMagazine()
+                .getLecturer()
+                .getId()
+                .equals(userId);
     }
 
     @Override

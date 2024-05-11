@@ -90,11 +90,15 @@ public class FacultyServiceImpl extends CrudServiceAbstract<Faculty, FacultyRepo
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) {
-       var entity = repository.findById(id);
-       entity.ifPresent(e -> {
-           deactivatedChild(e.getGroups(), UniversityGroupService.class);
-           deactivatedChild(e.getLecturers(), LecturerService.class);
-       });
+    protected boolean checkOwner(Faculty entity, UUID userId) {
+        return entity.getUniversity()
+                .getAdminId()
+                .equals(userId);
+    }
+
+    @Override
+    protected void selectedForDeactivateChild(Faculty entity) {
+        deactivatedChild(entity.getGroups(), UniversityGroupService.class);
+        deactivatedChild(entity.getLecturers(), LecturerService.class);
     }
 }

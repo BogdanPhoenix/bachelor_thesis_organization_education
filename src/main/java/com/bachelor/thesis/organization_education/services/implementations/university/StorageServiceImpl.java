@@ -30,6 +30,8 @@ import java.util.UUID;
 
 @Service
 public class StorageServiceImpl extends CrudServiceAbstract<Storage, StorageRepository> implements StorageService {
+    private static final int MAX_NAME_SIZE = 255;
+
     @Autowired
     public StorageServiceImpl(StorageRepository repository, ApplicationContext context) {
         super(repository, "Files", context);
@@ -58,20 +60,30 @@ public class StorageServiceImpl extends CrudServiceAbstract<Storage, StorageRepo
     }
 
     @Override
-    protected void updateEntity(Storage entity, UpdateRequest request) { }
+    protected void updateEntity(Storage entity, UpdateRequest request) {
+        //Updating attributes for entities is not provided.
+    }
 
     @Override
     public Storage uploadStorage(@NonNull UUID userId, @NonNull UUID classRecordingId, @NonNull MultipartFile file) throws FileException {
         try {
+            var fileName = file.getOriginalFilename();
+            var fileType = file.getContentType();
             var fileData = StorageTools.compressFile(file.getBytes());
             var classRecording = (ClassRecording) super.getBeanByClass(ClassRecordingService.class)
                     .getValue(classRecordingId);
 
+            assert fileName != null;
+            if(fileName.length() > MAX_NAME_SIZE) {
+                var message = String.format("The permissible length of the file name should be no more than %d characters.", MAX_NAME_SIZE);
+                throw new FileException(message);
+            }
+
             var request = StorageRequest.builder()
                     .userId(userId)
                     .classRecording(classRecording)
-                    .fileName(file.getOriginalFilename())
-                    .fileType(file.getContentType())
+                    .fileName(fileName)
+                    .fileType(fileType)
                     .fileData(fileData)
                     .build();
 

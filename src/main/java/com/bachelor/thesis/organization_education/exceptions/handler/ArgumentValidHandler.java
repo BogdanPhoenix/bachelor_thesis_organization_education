@@ -29,7 +29,7 @@ public class ArgumentValidHandler {
                 ? fieldError.getField()
                 : error.getObjectName();
         var value = (error instanceof FieldError fieldError)
-                ? fieldError.getRejectedValue().toString()
+                ? fieldError.getRejectedValue()
                 : "";
         var errorMessage = error.getDefaultMessage();
 
@@ -66,7 +66,7 @@ public class ArgumentValidHandler {
 
     public record ErrorResponse (
         String field,
-        String value,
+        Object value,
         String errorMessage
     ) {}
 }

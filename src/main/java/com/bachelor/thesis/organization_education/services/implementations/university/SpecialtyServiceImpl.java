@@ -60,10 +60,7 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) {
-        var entity = repository.findById(id);
-        entity.ifPresent(e ->
-                deactivatedChild(e.getGroups(), UniversityGroupService.class)
-        );
+    protected void selectedForDeactivateChild(Specialty entity) {
+        deactivatedChild(entity.getGroups(), UniversityGroupService.class);
     }
 }

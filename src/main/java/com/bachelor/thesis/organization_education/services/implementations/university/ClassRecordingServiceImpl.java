@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.ClassRecording;
+import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
@@ -14,6 +16,7 @@ import com.bachelor.thesis.organization_education.services.implementations.crud.
 import com.bachelor.thesis.organization_education.requests.general.university.ClassRecordingRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.ClassRecordingFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.ClassRecordingService;
+import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.StudentEvaluationService;
 
 import java.util.List;
@@ -37,12 +40,31 @@ public class ClassRecordingServiceImpl extends CrudServiceAbstract<ClassRecordin
     }
 
     @Override
+    public ClassRecording addValue(@NonNull InsertRequest request) throws DuplicateException, NullPointerException {
+        var insertRequest = (ClassRecordingRequest) request;
+        var uuid = super.getAuthenticationUUID();
+        var magazine = (GroupDiscipline) super.getBeanByClass(GroupDisciplineService.class)
+                .getValue(insertRequest.getMagazine().getId());
+
+        checkLecturer(magazine.getLecturer(), uuid);
+        return super.addValue(request);
+    }
+
+    @Override
     protected List<ClassRecording> findAllEntitiesByRequest(@NonNull FindRequest request) {
         var findRequest = (ClassRecordingFindRequest) request;
         return repository.findAllByMagazineAndClassTopic(
                 findRequest.getMagazine(),
                 findRequest.getClassTopic()
         );
+    }
+
+    @Override
+    protected boolean checkOwner(ClassRecording entity, UUID userId) {
+        return entity.getMagazine()
+                .getLecturer()
+                .getId()
+                .equals(userId);
     }
 
     @Override
@@ -53,11 +75,8 @@ public class ClassRecordingServiceImpl extends CrudServiceAbstract<ClassRecordin
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) {
-        var entity = repository.findById(id);
-        entity.ifPresent(e -> {
-            deactivatedChild(e.getStudentEvaluations(), StudentEvaluationService.class);
-            deactivatedChild(e.getStorages(), StorageService.class);
-        });
+    protected void selectedForDeactivateChild(ClassRecording entity) {
+        deactivatedChild(entity.getStudentEvaluations(), StudentEvaluationService.class);
+        deactivatedChild(entity.getStorages(), StorageService.class);
     }
 }

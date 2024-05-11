@@ -51,7 +51,8 @@ class CrudServiceAbstractTest {
         @DisplayName("Checking for an exception when the request to add data contained data that was already in the table.")
         void testAddValueThrowsDuplicateException() {
             when(requestMock.getFindRequest()).thenReturn(findRequestMock);
-            when(serviceMock.isDuplicate(any(FindRequest.class))).thenReturn(true);
+            when(serviceMock.isDuplicate(findRequestMock)).thenReturn(true);
+            doCallRealMethodForAction(serviceMock::validateDuplicate, findRequestMock);
             doCallRealMethodForAction(serviceMock::addValue, requestMock);
             assertThrows(DuplicateException.class, () -> serviceMock.addValue(requestMock));
         }
@@ -85,13 +86,6 @@ class CrudServiceAbstractTest {
             doCallRealMethod()
                     .when(serviceMock)
                     .updateValue(ID, updateDataMock);
-        }
-
-        @Test
-        @DisplayName("Check for an exception when the data update request contains data that already exists in the table.")
-        void testUpdateValueThrowsDuplicateException() {
-            when(serviceMock.isDuplicate(any(UUID.class), any(FindRequest.class))).thenReturn(true);
-            assertThrows(DuplicateException.class, () -> serviceMock.updateValue(ID, updateDataMock));
         }
 
         @Test
@@ -133,26 +127,12 @@ class CrudServiceAbstractTest {
         }
     }
 
-
     @Test
     @DisplayName("Check the exception when the entity return request did not find an entity.")
     void testGetValueThrowsNotFindEntityByRequestInDataBaseException() {
         when(serviceMock.findAllEntitiesByRequest(any(FindRequest.class))).thenThrow(NotFindEntityInDataBaseException.class);
         doCallRealMethodForAction(serviceMock::getValue, findRequestMock);
         assertThrows(NotFindEntityInDataBaseException.class, () -> serviceMock.getValue(findRequestMock));
-    }
-
-    private void testEntityNotFoundAction(Consumer<UUID> action) {
-        var ID = UUID.randomUUID();
-        doCallRealMethod()
-                .when(serviceMock)
-                .updateEnabled(any(UUID.class), any(Boolean.class));
-
-        when(serviceMock.findEntityById(any(UUID.class)))
-                .thenThrow(NotFindEntityInDataBaseException.class);
-        doCallRealMethodForAction(action, ID);
-
-        assertThrows(NotFindEntityInDataBaseException.class, () -> action.accept(ID));
     }
 
     private <T> void doCallRealMethodForAction(Consumer<T> action, T value) {

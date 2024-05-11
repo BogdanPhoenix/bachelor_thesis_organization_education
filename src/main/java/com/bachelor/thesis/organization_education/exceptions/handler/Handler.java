@@ -2,21 +2,18 @@ package com.bachelor.thesis.organization_education.exceptions.handler;
 
 import lombok.NonNull;
 import jakarta.ws.rs.NotFoundException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.client.RestClientException;
+import com.bachelor.thesis.organization_education.exceptions.*;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import com.bachelor.thesis.organization_education.exceptions.FileException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.exceptions.UserCreatingException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
 import java.util.Map;
 
@@ -30,6 +27,7 @@ public class Handler extends ResponseEntityExceptionHandler {
             NullPointerException.class,
             IllegalStateException.class,
             UserCreatingException.class,
+            UnauthorizedException.class,
             NotFindEntityInDataBaseException.class
     })
     public ResponseEntity<Object> handleExceptionInfo(Exception ex) {
@@ -55,6 +53,11 @@ public class Handler extends ResponseEntityExceptionHandler {
     }
 
     private Map<String, String> createMessage(Exception ex) {
-        return Map.of("errorMessage", ex.getMessage());
+        var cause = ex.getCause();
+        var message = cause == null
+                ? ex.getMessage()
+                : cause.getMessage();
+
+        return Map.of("errorMessage", message);
     }
 }

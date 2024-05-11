@@ -80,8 +80,14 @@ public class AudienceServiceImpl extends CrudServiceAbstract<Audience, AudienceR
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) {
-        var entity = repository.findById(id);
-        entity.ifPresent(e -> deactivatedChild(e.getSchedules(), ScheduleService.class));
+    protected boolean checkOwner(Audience entity, UUID userId) {
+        return entity.getUniversity()
+                .getAdminId()
+                .equals(userId);
+    }
+
+    @Override
+    protected void selectedForDeactivateChild(Audience entity) {
+        deactivatedChild(entity.getSchedules(), ScheduleService.class);
     }
 }

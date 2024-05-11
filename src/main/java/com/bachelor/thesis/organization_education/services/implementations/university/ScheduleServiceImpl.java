@@ -127,6 +127,14 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
         updateIfPresent(updateRequest::getEndTime, entity::setEndTime);
     }
 
+    @Override
+    protected boolean checkOwner(Schedule entity, UUID userId) {
+        return entity.getAudience()
+                .getUniversity()
+                .getAdminId()
+                .equals(userId);
+    }
+
     private enum FindBy {
         LECTURER, AUDIENCE
     }

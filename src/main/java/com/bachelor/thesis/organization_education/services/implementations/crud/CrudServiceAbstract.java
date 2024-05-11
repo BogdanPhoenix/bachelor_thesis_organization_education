@@ -5,8 +5,11 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationContext;
+import com.bachelor.thesis.organization_education.dto.Lecturer;
+import org.springframework.security.core.context.SecurityContextHolder;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.exceptions.UnauthorizedException;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
@@ -18,8 +21,8 @@ import com.bachelor.thesis.organization_education.repositories.abstracts.BaseTab
 import java.util.*;
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.Predicate;
 
 import static com.bachelor.thesis.organization_education.services.implementations.tools.ExceptionTools.throwRuntimeException;
 
@@ -67,6 +70,7 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
     @Override
     public T updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException {
         var entity = findValueById(id);
+        validateOwner(entity);
         updateEntity(entity, request);
         entity.setUpdateDate(LocalDateTime.now());
         return repository.save(entity);
@@ -98,26 +102,54 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
 
     @Override
     public void activate(@NonNull UUID id) {
-        updateEnabled(id, true);
+        repository.findById(id)
+                .ifPresent(e -> updateEnabled(e, true));
     }
 
     @Override
     public void deactivate(@NonNull UUID id) {
-        selectedForDeactivateChild(id);
-        updateEnabled(id, false);
+        repository.findById(id)
+                .ifPresent(e -> {
+                    validateOwner(e);
+                    selectedForDeactivateChild(e);
+                    updateEnabled(e, false);
+                });
     }
 
-    protected void selectedForDeactivateChild(UUID id) {
+    protected void validateOwner(T entity) {
+        if(!isOwner(entity)) {
+            throw new UnauthorizedException("You cannot interact with this entity because you aren`t its owner.");
+        }
+    }
+
+    private boolean isOwner(T entity) {
+        var uuid = getAuthenticationUUID();
+        return checkOwner(entity, uuid);
+    }
+
+    protected UUID getAuthenticationUUID() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        return UUID.fromString(auth.getName());
+    }
+
+    protected boolean checkOwner(T entity, UUID userId) {
+        return true;
+    }
+
+    protected void checkLecturer(Lecturer lecturer, UUID authId) {
+        if(!lecturer.getId().equals(authId)) {
+            throw new UnauthorizedException("You don`t lecturer in the selected group, so you cannot add data to it.");
+        }
+    }
+
+    protected void selectedForDeactivateChild(T entity) {
         //You need to override only in classes where it is required.
     }
 
-    protected void updateEnabled(UUID id, boolean value) {
-        var entity = repository.findById(id);
-        entity.ifPresent(e -> {
-            e.setEnabled(value);
-            e.setUpdateDate(LocalDateTime.now());
-            repository.save(e);
-        });
+    protected void updateEnabled(T entity, boolean value) {
+        entity.setEnabled(value);
+        entity.setUpdateDate(LocalDateTime.now());
+        repository.save(entity);
     }
 
     @Override

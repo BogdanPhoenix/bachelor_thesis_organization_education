@@ -62,8 +62,7 @@ public class StudentServiceImpl extends CrudServiceAbstract<Student, StudentRepo
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) {
-        var entity = repository.findById(id);
-        entity.ifPresent(e -> deactivatedChild(e.getEvaluations(), StudentEvaluationService.class));
+    protected void selectedForDeactivateChild(Student entity) {
+        deactivatedChild(entity.getEvaluations(), StudentEvaluationService.class);
     }
 }

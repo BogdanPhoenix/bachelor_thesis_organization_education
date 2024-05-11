@@ -34,12 +34,12 @@ public class UniversityGroupRequest implements InsertRequest, UpdateRequest, Yea
     @NotNull(groups = InsertRequest.class)
     private Faculty faculty;
 
-    @NotNull(groups = InsertRequest.class)
+    @NotNull(groups = {InsertRequest.class, UpdateRequest.class})
     @Min(value = 1900, groups = InsertRequest.class)
     @ValidYear(groups = UpdateRequest.class)
     private Short yearStart;
 
-    @NotNull(groups = InsertRequest.class)
+    @NotNull(groups = {InsertRequest.class, UpdateRequest.class})
     @Min(value = 1900, groups = InsertRequest.class)
     @ValidYear(groups = UpdateRequest.class)
     private Short yearEnd;

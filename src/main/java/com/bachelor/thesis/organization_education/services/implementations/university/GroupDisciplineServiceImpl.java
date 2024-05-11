@@ -68,12 +68,18 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) {
-        var entity = repository.findById(id);
-        entity.ifPresent(e -> {
-            deactivatedChild(e.getClassRecordings(), ClassRecordingService.class);
-            deactivatedChild(e.getSchedules(), ScheduleService.class);
-        });
+    protected boolean checkOwner(GroupDiscipline entity, UUID userId) {
+        return entity.getGroup()
+                .getFaculty()
+                .getUniversity()
+                .getAdminId()
+                .equals(userId);
+    }
+
+    @Override
+    protected void selectedForDeactivateChild(GroupDiscipline entity) {
+        deactivatedChild(entity.getClassRecordings(), ClassRecordingService.class);
+        deactivatedChild(entity.getSchedules(), ScheduleService.class);
     }
 
     @Override

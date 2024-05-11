@@ -43,10 +43,10 @@ public class ScheduleRequest implements InsertRequest, UpdateRequest, TimeRange 
     @NotNull(groups = InsertRequest.class)
     private Frequency frequency;
 
-    @NotNull(groups = InsertRequest.class)
+    @NotNull(groups = {InsertRequest.class, UpdateRequest.class})
     private Time startTime;
 
-    @NotNull(groups = InsertRequest.class)
+    @NotNull(groups = {InsertRequest.class, UpdateRequest.class})
     private Time endTime;
 
     @Override

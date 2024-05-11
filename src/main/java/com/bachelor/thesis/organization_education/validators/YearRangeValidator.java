@@ -8,6 +8,8 @@ import com.bachelor.thesis.organization_education.requests.general.abstracts.Yea
 public class YearRangeValidator implements ConstraintValidator<ValidYearRange, YearRange> {
     @Override
     public boolean isValid(YearRange value, ConstraintValidatorContext context) {
-        return value.getYearEnd() >= value.getYearStart();
+        return value.getYearStart() == null ||
+                value.getYearEnd() == null ||
+                value.getYearEnd() >= value.getYearStart();
     }
 }

@@ -48,9 +48,8 @@ public class AcademicDisciplineServiceImpl extends NameEntityServiceAbstract<Aca
     }
 
     @Override
-    protected void selectedForDeactivateChild(UUID id) {
-        var entity = repository.findById(id);
-        entity.ifPresent(e -> deactivatedChild(e.getGroupsDisciplines(), GroupDisciplineService.class));
+    protected void selectedForDeactivateChild(AcademicDiscipline entity) {
+        deactivatedChild(entity.getGroupsDisciplines(), GroupDisciplineService.class);
     }
 
     @Override
