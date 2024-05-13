@@ -1,7 +1,6 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,20 +32,12 @@ public class GroupDisciplineController extends ResourceController<GroupDisciplin
 
     @PostMapping("/stream")
     public ResponseEntity<List<Response>> addStream(@Valid @RequestBody ListRequest<GroupDisciplineRequest> requests) {
-        var response = service.addValue(requests.collection());
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return super.addValue(requests);
     }
 
     @PostMapping
     public ResponseEntity<Response> add(@Validated(InsertRequest.class) @RequestBody GroupDisciplineRequest request) {
-        var response = service.addValue(request)
-                .getResponse();
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return super.addValue(request);
     }
 
     @GetMapping

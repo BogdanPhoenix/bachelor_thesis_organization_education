@@ -23,7 +23,6 @@ public interface StorageService extends CrudService {
     /**
      * Uploads a file to storage associated with a user and a class recording.
      *
-     * @param userId the unique identifier of the user.
      * @param classRecordingId the unique identifier of the class recording.
      * @param file the file to be uploaded.
      * @return the storage entity representing the uploaded file.
@@ -31,17 +30,16 @@ public interface StorageService extends CrudService {
      * @throws NullPointerException if null was passed to the request.
      * @throws DuplicateException if the table contains one of the entity values that is passed in the collection.
      */
-    Storage uploadStorage(@NonNull UUID userId, @NonNull UUID classRecordingId, @NonNull MultipartFile file) throws FileException, NullPointerException, DuplicateException;
+    Storage uploadStorage(@NonNull UUID classRecordingId, @NonNull MultipartFile file) throws FileException, NullPointerException, DuplicateException;
 
     /**
      * Retrieves a page of storage entities associated with a user and a class recording.
      *
-     * @param userId the unique identifier of the user.
      * @param classRecordingId the unique identifier of the class recording.
      * @param pageable the pagination information.
      * @return a page of storage entities.
      */
-    Page<Response> getStorages(@NonNull UUID userId, @NonNull UUID classRecordingId, Pageable pageable);
+    Page<Response> getStorages(@NonNull UUID classRecordingId, Pageable pageable);
 
     /**
      * Downloads a storage entity by its unique identifier.

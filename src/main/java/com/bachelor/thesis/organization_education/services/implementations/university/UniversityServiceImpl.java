@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.University;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
@@ -40,19 +39,23 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     }
 
     @Override
-    public University addValue(@NonNull UniversityRequest request, @NonNull String userId) throws NullPointerException, DuplicateException {
-        var uuid = UUID.fromString(userId);
-        request.setAdminId(uuid);
+    public University addValue(@NonNull InsertRequest request) throws NullPointerException, DuplicateException {
+        var insertRequest = (UniversityRequest) request;
+        var uuid = super.getAuthenticationUUID();
+
+        insertRequest.setAdminId(uuid);
         return super.addValue(request);
     }
 
     @Override
-    public BaseTableInfo updateValue(@NonNull String adminId, @NonNull UUID entityId, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
+    public University updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException {
         var updateRequest = (UniversityRequest) request;
-        var uuid = UUID.fromString(adminId);
+        var uuid = super.getAuthenticationUUID();
+
         updateRequest.setAdminId(uuid);
-        validateDuplicate(entityId, request.getFindRequest());
-        return super.updateValue(entityId, updateRequest);
+        validateDuplicate(id, request.getFindRequest());
+
+        return super.updateValue(id, updateRequest);
     }
 
     @Override

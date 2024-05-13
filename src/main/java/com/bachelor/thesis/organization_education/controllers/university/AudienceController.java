@@ -1,7 +1,6 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 
 import java.util.List;
 import java.util.UUID;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/audiences")
@@ -30,27 +28,13 @@ public class AudienceController extends ResourceController<AudienceService> {
     }
 
     @PostMapping("/stream")
-    public ResponseEntity<List<Response>> addStream(
-            @Valid @RequestBody ListRequest<AudienceRequest> requests,
-            Principal principal
-    ) {
-        var response = service.addValue(requests.collection(), principal.getName());
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+    public ResponseEntity<List<Response>> addStream(@Valid @RequestBody ListRequest<AudienceRequest> requests) {
+        return super.addValue(requests);
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(
-            @Validated(InsertRequest.class) @RequestBody AudienceRequest request,
-            Principal principal
-    ) {
-        var response = service.addValue(request, principal.getName())
-                .getResponse();
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+    public ResponseEntity<Response> add(@Validated(InsertRequest.class) @RequestBody AudienceRequest request) {
+        return super.addValue(request);
     }
 
     @GetMapping

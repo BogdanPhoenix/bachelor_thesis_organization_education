@@ -2,7 +2,6 @@ package com.bachelor.thesis.organization_education.controllers.university;
 
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
-import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 
 import java.util.List;
 import java.util.UUID;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/class-recordings")
@@ -40,19 +38,12 @@ public class ClassRecordingController extends ResourceController<ClassRecordingS
 
     @PostMapping("/stream")
     public ResponseEntity<List<Response>> addStream(@Valid @RequestBody ListRequest<ClassRecordingRequest> requests) {
-        var response = service.addValue(requests.collection());
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return super.addValue(requests);
     }
 
     @PostMapping
     public ResponseEntity<Response> add(@Validated(InsertRequest.class) @RequestBody ClassRecordingRequest request) {
-        var response = service.addValue(request)
-                .getResponse();
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return super.addValue(request);
     }
 
     @GetMapping
@@ -79,12 +70,10 @@ public class ClassRecordingController extends ResourceController<ClassRecordingS
     @PreAuthorize("hasRole('LECTURER') || hasRole('STUDENT')")
     @PostMapping("/{id}/files/upload")
     public ResponseEntity<Response> uploadFile(
-            Principal principal,
             @PathVariable UUID id,
             @RequestParam("file") MultipartFile file
     ) {
-        var uuid = UUID.fromString(principal.getName());
-        var response = storageService.uploadStorage(uuid, id, file)
+        var response = storageService.uploadStorage(id, file)
                 .getResponse();
         return ResponseEntity.ok(response);
     }
@@ -92,14 +81,12 @@ public class ClassRecordingController extends ResourceController<ClassRecordingS
     @PreAuthorize("hasRole('LECTURER') || hasRole('STUDENT')")
     @GetMapping("/{id}/files")
     public ResponseEntity<Page<Response>> getFiles(
-            Principal principal,
             @PathVariable UUID id,
             @RequestParam(defaultValue = "0") int pageNumber,
             @RequestParam(defaultValue = "20") int pageSize
     ) {
-        var uuid = UUID.fromString(principal.getName());
         var pageable = PageRequest.of(pageNumber, pageSize);
-        var response = storageService.getStorages(uuid, id, pageable);
+        var response = storageService.getStorages(id, pageable);
         return ResponseEntity.ok(response);
     }
 

@@ -1,7 +1,6 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 
 import java.util.List;
 import java.util.UUID;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/faculties")
@@ -30,27 +28,13 @@ public class FacultyController extends ResourceController<FacultyService> {
     }
 
     @PostMapping("/stream")
-    public ResponseEntity<List<Response>> addStream(
-            @Valid @RequestBody ListRequest<FacultyRequest> requests,
-            Principal principal
-    ) {
-        var response = service.addValue(requests.collection(), principal.getName());
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+    public ResponseEntity<List<Response>> addStream(@Valid @RequestBody ListRequest<FacultyRequest> requests) {
+        return super.addValue(requests);
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(
-            @Validated(InsertRequest.class) @RequestBody FacultyRequest request,
-            Principal principal
-    ) {
-        var response = service.addValue(request, principal.getName())
-                .getResponse();
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+    public ResponseEntity<Response> add(@Validated(InsertRequest.class) @RequestBody FacultyRequest request) {
+        return super.addValue(request);
     }
 
     @GetMapping
@@ -68,13 +52,9 @@ public class FacultyController extends ResourceController<FacultyService> {
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
-            Principal principal,
             @PathVariable UUID id,
             @Validated(UpdateRequest.class) @RequestBody FacultyRequest request
     ) {
-        var response = service.updateValue(principal.getName(), id, request)
-                .getResponse();
-
-        return ResponseEntity.ok(response);
+        return super.updateEntity(id, request);
     }
 }

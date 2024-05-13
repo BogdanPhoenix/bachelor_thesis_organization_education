@@ -1,6 +1,5 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +13,6 @@ import com.bachelor.thesis.organization_education.requests.find.university.Unive
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 
 import java.util.UUID;
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/universities")
@@ -26,17 +24,8 @@ public class UniversityController extends ResourceController<UniversityService> 
     }
 
     @PostMapping
-    public ResponseEntity<Response> add(
-            @Validated(InsertRequest.class) @RequestBody UniversityRequest request,
-            Principal principal
-    ) {
-        var response = service
-                .addValue(request, principal.getName())
-                .getResponse();
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+    public ResponseEntity<Response> add(@Validated(InsertRequest.class) @RequestBody UniversityRequest request) {
+        return super.addValue(request);
     }
 
     @GetMapping
@@ -46,13 +35,9 @@ public class UniversityController extends ResourceController<UniversityService> 
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
-            Principal principal,
             @PathVariable UUID id,
             @Validated(UpdateRequest.class) @RequestBody UniversityRequest request
     ) {
-        var response = service.updateValue(principal.getName(), id, request)
-                .getResponse();
-
-        return ResponseEntity.ok(response);
+       return super.updateEntity(id, request);
     }
 }

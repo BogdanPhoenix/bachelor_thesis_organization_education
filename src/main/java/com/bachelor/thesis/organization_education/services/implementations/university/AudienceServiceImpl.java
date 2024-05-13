@@ -44,17 +44,23 @@ public class AudienceServiceImpl extends CrudServiceAbstract<Audience, AudienceR
     }
 
     @Override
-    public List<Response> addValue(@NonNull Collection<AudienceRequest> requests, @NonNull String adminId) throws NullPointerException, DuplicateException {
-        var university = getUniversity(adminId);
-        requests.forEach(entity -> entity.setUniversity(university));
+    public List<Response> addValue(@NonNull Collection<? extends InsertRequest> requests) throws NullPointerException, DuplicateException {
+        var university = getUniversity();
+
+        for(var request : requests) {
+            var insertRequest = (AudienceRequest) request;
+            insertRequest.setUniversity(university);
+        }
+
         return super.addValue(requests);
     }
 
     @Override
-    public BaseTableInfo addValue(@NonNull AudienceRequest request, @NonNull String adminId) throws NullPointerException, DuplicateException {
-        var university = getUniversity(adminId);
-        request.setUniversity(university);
-        return super.addValue(request);
+    public Audience addValue(@NonNull InsertRequest request) throws DuplicateException, NullPointerException {
+        var insertRequest = (AudienceRequest) request;
+        var university = getUniversity();
+        insertRequest.setUniversity(university);
+        return super.addValue(insertRequest);
     }
 
     @Override
@@ -64,8 +70,8 @@ public class AudienceServiceImpl extends CrudServiceAbstract<Audience, AudienceR
                 .map(BaseTableInfo::getResponse);
     }
 
-    private University getUniversity(String adminId) {
-        var uuid = UUID.fromString(adminId);
+    private University getUniversity() {
+        var uuid = super.getAuthenticationUUID();
         var universityService = getBeanByClass(UniversityService.class);
         return universityService.findByUser(uuid);
     }

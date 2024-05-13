@@ -1,15 +1,20 @@
 package com.bachelor.thesis.organization_education.controllers.abstracts;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
+import com.bachelor.thesis.organization_education.requests.general.ListRequest;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -23,6 +28,23 @@ public abstract class ResourceController<T extends CrudService> {
 
     protected ResourceController(T service) {
         this.service = service;
+    }
+
+    protected ResponseEntity<List<Response>> addValue(ListRequest<? extends InsertRequest> requests) {
+        var response = service.addValue(requests.collection());
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
+    }
+
+    protected ResponseEntity<Response> addValue(@Validated(InsertRequest.class) @RequestBody InsertRequest request) {
+        var response = service.addValue(request)
+                .getResponse();
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     protected  <I extends FindRequest> ResponseEntity<Response> get(I request) {

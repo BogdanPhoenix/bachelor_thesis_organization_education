@@ -1,7 +1,6 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
@@ -29,19 +28,12 @@ public class AcademicDisciplineController extends ResourceController<AcademicDis
 
     @PostMapping("/stream")
     public ResponseEntity<List<Response>> addStream(@Valid @RequestBody ListRequest<AcademicDisciplineRequest> requests) {
-        var response = service.addValue(requests.collection());
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return super.addValue(requests);
     }
 
     @PostMapping
     public ResponseEntity<Response> add(@Validated(InsertRequest.class) @RequestBody AcademicDisciplineRequest request) {
-        var response = service.addValue(request)
-                .getResponse();
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return super.addValue(request);
     }
 
     @PutMapping("/{disciplineId}/connect-with-lecturer/{lecturerId}")

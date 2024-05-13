@@ -65,8 +65,9 @@ public class StorageServiceImpl extends CrudServiceAbstract<Storage, StorageRepo
     }
 
     @Override
-    public Storage uploadStorage(@NonNull UUID userId, @NonNull UUID classRecordingId, @NonNull MultipartFile file) throws FileException {
+    public Storage uploadStorage( @NonNull UUID classRecordingId, @NonNull MultipartFile file) throws FileException {
         try {
+            var userId = super.getAuthenticationUUID();
             var fileName = file.getOriginalFilename();
             var fileType = file.getContentType();
             var fileData = StorageTools.compressFile(file.getBytes());
@@ -94,7 +95,8 @@ public class StorageServiceImpl extends CrudServiceAbstract<Storage, StorageRepo
     }
 
     @Override
-    public Page<Response> getStorages(@NonNull UUID userId, @NonNull UUID classRecordingId, Pageable pageable) {
+    public Page<Response> getStorages(@NonNull UUID classRecordingId, Pageable pageable) {
+        var userId = super.getAuthenticationUUID();
         var classRecording = (ClassRecording) super.getBeanByClass(ClassRecordingService.class)
                 .getValue(classRecordingId);
 

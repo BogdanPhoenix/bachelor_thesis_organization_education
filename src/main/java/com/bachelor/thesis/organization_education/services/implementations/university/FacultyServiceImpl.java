@@ -2,8 +2,8 @@ package com.bachelor.thesis.organization_education.services.implementations.univ
 
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Faculty;
@@ -45,25 +45,35 @@ public class FacultyServiceImpl extends CrudServiceAbstract<Faculty, FacultyRepo
     }
 
     @Override
-    public List<Response> addValue(@NonNull Collection<FacultyRequest> requests, @NonNull String adminId) throws NullPointerException, DuplicateException {
-        var university = getUniversity(adminId);
-        requests.forEach(entity -> entity.setUniversity(university));
+    public List<Response> addValue(@NonNull Collection<? extends InsertRequest> requests) throws NullPointerException, DuplicateException {
+        var university = getUniversity();
+
+        for(var request : requests) {
+            var insertRequest = (FacultyRequest) request;
+            insertRequest.setUniversity(university);
+        }
+
         return super.addValue(requests);
     }
 
     @Override
-    public Faculty addValue(@NonNull FacultyRequest request, @NonNull String adminId) {
-        var university = getUniversity(adminId);
-        request.setUniversity(university);
-        return super.addValue(request);
+    public Faculty addValue(@NonNull InsertRequest request) {
+        var insertRequest = (FacultyRequest) request;
+        var university = getUniversity();
+
+        insertRequest.setUniversity(university);
+        return super.addValue(insertRequest);
     }
 
     @Override
-    public BaseTableInfo updateValue(@NonNull String adminId, @NonNull UUID entityId, @NonNull FacultyRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
-        var university = getUniversity(adminId);
-        request.setUniversity(university);
-        validateDuplicate(entityId, request.getFindRequest());
-        return super.updateValue(entityId, request);
+    public Faculty updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
+        var updateRequest = (FacultyRequest) request;
+        var university = getUniversity();
+
+        updateRequest.setUniversity(university);
+        validateDuplicate(id, updateRequest.getFindRequest());
+
+        return super.updateValue(id, updateRequest);
     }
 
     @Override
@@ -81,8 +91,8 @@ public class FacultyServiceImpl extends CrudServiceAbstract<Faculty, FacultyRepo
         updateIfPresent(updateRequest::getUaName, entity::setUaName);
     }
 
-    private University getUniversity(String adminId) {
-        var uuid = UUID.fromString(adminId);
+    private University getUniversity() {
+        var uuid = super.getAuthenticationUUID();
         var universityService = getBeanByClass(UniversityService.class);
         return universityService.findByUser(uuid);
     }
