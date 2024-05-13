@@ -58,22 +58,21 @@ public class FacultyServiceImpl extends CrudServiceAbstract<Faculty, FacultyRepo
 
     @Override
     public Faculty addValue(@NonNull InsertRequest request) {
-        var insertRequest = (FacultyRequest) request;
-        var university = getUniversity();
-
-        insertRequest.setUniversity(university);
-        return super.addValue(insertRequest);
+        setUniversity((FacultyRequest) request);
+        return super.addValue(request);
     }
 
     @Override
     public Faculty updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
-        var updateRequest = (FacultyRequest) request;
+        setUniversity((FacultyRequest) request);
+        validateDuplicate(id, request.getFindRequest());
+
+        return super.updateValue(id, request);
+    }
+
+    private void setUniversity(FacultyRequest request) {
         var university = getUniversity();
-
-        updateRequest.setUniversity(university);
-        validateDuplicate(id, updateRequest.getFindRequest());
-
-        return super.updateValue(id, updateRequest);
+        request.setUniversity(university);
     }
 
     @Override

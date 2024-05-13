@@ -40,22 +40,21 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
 
     @Override
     public University addValue(@NonNull InsertRequest request) throws NullPointerException, DuplicateException {
-        var insertRequest = (UniversityRequest) request;
-        var uuid = super.getAuthenticationUUID();
-
-        insertRequest.setAdminId(uuid);
+        setAdminId((UniversityRequest) request);
         return super.addValue(request);
     }
 
     @Override
     public University updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException {
-        var updateRequest = (UniversityRequest) request;
-        var uuid = super.getAuthenticationUUID();
-
-        updateRequest.setAdminId(uuid);
+        setAdminId((UniversityRequest) request);
         validateDuplicate(id, request.getFindRequest());
 
-        return super.updateValue(id, updateRequest);
+        return super.updateValue(id, request);
+    }
+
+    private void setAdminId(UniversityRequest request) {
+        var uuid = super.getAuthenticationUUID();
+        request.setAdminId(uuid);
     }
 
     @Override

@@ -129,18 +129,20 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
     private MagazineResponse getMagazine(GroupDiscipline groupDiscipline) {
         var evaluations = groupDiscipline.getClassRecordings()
                 .stream()
-                .map(classRecording -> {
-                    var key = classRecording.getResponse();
-                    var value = mapToStudentEvaluationResponse(classRecording);
-
-                    return new EvaluationsForClassesResponse(key, value);
-                })
+                .map(this::mapToEvaluationsForClassesResponse)
                 .collect(Collectors.toSet());
 
         return MagazineResponse.builder()
                 .groupDiscipline(groupDiscipline.getResponse())
                 .evaluationsForClasses(evaluations)
                 .build();
+    }
+
+    private EvaluationsForClassesResponse mapToEvaluationsForClassesResponse(ClassRecording classRecording) {
+        var key = classRecording.getResponse();
+        var value = mapToStudentEvaluationResponse(classRecording);
+
+        return new EvaluationsForClassesResponse(key, value);
     }
 
     private Set<StudentEvaluationResponse> mapToStudentEvaluationResponse(ClassRecording classRecording) {
