@@ -77,12 +77,12 @@ public interface CrudService {
     BaseTableInfo getValue(@NonNull UUID id) throws NotFindEntityInDataBaseException;
 
     /**
-     * Returns the set of all table entities.
+     * Returns all entities in the table.
      *
      * @param pageable page settings
      * @return a set of entities.
      */
-    Page<BaseTableInfo> getAll(Pageable pageable);
+    Page<Response> getAll(Pageable pageable);
 
     /**
      * Updates the attributes of the selected entity.

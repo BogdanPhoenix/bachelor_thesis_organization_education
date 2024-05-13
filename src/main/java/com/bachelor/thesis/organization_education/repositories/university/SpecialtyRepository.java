@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SpecialtyRepository extends NameEntityRepository<Specialty> {
-    List<Specialty> findAllByEnNameOrUaNameOrNumber(String enName, String uaName, short number);
+    List<Specialty> findAllByEnNameOrUaNameOrNumber(String enName, String uaName, Short number);
 }

@@ -29,11 +29,24 @@ public class ArgumentValidHandler {
                 ? fieldError.getField()
                 : error.getObjectName();
         var value = (error instanceof FieldError fieldError)
-                ? fieldError.getRejectedValue()
+                ? getValue(fieldError.getRejectedValue())
                 : "";
         var errorMessage = error.getDefaultMessage();
 
         return new ErrorResponse(fieldName, value, errorMessage);
+    }
+
+    private String getValue(Object rejectedValue) {
+        if(rejectedValue == null) {
+            return "";
+        } else if(rejectedValue instanceof Collection<?>) {
+            return "A collection of values.";
+        } else if(rejectedValue instanceof Map<?, ?>) {
+            return "Dictionary of meanings.";
+        } else if(rejectedValue instanceof Object[]) {
+            return "An array of values.";
+        }
+        return rejectedValue.toString();
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

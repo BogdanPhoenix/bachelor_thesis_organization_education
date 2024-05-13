@@ -13,8 +13,6 @@ import com.bachelor.thesis.organization_education.requests.general.abstracts.Ins
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.repositories.university.UniversityRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.UniversityRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
-import com.bachelor.thesis.organization_education.services.interfaces.university.AudienceService;
 import com.bachelor.thesis.organization_education.requests.find.university.UniversityFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
@@ -42,7 +40,7 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     }
 
     @Override
-    public University addResource(@NonNull UniversityRequest request, @NonNull String userId) throws NullPointerException, DuplicateException {
+    public University addValue(@NonNull UniversityRequest request, @NonNull String userId) throws NullPointerException, DuplicateException {
         var uuid = UUID.fromString(userId);
         request.setAdminId(uuid);
         return super.addValue(request);
@@ -53,6 +51,7 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
         var updateRequest = (UniversityRequest) request;
         var uuid = UUID.fromString(adminId);
         updateRequest.setAdminId(uuid);
+        validateDuplicate(entityId, request.getFindRequest());
         return super.updateValue(entityId, updateRequest);
     }
 
@@ -76,9 +75,7 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
     @Override
     public void deactivateUserEntity(@NonNull UUID userId) {
         var university = repository.findByAdminId(userId);
-        university.ifPresent(entity ->
-                deactivate(entity.getId())
-        );
+        university.ifPresent(super::deactivateEntity);
     }
 
     @Override
@@ -97,7 +94,7 @@ public class UniversityServiceImpl extends NameEntityServiceAbstract<University,
 
     @Override
     protected void selectedForDeactivateChild(University entity) {
-        deactivatedChild(entity.getFaculties(), FacultyService.class);
-        deactivatedChild(entity.getAudiences(), AudienceService.class);
+        deactivatedChild(entity.getFaculties(), FacultyServiceImpl.class);
+        deactivatedChild(entity.getAudiences(), AudienceServiceImpl.class);
     }
 }

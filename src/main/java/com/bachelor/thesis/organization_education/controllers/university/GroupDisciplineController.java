@@ -9,11 +9,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.requests.general.ListRequest;
-import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.responces.university.MagazineResponse;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
+import com.bachelor.thesis.organization_education.controllers.abstracts.ResourceController;
 import com.bachelor.thesis.organization_education.requests.general.university.GroupDisciplineRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.GroupDisciplineFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
@@ -52,6 +52,14 @@ public class GroupDisciplineController extends ResourceController<GroupDisciplin
     @GetMapping
     public ResponseEntity<Response> get(@Validated @RequestBody GroupDisciplineFindRequest request) {
         return super.get(request);
+    }
+
+    @GetMapping("/all/university-admin")
+    public ResponseEntity<Page<Response>> getAllByLecturer(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize
+    ) {
+        return super.getAllByUser(pageNumber, pageSize, service::getAllByUniversityAdmin);
     }
 
     @GetMapping({"/for-lecturer/magazines/{id}", "/magazines/{id}"})

@@ -5,7 +5,6 @@ import lombok.experimental.SuperBuilder;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.NotNull;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEntityFindRequest;
 
 @Getter
@@ -17,8 +16,7 @@ import com.bachelor.thesis.organization_education.requests.find.abstracts.NameEn
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class SpecialtyFindRequest extends NameEntityFindRequest {
-    @NotNull
-    @Min(0)
+    @Min(1)
     @Max(999)
     private Short number;
 }

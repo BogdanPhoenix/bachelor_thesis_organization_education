@@ -1,11 +1,12 @@
 package com.bachelor.thesis.organization_education.requests.insert.user;
 
-import com.bachelor.thesis.organization_education.dto.Faculty;
-import com.bachelor.thesis.organization_education.enums.AcademicDegree;
-import com.bachelor.thesis.organization_education.enums.AcademicTitle;
-import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.validation.constraints.NotNull;
+import com.bachelor.thesis.organization_education.dto.Faculty;
+import com.bachelor.thesis.organization_education.enums.AcademicTitle;
+import com.bachelor.thesis.organization_education.enums.AcademicDegree;
+import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 
 @Getter
 @Setter
@@ -15,12 +16,12 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class RegistrationLecturerRequest extends RegistrationRequest {
-    @NonNull
+    @NotNull
     private AcademicTitle title;
 
-    @NonNull
+    @NotNull
     private AcademicDegree degree;
 
-    @NonNull
+    @NotNull
     private Faculty faculty;
 }

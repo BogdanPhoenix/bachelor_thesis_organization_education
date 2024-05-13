@@ -2,15 +2,16 @@ package com.bachelor.thesis.organization_education.controllers.university;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.requests.general.ListRequest;
-import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
+import com.bachelor.thesis.organization_education.controllers.abstracts.ResourceController;
 import com.bachelor.thesis.organization_education.requests.general.university.AudienceRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.AudienceFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AudienceService;
@@ -44,7 +45,7 @@ public class AudienceController extends ResourceController<AudienceService> {
             @Validated(InsertRequest.class) @RequestBody AudienceRequest request,
             Principal principal
     ) {
-        var response = service.addResource(request, principal.getName())
+        var response = service.addValue(request, principal.getName())
                 .getResponse();
 
         return ResponseEntity
@@ -57,14 +58,19 @@ public class AudienceController extends ResourceController<AudienceService> {
         return super.get(request);
     }
 
+    @GetMapping("/all/university-admin")
+    public ResponseEntity<Page<Response>> getAllByUniversityAdmin(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize
+    ) {
+        return super.getAllByUser(pageNumber, pageSize, service::getAllByUniversityAdmin);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Response> update(
             @PathVariable UUID id,
             @Validated(UpdateRequest.class) @RequestBody AudienceRequest request
     ) {
-        var response = service.updateValue(id, request)
-                .getResponse();
-
-        return ResponseEntity.ok(response);
+        return super.updateEntity(id, request);
     }
 }

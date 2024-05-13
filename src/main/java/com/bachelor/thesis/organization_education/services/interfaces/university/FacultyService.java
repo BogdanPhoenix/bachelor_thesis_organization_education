@@ -1,6 +1,8 @@
 package com.bachelor.thesis.organization_education.services.interfaces.university;
 
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.bachelor.thesis.organization_education.dto.Faculty;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
@@ -36,7 +38,7 @@ public interface FacultyService extends CrudService {
      * @throws NullPointerException if null was passed to the request.
      * @throws DuplicateException if the table contains an entity value that is passed in the query.
      */
-    Faculty addResource(@NonNull FacultyRequest request, @NonNull String adminId) throws NullPointerException, DuplicateException;
+    Faculty addValue(@NonNull FacultyRequest request, @NonNull String adminId) throws NullPointerException, DuplicateException;
 
     /**
      * Updates the attributes of the selected entity.
@@ -49,4 +51,12 @@ public interface FacultyService extends CrudService {
      * @throws NotFindEntityInDataBaseException if the entity could not be found.
      */
     BaseTableInfo updateValue(@NonNull String adminId, @NonNull UUID entityId, @NonNull FacultyRequest request) throws DuplicateException, NotFindEntityInDataBaseException;
+
+    /**
+     * Returns all faculty entities created by the university administrator. The administrator ID is taken from the authorized user...
+     *
+     * @param pageable page settings
+     * @return a set of entities.
+     */
+    Page<Response> getAllByUniversityAdmin(@NonNull Pageable pageable);
 }

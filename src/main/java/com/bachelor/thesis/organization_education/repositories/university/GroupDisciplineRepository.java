@@ -13,6 +13,7 @@ import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.repositories.abstracts.BaseTableInfoRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface GroupDisciplineRepository extends BaseTableInfoRepository<GroupDiscipline> {
@@ -26,4 +27,13 @@ public interface GroupDisciplineRepository extends BaseTableInfoRepository<Group
             @Param("lecturer") Lecturer lecturer,
             Pageable pageable
     );
+
+    @Query("""
+        SELECT gb FROM GroupDiscipline gb
+        JOIN UniversityGroup ug ON gb.group = ug
+        JOIN Faculty f ON ug.faculty = f
+        JOIN University u ON f.university = u
+        WHERE u.adminId = :adminId AND gb.enabled = TRUE
+    """)
+    Page<GroupDiscipline> findAll(UUID adminId, Pageable pageable);
 }

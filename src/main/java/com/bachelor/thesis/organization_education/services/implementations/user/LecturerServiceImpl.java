@@ -20,9 +20,11 @@ import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInData
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationLecturerRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
+import com.bachelor.thesis.organization_education.services.implementations.university.GroupDisciplineServiceImpl;
+import com.bachelor.thesis.organization_education.services.implementations.university.UniversityGroupServiceImpl;
 
-import java.util.List;
 import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -94,8 +96,8 @@ public class LecturerServiceImpl extends CrudServiceAbstract<Lecturer, LecturerR
 
     @Override
     protected void selectedForDeactivateChild(Lecturer entity) {
-        deactivatedChild(entity.getGroups(), UniversityGroupService.class);
-        deactivatedChild(entity.getGroupDisciplines(), GroupDisciplineService.class);
+        deactivatedChild(entity.getGroups(), UniversityGroupServiceImpl.class);
+        deactivatedChild(entity.getGroupDisciplines(), GroupDisciplineServiceImpl.class);
     }
 
     @Override

@@ -1,7 +1,9 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Audience;
@@ -16,7 +18,6 @@ import com.bachelor.thesis.organization_education.repositories.university.Audien
 import com.bachelor.thesis.organization_education.requests.general.university.AudienceRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.AudienceFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AudienceService;
-import com.bachelor.thesis.organization_education.services.interfaces.university.ScheduleService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 
@@ -50,10 +51,17 @@ public class AudienceServiceImpl extends CrudServiceAbstract<Audience, AudienceR
     }
 
     @Override
-    public BaseTableInfo addResource(@NonNull AudienceRequest request, @NonNull String adminId) throws NullPointerException, DuplicateException {
+    public BaseTableInfo addValue(@NonNull AudienceRequest request, @NonNull String adminId) throws NullPointerException, DuplicateException {
         var university = getUniversity(adminId);
         request.setUniversity(university);
         return super.addValue(request);
+    }
+
+    @Override
+    public Page<Response> getAllByUniversityAdmin(@NonNull Pageable pageable) {
+        var uuid = super.getAuthenticationUUID();
+        return repository.findAll(uuid, pageable)
+                .map(BaseTableInfo::getResponse);
     }
 
     private University getUniversity(String adminId) {
@@ -88,6 +96,6 @@ public class AudienceServiceImpl extends CrudServiceAbstract<Audience, AudienceR
 
     @Override
     protected void selectedForDeactivateChild(Audience entity) {
-        deactivatedChild(entity.getSchedules(), ScheduleService.class);
+        deactivatedChild(entity.getSchedules(), ScheduleServiceImpl.class);
     }
 }

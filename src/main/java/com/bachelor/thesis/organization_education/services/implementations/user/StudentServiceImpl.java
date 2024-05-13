@@ -17,7 +17,7 @@ import com.bachelor.thesis.organization_education.requests.general.abstracts.Ins
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.requests.insert.user.RegistrationStudentRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
-import com.bachelor.thesis.organization_education.services.interfaces.university.StudentEvaluationService;
+import com.bachelor.thesis.organization_education.services.implementations.university.StudentEvaluationServiceImpl;
 
 import java.util.List;
 import java.util.UUID;
@@ -63,6 +63,6 @@ public class StudentServiceImpl extends CrudServiceAbstract<Student, StudentRepo
 
     @Override
     protected void selectedForDeactivateChild(Student entity) {
-        deactivatedChild(entity.getEvaluations(), StudentEvaluationService.class);
+        deactivatedChild(entity.getEvaluations(), StudentEvaluationServiceImpl.class);
     }
 }

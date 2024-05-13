@@ -2,14 +2,15 @@ package com.bachelor.thesis.organization_education.controllers.university;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.requests.general.ListRequest;
-import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.controllers.abstracts.ResourceController;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.general.university.FacultyRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
@@ -44,7 +45,7 @@ public class FacultyController extends ResourceController<FacultyService> {
             @Validated(InsertRequest.class) @RequestBody FacultyRequest request,
             Principal principal
     ) {
-        var response = service.addResource(request, principal.getName())
+        var response = service.addValue(request, principal.getName())
                 .getResponse();
 
         return ResponseEntity
@@ -55,6 +56,14 @@ public class FacultyController extends ResourceController<FacultyService> {
     @GetMapping
     public ResponseEntity<Response> get(@Validated @RequestBody FacultyFindRequest request) {
         return super.get(request);
+    }
+
+    @GetMapping("/all/university-admin")
+    public ResponseEntity<Page<Response>> getAllByUniversityAdmin(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize
+    ) {
+        return super.getAllByUser(pageNumber, pageSize, service::getAllByUniversityAdmin);
     }
 
     @PutMapping("/{id}")

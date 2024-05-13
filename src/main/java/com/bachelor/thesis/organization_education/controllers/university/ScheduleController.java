@@ -1,15 +1,16 @@
 package com.bachelor.thesis.organization_education.controllers.university;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.requests.general.ListRequest;
-import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.controllers.abstracts.ResourceController;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.requests.general.university.ScheduleRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.ScheduleFindRequest;
@@ -47,6 +48,30 @@ public class ScheduleController extends ResourceController<ScheduleService> {
     @GetMapping
     public ResponseEntity<Response> get(@Validated @RequestBody ScheduleFindRequest request) {
         return super.get(request);
+    }
+
+    @GetMapping("/all/university-admin")
+    public ResponseEntity<Page<Response>> getAllByUniversityAdmin(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize
+    ) {
+        return super.getAllByUser(pageNumber, pageSize, service::getAllByUniversityAdmin);
+    }
+
+    @GetMapping("/all/lecturer")
+    public ResponseEntity<Page<Response>> getAllByLecturer(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize
+    ) {
+        return super.getAllByUser(pageNumber, pageSize, service::getAllByLecturer);
+    }
+
+    @GetMapping("/all/student")
+    public ResponseEntity<Page<Response>> getAllByStudent(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize
+    ) {
+        return super.getAllByUser(pageNumber, pageSize, service::getAllByStudent);
     }
 
     @PutMapping("/{id}")

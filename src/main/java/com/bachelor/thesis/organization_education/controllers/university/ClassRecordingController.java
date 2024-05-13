@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,9 +13,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.bachelor.thesis.organization_education.requests.general.ListRequest;
-import com.bachelor.thesis.organization_education.controllers.ResourceController;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
+import com.bachelor.thesis.organization_education.controllers.abstracts.ResourceController;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.StorageService;
 import com.bachelor.thesis.organization_education.requests.general.university.ClassRecordingRequest;
@@ -58,6 +58,14 @@ public class ClassRecordingController extends ResourceController<ClassRecordingS
     @GetMapping
     public ResponseEntity<Response> get(@Validated @RequestBody ClassRecordingFindRequest request) {
         return super.get(request);
+    }
+
+    @GetMapping("/all/lecturer")
+    public ResponseEntity<Page<Response>> getAllByLecturer(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "20") int pageSize
+    ) {
+        return super.getAllByUser(pageNumber, pageSize, service::getAllByLecturer);
     }
 
     @PutMapping("/{id}")

@@ -1,5 +1,7 @@
 package com.bachelor.thesis.organization_education.repositories.university;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +15,7 @@ import com.bachelor.thesis.organization_education.repositories.abstracts.BaseTab
 
 import java.sql.Time;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface ScheduleRepository extends BaseTableInfoRepository<Schedule> {
@@ -46,4 +49,28 @@ public interface ScheduleRepository extends BaseTableInfoRepository<Schedule> {
             @Param("startTime") Time startTime,
             @Param("endTime") Time endTime
     );
+
+    @Query("""
+        SELECT s FROM Schedule s
+        JOIN Audience a ON s.audience = a
+        JOIN University u ON a.university = u
+        WHERE u.adminId = :adminId AND s.enabled = TRUE
+    """)
+    Page<Schedule> findAllByUniversityAdmin(UUID adminId, Pageable pageable);
+
+    @Query("""
+        SELECT s FROM Schedule s
+        JOIN GroupDiscipline gd ON s.groupDiscipline = gd
+        JOIN Lecturer l ON gd.lecturer = l
+        WHERE l.id = :lecturerId AND s.enabled = TRUE
+    """)
+    Page<Schedule> findAllByLecturer(UUID lecturerId, Pageable pageable);
+
+    @Query("""
+        SELECT s FROM Schedule s
+        JOIN GroupDiscipline gd ON s.groupDiscipline = gd
+        JOIN Student st ON st.group = gd.group
+        WHERE st.id = :studentId AND s.enabled = TRUE
+    """)
+    Page<Schedule> findAllByStudent(UUID studentId, Pageable pageable);
 }

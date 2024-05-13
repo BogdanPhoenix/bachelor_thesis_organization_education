@@ -3,6 +3,7 @@ package com.bachelor.thesis.organization_education.services.interfaces.universit
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.responces.university.MagazineResponse;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
@@ -14,6 +15,13 @@ import java.util.UUID;
  * Extends the basic CRUD service interface to provide collaborative CRUD operations.
  */
 public interface GroupDisciplineService extends CrudService {
+    /**
+     * Returns all group-discipline entities created by the university administrator. The administrator ID is taken from the authorized user...
+     *
+     * @param pageable page settings
+     * @return a set of entities.
+     */
+    Page<Response> getAllByUniversityAdmin(@NonNull Pageable pageable);
     /**
      * Retrieves a magazine by its unique identifier.
      *

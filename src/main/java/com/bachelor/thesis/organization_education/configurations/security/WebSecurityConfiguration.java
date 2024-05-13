@@ -35,11 +35,13 @@ public class WebSecurityConfiguration {
 
     private static final Map<Role, List<RequestMatcherConfig>> ROLE_REQUEST_MATCHERS = Map.of(
             Role.STUDENT, List.of(
-                    new RequestMatcherConfig(HttpMethod.GET, "/users/student", "/groups-disciplines/for-student/magazines/*"),
+                    new RequestMatcherConfig(HttpMethod.GET, "/users/student", "/groups-disciplines/for-student/magazines/*", "/schedules/all/student"),
                     new RequestMatcherConfig(HttpMethod.PUT, "/users/student")
             ),
             Role.LECTURER, List.of(
-                    new RequestMatcherConfig(HttpMethod.GET, "/users/lecturer", "/students-evaluations/recording/*", "/for-lecturer/magazines/*"),
+                    new RequestMatcherConfig(HttpMethod.GET, "/users/lecturer", "/students-evaluations/recording/*", "/for-lecturer/magazines/*", "/class-recordings/all/lecturer",
+                            "/groups-disciplines/for-lecturer/magazines", "/groups-disciplines/for-lecturer/magazines/*", "/schedules/all/lecturer"
+                    ),
                     new RequestMatcherConfig(HttpMethod.PUT, "/users/lecturer", "/class-recordings/*", "/students-evaluations/*"),
                     new RequestMatcherConfig(HttpMethod.POST, "/class-recordings", "/class-recordings/stream", "/students-evaluations", "/students-evaluations/stream"),
                     new RequestMatcherConfig(HttpMethod.DELETE, "/class-recordings/*")
@@ -52,15 +54,18 @@ public class WebSecurityConfiguration {
                             "/disciplines/*/disconnect-lecturer/*", "/users/lecturer/*/connect-with-discipline/*", "/users/lecturer/*/disconnect-discipline/*",
                             "/groups-disciplines/*", "/audiences/*", "/schedules/*"
                     ),
-                    new RequestMatcherConfig(HttpMethod.DELETE, "/faculties/*", "/groups/*", "/universities/*", "/disciplines/*", "/groups-disciplines/*",
+                    new RequestMatcherConfig(HttpMethod.DELETE, "/faculties/*", "/groups/*", "/universities/*", "/groups-disciplines/*",
                             "/audiences/*", "/schedules/*"
                     ),
-                    new RequestMatcherConfig(HttpMethod.GET, "/groups-disciplines/magazines", "/groups-disciplines/magazines/*", "/groups-disciplines/*")
+                    new RequestMatcherConfig(HttpMethod.GET, "/groups-disciplines/magazines/*", "/groups-disciplines/*", "/audiences/all/university-admin",
+                            "/groups/all/university-admin", "/faculties/all/university-admin", "/groups-disciplines/all/university-admin", "/schedules/all/university-admin"
+                    )
             ),
             Role.ADMIN, List.of(
-                    new RequestMatcherConfig(HttpMethod.DELETE, "*/delete/*", "/class-recordings/files/delete/*"),
+                    new RequestMatcherConfig(HttpMethod.DELETE, "*/delete/*", "/disciplines/*", "/specialties/*",  "/class-recordings/files/delete/*"),
                     new RequestMatcherConfig(HttpMethod.PUT, "*/activate/*", "/class-recordings/files/activate/*", "/specialties/*", "/disciplines/*"),
-                    new RequestMatcherConfig(HttpMethod.POST, "/specialties", "/specialties/stream", "/disciplines", "/disciplines/stream")
+                    new RequestMatcherConfig(HttpMethod.POST, "/specialties", "/specialties/stream", "/disciplines", "/disciplines/stream"),
+                    new RequestMatcherConfig(HttpMethod.GET, "*/all")
             )
     );
 
@@ -88,14 +93,15 @@ public class WebSecurityConfiguration {
 
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> authorizeHttpRequestsCustomizer() {
         return request -> {
+            request.requestMatchers(HttpMethod.GET, "/disciplines/all", "/specialties/all").permitAll();
+
             ROLE_REQUEST_MATCHERS.forEach((role, configs) ->
                     configs.forEach(config ->
                             request.requestMatchers(config.method, config.paths).hasRole(role.name())
                     )
             );
 
-            request
-                    .requestMatchers(HttpMethod.POST, WHILE_LIST).permitAll()
+            request.requestMatchers(HttpMethod.POST, WHILE_LIST).permitAll()
                     .anyRequest().authenticated();
         };
     }

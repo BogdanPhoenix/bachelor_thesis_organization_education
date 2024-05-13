@@ -23,8 +23,8 @@ spring:
           issuer-uri: ${keycloak.urls.auth}/realms/${keycloak.realm}
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 110MB
+      max-file-size: 10MB
+      max-request-size: 11MB
 
 jwt:
   auth:
@@ -44,6 +44,9 @@ server:
   port: 8443
   servlet:
     context-path: /organization-education
+    session:
+      cookie:
+        same-site: strict
   ssl:
     enabled: true
     key-store-type: PKCS12

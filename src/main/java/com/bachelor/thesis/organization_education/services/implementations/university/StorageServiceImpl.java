@@ -116,7 +116,7 @@ public class StorageServiceImpl extends CrudServiceAbstract<Storage, StorageRepo
     @Override
     public void deactivateByUserId(@NonNull UUID userId) {
         repository.findAllByUserId(userId)
-                .forEach(storage -> deactivate(storage.getId()));
+                .forEach(super::deactivateEntity);
     }
 
     @Override

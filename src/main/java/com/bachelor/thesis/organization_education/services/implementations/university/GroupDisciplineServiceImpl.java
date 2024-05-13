@@ -10,6 +10,8 @@ import com.bachelor.thesis.organization_education.dto.Lecturer;
 import com.bachelor.thesis.organization_education.dto.ClassRecording;
 import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
 import com.bachelor.thesis.organization_education.dto.StudentEvaluation;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.services.interfaces.university.*;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.responces.university.MagazineResponse;
@@ -78,8 +80,15 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
 
     @Override
     protected void selectedForDeactivateChild(GroupDiscipline entity) {
-        deactivatedChild(entity.getClassRecordings(), ClassRecordingService.class);
-        deactivatedChild(entity.getSchedules(), ScheduleService.class);
+        deactivatedChild(entity.getClassRecordings(), ClassRecordingServiceImpl.class);
+        deactivatedChild(entity.getSchedules(), ScheduleServiceImpl.class);
+    }
+
+    @Override
+    public Page<Response> getAllByUniversityAdmin(@NonNull Pageable pageable) {
+        var uuid = super.getAuthenticationUUID();
+        return repository.findAll(uuid, pageable)
+                .map(BaseTableInfo::getResponse);
     }
 
     @Override

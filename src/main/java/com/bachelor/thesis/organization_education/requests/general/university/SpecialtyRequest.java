@@ -33,8 +33,4 @@ public class SpecialtyRequest extends NameEntityRequest {
                 .number(number)
                 .build();
     }
-
-    public boolean numberIsEmpty() {
-        return number == null;
-    }
 }

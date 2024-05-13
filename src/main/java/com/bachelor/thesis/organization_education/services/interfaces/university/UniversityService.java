@@ -25,7 +25,7 @@ public interface UniversityService extends CrudService {
      * @throws NullPointerException if null was passed to the request.
      * @throws DuplicateException if the table contains an entity value that is passed in the query.
      */
-    University addResource(@NonNull UniversityRequest request, @NonNull String userId) throws NullPointerException, DuplicateException;
+    University addValue(@NonNull UniversityRequest request, @NonNull String userId) throws NullPointerException, DuplicateException;
 
     /**
      * Deactivate the university entity associated with the user.

@@ -13,7 +13,6 @@ import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInData
 import com.bachelor.thesis.organization_education.requests.general.university.SpecialtyRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.SpecialtyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.SpecialtyService;
-import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityGroupService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
 
 import java.util.List;
@@ -61,6 +60,6 @@ public class SpecialtyServiceImpl extends NameEntityServiceAbstract<Specialty, S
 
     @Override
     protected void selectedForDeactivateChild(Specialty entity) {
-        deactivatedChild(entity.getGroups(), UniversityGroupService.class);
+        deactivatedChild(entity.getGroups(), UniversityGroupServiceImpl.class);
     }
 }

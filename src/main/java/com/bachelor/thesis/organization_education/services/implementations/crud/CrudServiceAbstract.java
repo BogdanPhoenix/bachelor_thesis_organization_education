@@ -111,9 +111,13 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
         repository.findById(id)
                 .ifPresent(e -> {
                     validateOwner(e);
-                    selectedForDeactivateChild(e);
-                    updateEnabled(e, false);
+                    deactivateEntity(e);
                 });
+    }
+
+    protected void deactivateEntity(T entity) {
+        selectedForDeactivateChild(entity);
+        updateEnabled(entity, false);
     }
 
     protected void validateOwner(T entity) {
@@ -170,8 +174,9 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
     }
 
     @Override
-    public Page<BaseTableInfo> getAll(Pageable pageable) {
-        return repository.findAllActiveEntities(pageable);
+    public Page<Response> getAll(Pageable pageable) {
+        return repository.findAllActiveEntities(pageable)
+                .map(BaseTableInfo::getResponse);
     }
 
     @Override
@@ -180,11 +185,9 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
         entity.ifPresent(repository::delete);
     }
 
-    protected <B extends BaseTableInfo, C extends CrudService> void deactivatedChild(Collection<B> collection, Class<C> serviceClass) {
+    protected <B extends BaseTableInfo, C extends CrudServiceAbstract<B, ?>> void deactivatedChild(Collection<B> collection, Class<C> serviceClass) {
         var service = getBeanByClass(serviceClass);
-        collection.forEach(
-                entity -> service.deactivate(entity.getId())
-        );
+        collection.forEach(service::deactivateEntity);
     }
 
     @SuppressWarnings("unchecked")

@@ -1,6 +1,8 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +14,14 @@ import com.bachelor.thesis.organization_education.responces.abstract_type.Respon
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.repositories.university.FacultyRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.FacultyRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
+import com.bachelor.thesis.organization_education.services.implementations.user.LecturerServiceImpl;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
-import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityGroupService;
 
 import java.util.UUID;
 import java.util.List;
@@ -51,7 +52,7 @@ public class FacultyServiceImpl extends CrudServiceAbstract<Faculty, FacultyRepo
     }
 
     @Override
-    public Faculty addResource(@NonNull FacultyRequest request, @NonNull String adminId) {
+    public Faculty addValue(@NonNull FacultyRequest request, @NonNull String adminId) {
         var university = getUniversity(adminId);
         request.setUniversity(university);
         return super.addValue(request);
@@ -61,7 +62,15 @@ public class FacultyServiceImpl extends CrudServiceAbstract<Faculty, FacultyRepo
     public BaseTableInfo updateValue(@NonNull String adminId, @NonNull UUID entityId, @NonNull FacultyRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
         var university = getUniversity(adminId);
         request.setUniversity(university);
+        validateDuplicate(entityId, request.getFindRequest());
         return super.updateValue(entityId, request);
+    }
+
+    @Override
+    public Page<Response> getAllByUniversityAdmin(@NonNull Pageable pageable) {
+        var uuid = super.getAuthenticationUUID();
+        return repository.findAll(uuid, pageable)
+                .map(BaseTableInfo::getResponse);
     }
 
     @Override
@@ -98,7 +107,7 @@ public class FacultyServiceImpl extends CrudServiceAbstract<Faculty, FacultyRepo
 
     @Override
     protected void selectedForDeactivateChild(Faculty entity) {
-        deactivatedChild(entity.getGroups(), UniversityGroupService.class);
-        deactivatedChild(entity.getLecturers(), LecturerService.class);
+        deactivatedChild(entity.getGroups(), UniversityGroupServiceImpl.class);
+        deactivatedChild(entity.getLecturers(), LecturerServiceImpl.class);
     }
 }

@@ -1,6 +1,8 @@
 package com.bachelor.thesis.organization_education.services.interfaces.university;
 
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
@@ -25,6 +27,7 @@ public interface AudienceService extends CrudService {
      * @throws NullPointerException if null was passed to the request.
      */
     List<Response> addValue(@NonNull Collection<AudienceRequest> requests, @NonNull String adminId) throws NullPointerException, DuplicateException;
+
     /**
      * Adds an audience resource using the provided query.
      *
@@ -34,5 +37,13 @@ public interface AudienceService extends CrudService {
      * @throws NullPointerException if one or both of the passed parameters are null.
      * @throws DuplicateException if an attempt is made to add a resource that already exists.
      */
-    BaseTableInfo addResource(@NonNull AudienceRequest request, @NonNull String adminId) throws NullPointerException, DuplicateException;
+    BaseTableInfo addValue(@NonNull AudienceRequest request, @NonNull String adminId) throws NullPointerException, DuplicateException;
+
+    /**
+     * Returns all audience entities created by the university administrator. The administrator ID is taken from the authorized user...
+     *
+     * @param pageable page settings
+     * @return a set of entities.
+     */
+    Page<Response> getAllByUniversityAdmin(@NonNull Pageable pageable);
 }

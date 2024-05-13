@@ -1,16 +1,17 @@
-package com.bachelor.thesis.organization_education.controllers;
+package com.bachelor.thesis.organization_education.controllers.abstracts;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.PageRequest;
-import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * A base controller for handling RESTful endpoints related to a resource.
@@ -45,8 +46,17 @@ public abstract class ResourceController<T extends CrudService> {
             @RequestParam(defaultValue = "20") int pageSize
     ) {
         var pageable = PageRequest.of(pageNumber, pageSize);
-        return service.getAll(pageable)
-                .map(BaseTableInfo::getResponse);
+        return service.getAll(pageable);
+    }
+
+    protected ResponseEntity<Page<Response>> getAllByUser(
+            int pageNumber,
+            int pageSize,
+            Function<Pageable, Page<Response>> function
+    ) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var responses = function.apply(pageable);
+        return ResponseEntity.ok(responses);
     }
 
     protected <I extends UpdateRequest> ResponseEntity<Response> updateEntity(UUID id, I request) {

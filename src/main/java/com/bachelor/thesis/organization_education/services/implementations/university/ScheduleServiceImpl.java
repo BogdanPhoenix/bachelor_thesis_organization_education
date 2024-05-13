@@ -1,12 +1,16 @@
 package com.bachelor.thesis.organization_education.services.implementations.university;
 
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.Schedule;
 import com.bachelor.thesis.organization_education.dto.GroupDiscipline;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
@@ -63,6 +67,9 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
     @Override
     public Schedule updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws DuplicateException, NotFindEntityInDataBaseException {
         var updateRequest = (ScheduleRequest) request;
+        var entity = findValueById(id);
+        updateRequest.setGroupDiscipline(entity.getGroupDiscipline());
+        updateRequest.setTypeClass(entity.getTypeClass());
 
         validateMatchesSchedulesByLecturer(updateRequest);
         validateMatchesSchedulesByAudience(updateRequest);
@@ -133,6 +140,27 @@ public class ScheduleServiceImpl extends CrudServiceAbstract<Schedule, ScheduleR
                 .getUniversity()
                 .getAdminId()
                 .equals(userId);
+    }
+
+    @Override
+    public Page<Response> getAllByUniversityAdmin(@NonNull Pageable pageable) {
+        var uuid = super.getAuthenticationUUID();
+        return repository.findAllByUniversityAdmin(uuid, pageable)
+                .map(BaseTableInfo::getResponse);
+    }
+
+    @Override
+    public Page<Response> getAllByLecturer(@NonNull Pageable pageable) {
+        var uuid = super.getAuthenticationUUID();
+        return repository.findAllByLecturer(uuid, pageable)
+                .map(BaseTableInfo::getResponse);
+    }
+
+    @Override
+    public Page<Response> getAllByStudent(@NonNull Pageable pageable) {
+        var uuid = super.getAuthenticationUUID();
+        return repository.findAllByStudent(uuid, pageable)
+                .map(BaseTableInfo::getResponse);
     }
 
     private enum FindBy {
