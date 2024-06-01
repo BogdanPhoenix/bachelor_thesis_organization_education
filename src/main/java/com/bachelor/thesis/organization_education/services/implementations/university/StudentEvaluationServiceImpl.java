@@ -16,7 +16,6 @@ import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInData
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 import com.bachelor.thesis.organization_education.repositories.university.StudentEvaluationRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.StudentEvaluationRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.university.ClassRecordingService;
 import com.bachelor.thesis.organization_education.requests.find.university.StudentEvaluationFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.StudentEvaluationService;
 
@@ -45,7 +44,7 @@ public class StudentEvaluationServiceImpl extends CrudServiceAbstract<StudentEva
     public StudentEvaluation addValue(@NonNull InsertRequest request) throws DuplicateException, NullPointerException {
         var insertRequest = (StudentEvaluationRequest) request;
         var uuid = super.getAuthenticationUUID();
-        var classRecording = (ClassRecording) super.getBeanByClass(ClassRecordingService.class)
+        var classRecording = (ClassRecording) super.getBeanByClass(ClassRecordingServiceImpl.class)
                 .getValue(insertRequest.getClassRecording().getId());
 
         checkLecturer(classRecording.getMagazine().getLecturer(), uuid);
@@ -84,7 +83,7 @@ public class StudentEvaluationServiceImpl extends CrudServiceAbstract<StudentEva
 
     @Override
     public Page<StudentEvaluation> getEvaluationsForRecording(@NonNull UUID recordingId, @NonNull Pageable pageable) throws NotFindEntityInDataBaseException {
-        var classRecordingService = super.getBeanByClass(ClassRecordingService.class);
+        var classRecordingService = super.getBeanByClass(ClassRecordingServiceImpl.class);
         var classRecording = (ClassRecording) classRecordingService.getValue(recordingId);
         return repository.findAllByClassRecording(classRecording, pageable);
     }

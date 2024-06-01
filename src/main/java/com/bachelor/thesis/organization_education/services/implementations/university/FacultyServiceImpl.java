@@ -19,7 +19,6 @@ import com.bachelor.thesis.organization_education.requests.general.university.Fa
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.requests.find.university.FacultyFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.FacultyService;
-import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import com.bachelor.thesis.organization_education.services.implementations.user.LecturerServiceImpl;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 
@@ -92,7 +91,7 @@ public class FacultyServiceImpl extends CrudServiceAbstract<Faculty, FacultyRepo
 
     private University getUniversity() {
         var uuid = super.getAuthenticationUUID();
-        var universityService = getBeanByClass(UniversityService.class);
+        var universityService = getBeanByClass(UniversityServiceImpl.class);
         return universityService.findByUser(uuid);
     }
 

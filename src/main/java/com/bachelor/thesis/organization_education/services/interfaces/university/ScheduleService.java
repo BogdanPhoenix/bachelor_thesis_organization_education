@@ -3,14 +3,14 @@ package com.bachelor.thesis.organization_education.services.interfaces.universit
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.*;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 
 /**
  * Service for managing the schedule.
  * Implements CRUD operations and additional functionality.
  */
-public interface ScheduleService extends CrudService {
+public interface ScheduleService extends CreateService, ReadService, UpdateService, DeleteService, StateManagementService {
     /**
      * Returns all the Schedule entities created by the university administrator. The administrator ID is taken from the authorized user...
      *

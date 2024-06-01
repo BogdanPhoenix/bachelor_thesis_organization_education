@@ -25,8 +25,6 @@ import com.bachelor.thesis.organization_education.exceptions.UserCreatingExcepti
 import com.bachelor.thesis.organization_education.requests.general.user.AuthRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.user.UserService;
 import com.bachelor.thesis.organization_education.requests.update.user.UserUpdateRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.user.StudentService;
-import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.services.interfaces.university.StorageService;
 import com.bachelor.thesis.organization_education.requests.insert.abstracts.RegistrationRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
@@ -40,8 +38,8 @@ public class UserServiceImpl implements UserService {
     private final RestTemplate keycloakRestTemplate;
 
     private final UniversityService universityService;
-    private final LecturerService lecturerService;
-    private final StudentService studentService;
+    private final LecturerServiceImpl lecturerService;
+    private final StudentServiceImpl studentService;
     private final StorageService storageService;
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")

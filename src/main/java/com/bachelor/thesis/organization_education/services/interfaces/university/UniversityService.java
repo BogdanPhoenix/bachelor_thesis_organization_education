@@ -2,7 +2,7 @@ package com.bachelor.thesis.organization_education.services.interfaces.universit
 
 import lombok.NonNull;
 import com.bachelor.thesis.organization_education.dto.University;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.*;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
 import java.util.UUID;
@@ -11,7 +11,7 @@ import java.util.UUID;
  * This interface represents a service for managing university entities.
  * It extends the CrudService interface to inherit CRUD operations.
  */
-public interface UniversityService extends CrudService {
+public interface UniversityService extends CreateService, ReadService, UpdateService, DeleteService, StateManagementService {
     /**
      * Deactivate the university entity associated with the user.
      *

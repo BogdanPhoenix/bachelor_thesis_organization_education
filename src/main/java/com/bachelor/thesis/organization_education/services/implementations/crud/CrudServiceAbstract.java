@@ -7,12 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationContext;
 import com.bachelor.thesis.organization_education.dto.Lecturer;
 import org.springframework.security.core.context.SecurityContextHolder;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.*;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
 import com.bachelor.thesis.organization_education.exceptions.UnauthorizedException;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
@@ -31,7 +31,7 @@ import static com.bachelor.thesis.organization_education.services.implementation
  * @param <T> type of the entity class for which CRUD is implemented.
  * @param <J> the type of entity repository that manages access to and interconnection with the entity.
  */
-public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends BaseTableInfoRepository<T>> implements CrudService {
+public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends BaseTableInfoRepository<T>> implements CreateService, ReadService, UpdateService, DeleteService, StateManagementService {
     protected final String tableName;
     protected final J repository;
     protected final ApplicationContext context;
@@ -191,12 +191,12 @@ public abstract class CrudServiceAbstract<T extends BaseTableInfo, J extends Bas
     }
 
     @SuppressWarnings("unchecked")
-    protected <B extends BaseTableInfo, C extends CrudService> B getValue(B request, Class<C> serviceClass) {
+    protected <B extends BaseTableInfo, C extends CrudServiceAbstract<B, ?>> B getValue(B request, Class<C> serviceClass) {
         var service = getBeanByClass(serviceClass);
         return (B) service.getValue(request.getId());
     }
 
-    protected  <B extends CrudService> B getBeanByClass(Class<B> clazz) {
+    protected  <B extends CrudServiceAbstract<?, ?>> B getBeanByClass(Class<B> clazz) {
         return context.getBean(clazz);
     }
 

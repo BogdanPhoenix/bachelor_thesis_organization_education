@@ -20,7 +20,6 @@ import com.bachelor.thesis.organization_education.services.implementations.crud.
 import com.bachelor.thesis.organization_education.requests.general.university.ClassRecordingRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.ClassRecordingFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.ClassRecordingService;
-import com.bachelor.thesis.organization_education.services.interfaces.university.GroupDisciplineService;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,7 +45,7 @@ public class ClassRecordingServiceImpl extends CrudServiceAbstract<ClassRecordin
     public ClassRecording addValue(@NonNull InsertRequest request) throws DuplicateException, NullPointerException {
         var insertRequest = (ClassRecordingRequest) request;
         var uuid = super.getAuthenticationUUID();
-        var magazine = (GroupDiscipline) super.getBeanByClass(GroupDisciplineService.class)
+        var magazine = (GroupDiscipline) super.getBeanByClass(GroupDisciplineServiceImpl.class)
                 .getValue(insertRequest.getMagazine().getId());
 
         checkLecturer(magazine.getLecturer(), uuid);

@@ -16,10 +16,10 @@ import com.bachelor.thesis.organization_education.services.interfaces.university
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
 import com.bachelor.thesis.organization_education.responces.university.MagazineResponse;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 import com.bachelor.thesis.organization_education.responces.university.StudentEvaluationResponse;
+import com.bachelor.thesis.organization_education.services.implementations.user.LecturerServiceImpl;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 import com.bachelor.thesis.organization_education.repositories.university.GroupDisciplineRepository;
 import com.bachelor.thesis.organization_education.responces.university.EvaluationsForClassesResponse;
@@ -113,7 +113,7 @@ public class GroupDisciplineServiceImpl extends CrudServiceAbstract<GroupDiscipl
 
     @Override
     public Page<MagazineResponse> getMagazinesByLecturer(@NonNull UUID lecturerId, @NonNull Pageable pageable) throws NotFindEntityInDataBaseException {
-        var entity = (Lecturer) getBeanByClass(LecturerService.class)
+        var entity = (Lecturer) getBeanByClass(LecturerServiceImpl.class)
                 .getValue(lecturerId);
 
         return repository.findAllByLecturer(entity, pageable)

@@ -1,9 +1,9 @@
 package com.bachelor.thesis.organization_education.services.interfaces.university;
 
 import lombok.NonNull;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.*;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
  * Interface representing a service for managing specialty.
  * Extends CrudService to provide basic CRUD operations.
  */
-public interface SpecialtyService extends CrudService {
+public interface SpecialtyService extends CreateService, ReadService, UpdateService, DeleteService, StateManagementService {
 
     /**
      * Updates the attributes of the selected entity.

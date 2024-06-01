@@ -3,13 +3,13 @@ package com.bachelor.thesis.organization_education.services.interfaces.universit
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.*;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 
 /**
  * Service interface for managing faculties, extending basic CRUD operations.
  */
-public interface FacultyService extends CrudService {
+public interface FacultyService extends CreateService, ReadService, UpdateService, DeleteService, StateManagementService {
     /**
      * Returns all faculty entities created by the university administrator. The administrator ID is taken from the authorized user...
      *

@@ -1,10 +1,10 @@
 package com.bachelor.thesis.organization_education.services.interfaces.university;
 
-import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
-import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
-import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import lombok.NonNull;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.*;
+import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
+import com.bachelor.thesis.organization_education.dto.abstract_type.BaseTableInfo;
+import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
 import java.util.UUID;
@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Interface for managing academic disciplines, extending basic CRUD operations.
  */
-public interface AcademicDisciplineService extends CrudService {
+public interface AcademicDisciplineService extends CreateService, ReadService, UpdateService, DeleteService, StateManagementService {
     /**
      * Цей метод призначає лектора за конкретною навчальною дисципліною.
      *

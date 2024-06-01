@@ -18,7 +18,6 @@ import com.bachelor.thesis.organization_education.repositories.university.Audien
 import com.bachelor.thesis.organization_education.requests.general.university.AudienceRequest;
 import com.bachelor.thesis.organization_education.requests.find.university.AudienceFindRequest;
 import com.bachelor.thesis.organization_education.services.interfaces.university.AudienceService;
-import com.bachelor.thesis.organization_education.services.interfaces.university.UniversityService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
 
 import java.util.UUID;
@@ -72,7 +71,7 @@ public class AudienceServiceImpl extends CrudServiceAbstract<Audience, AudienceR
 
     private University getUniversity() {
         var uuid = super.getAuthenticationUUID();
-        var universityService = getBeanByClass(UniversityService.class);
+        var universityService = getBeanByClass(UniversityServiceImpl.class);
         return universityService.findByUser(uuid);
     }
 

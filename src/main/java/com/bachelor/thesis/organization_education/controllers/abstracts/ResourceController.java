@@ -1,5 +1,6 @@
 package com.bachelor.thesis.organization_education.controllers.abstracts;
 
+import com.bachelor.thesis.organization_education.services.interfaces.crud.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,6 @@ import org.springframework.validation.annotation.Validated;
 import com.bachelor.thesis.organization_education.requests.general.ListRequest;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
 import com.bachelor.thesis.organization_education.requests.find.abstracts.FindRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 
@@ -23,7 +23,7 @@ import java.util.function.Function;
  * Supports CRUD operations and activation/deactivation of entities.
  * @param <T> The service type extending CrudService for the resource.
  */
-public abstract class ResourceController<T extends CrudService> {
+public abstract class ResourceController<T extends CreateService & ReadService & UpdateService & DeleteService & StateManagementService> {
     protected final T service;
 
     protected ResourceController(T service) {

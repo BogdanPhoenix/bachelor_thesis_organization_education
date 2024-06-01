@@ -6,9 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import com.bachelor.thesis.organization_education.dto.Storage;
 import com.bachelor.thesis.organization_education.exceptions.FileException;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.*;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.responces.university.DownloadFileResponse;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
@@ -19,7 +19,7 @@ import java.util.UUID;
  * Implementations should handle CRUD operations for storage entities.
  * This interface extends CrudService to inherit basic CRUD functionalities.
  */
-public interface StorageService extends CrudService {
+public interface StorageService extends CreateService, ReadService, UpdateService, DeleteService, StateManagementService {
     /**
      * Uploads a file to storage associated with a user and a class recording.
      *

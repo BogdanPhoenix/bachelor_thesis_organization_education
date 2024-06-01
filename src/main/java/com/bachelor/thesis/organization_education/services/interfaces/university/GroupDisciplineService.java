@@ -3,8 +3,8 @@ package com.bachelor.thesis.organization_education.services.interfaces.universit
 import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.bachelor.thesis.organization_education.services.interfaces.crud.*;
 import com.bachelor.thesis.organization_education.responces.abstract_type.Response;
-import com.bachelor.thesis.organization_education.services.interfaces.crud.CrudService;
 import com.bachelor.thesis.organization_education.responces.university.MagazineResponse;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
 
@@ -14,7 +14,7 @@ import java.util.UUID;
  * An interface that implements interaction between groups and disciplines.
  * Extends the basic CRUD service interface to provide collaborative CRUD operations.
  */
-public interface GroupDisciplineService extends CrudService {
+public interface GroupDisciplineService extends CreateService, ReadService, UpdateService, DeleteService, StateManagementService {
     /**
      * Returns all group-discipline entities created by the university administrator. The administrator ID is taken from the authorized user...
      *

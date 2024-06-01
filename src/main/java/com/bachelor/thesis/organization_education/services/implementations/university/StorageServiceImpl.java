@@ -23,7 +23,6 @@ import com.bachelor.thesis.organization_education.requests.find.university.Stora
 import com.bachelor.thesis.organization_education.services.implementations.tools.StorageTools;
 import com.bachelor.thesis.organization_education.services.interfaces.university.StorageService;
 import com.bachelor.thesis.organization_education.services.implementations.crud.CrudServiceAbstract;
-import com.bachelor.thesis.organization_education.services.interfaces.university.ClassRecordingService;
 
 import java.util.List;
 import java.util.UUID;
@@ -71,7 +70,7 @@ public class StorageServiceImpl extends CrudServiceAbstract<Storage, StorageRepo
             var fileName = file.getOriginalFilename();
             var fileType = file.getContentType();
             var fileData = StorageTools.compressFile(file.getBytes());
-            var classRecording = (ClassRecording) super.getBeanByClass(ClassRecordingService.class)
+            var classRecording = (ClassRecording) super.getBeanByClass(ClassRecordingServiceImpl.class)
                     .getValue(classRecordingId);
 
             assert fileName != null;
@@ -97,7 +96,7 @@ public class StorageServiceImpl extends CrudServiceAbstract<Storage, StorageRepo
     @Override
     public Page<Response> getStorages(@NonNull UUID classRecordingId, Pageable pageable) {
         var userId = super.getAuthenticationUUID();
-        var classRecording = (ClassRecording) super.getBeanByClass(ClassRecordingService.class)
+        var classRecording = (ClassRecording) super.getBeanByClass(ClassRecordingServiceImpl.class)
                 .getValue(classRecordingId);
 
         return repository.findAllByUserIdAndClassRecording(userId, classRecording, pageable)

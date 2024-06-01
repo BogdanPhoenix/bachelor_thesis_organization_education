@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.bachelor.thesis.organization_education.dto.AcademicDiscipline;
 import com.bachelor.thesis.organization_education.exceptions.DuplicateException;
 import com.bachelor.thesis.organization_education.requests.update.abstracts.UpdateRequest;
-import com.bachelor.thesis.organization_education.services.interfaces.user.LecturerService;
 import com.bachelor.thesis.organization_education.requests.general.abstracts.InsertRequest;
 import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInDataBaseException;
+import com.bachelor.thesis.organization_education.services.implementations.user.LecturerServiceImpl;
 import com.bachelor.thesis.organization_education.repositories.university.AcademicDisciplineRepository;
 import com.bachelor.thesis.organization_education.requests.general.university.AcademicDisciplineRequest;
 import com.bachelor.thesis.organization_education.services.implementations.crud.NameEntityServiceAbstract;
@@ -53,13 +53,13 @@ public class AcademicDisciplineServiceImpl extends NameEntityServiceAbstract<Aca
 
     @Override
     public void addLecturer(@NonNull UUID disciplineId, @NonNull UUID lecturerId) throws NotFindEntityInDataBaseException {
-        getBeanByClass(LecturerService.class)
+        getBeanByClass(LecturerServiceImpl.class)
                 .addDiscipline(lecturerId, disciplineId);
     }
 
     @Override
     public void disconnectLecturer(@NonNull UUID disciplineId, @NonNull UUID lecturerId) throws NotFindEntityInDataBaseException {
-        getBeanByClass(LecturerService.class)
+        getBeanByClass(LecturerServiceImpl.class)
                 .disconnectDiscipline(lecturerId, disciplineId);
     }
 }
