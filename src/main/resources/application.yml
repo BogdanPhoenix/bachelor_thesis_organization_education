@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5433/keycloak
-    username: keycloak
-    password: keycloak
+    username: ${DB_LOGIN}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     properties:
@@ -23,8 +23,8 @@ spring:
           issuer-uri: ${keycloak.urls.auth}/realms/${keycloak.realm}
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 11MB
+      max-file-size: 8MB
+      max-request-size: 8MB
 
 jwt:
   auth:
