@@ -1,6 +1,5 @@
 package com.bachelor.thesis.organization_education.services.implementations.crud;
 
-import com.bachelor.thesis.organization_education.repositories.university.AudienceRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,21 +13,17 @@ import com.bachelor.thesis.organization_education.exceptions.NotFindEntityInData
 import com.bachelor.thesis.organization_education.repositories.abstracts.BaseTableInfoRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 
 @Transactional
 @RequiredArgsConstructor
-public class ReadServiceImpl<T extends BaseTableInfo, J extends BaseTableInfoRepository<T>> implements ReadService {
-    private final J repository;
-    private final String tableName;
-    private final Function<UUID, Optional<T>> findValueById;
-    private final Function<FindRequest, List<T>> findAll;
+public abstract class ReadServiceAbstract<T extends BaseTableInfo, J extends BaseTableInfoRepository<T>> implements ReadService {
+    protected final J repository;
+    protected final String tableName;
 
     @Override
     public T getValue(@NonNull FindRequest request) throws NotFindEntityInDataBaseException {
-        return findAll.apply(request)
+        return findAllEntitiesByRequest(request)
                 .stream()
                 .filter(BaseTableInfo::isEnabled)
                 .findFirst()
@@ -37,7 +32,8 @@ public class ReadServiceImpl<T extends BaseTableInfo, J extends BaseTableInfoRep
 
     @Override
     public T getValue(@NonNull UUID id) throws NotFindEntityInDataBaseException {
-        return findValueById.apply(id)
+        return repository.findById(id)
+                .filter(BaseTableInfo::isEnabled)
                 .orElseThrow(() -> new NotFindEntityInDataBaseException(String.format("Unable to find an entity in the \"%s\" table using the specified identifier: %s.", tableName, id)));
     }
 
@@ -46,4 +42,6 @@ public class ReadServiceImpl<T extends BaseTableInfo, J extends BaseTableInfoRep
         return repository.findAllActiveEntities(pageable)
                 .map(BaseTableInfo::getResponse);
     }
+
+    protected abstract List<T> findAllEntitiesByRequest(@NonNull FindRequest request);
 }

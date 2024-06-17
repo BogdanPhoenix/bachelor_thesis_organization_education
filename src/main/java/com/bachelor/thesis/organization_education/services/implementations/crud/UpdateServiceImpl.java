@@ -15,23 +15,28 @@ import java.util.UUID;
 import java.time.LocalDateTime;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
 
 @Transactional
 @RequiredArgsConstructor
 public class UpdateServiceImpl<T extends BaseTableInfo, J extends BaseTableInfoRepository<T>> implements UpdateService {
     private final J repository;
+    private final String tableName;
     private final BiPredicate<T, UUID> checkOwner;
-    private final Function<UUID, T> findValueById;
     private final BiConsumer<T, UpdateRequest> updateRequest;
 
     @Override
     public T updateValue(@NonNull UUID id, @NonNull UpdateRequest request) throws NotFindEntityInDataBaseException {
-        T entity = findValueById.apply(id);
+        T entity = findValueById(id);
         validateOwner(entity);
         updateRequest.accept(entity, request);
         entity.setUpdateDate(LocalDateTime.now());
         return repository.save(entity);
+    }
+
+    private T findValueById(@NonNull UUID id) throws NotFindEntityInDataBaseException {
+        return repository.findById(id)
+                .filter(BaseTableInfo::isEnabled)
+                .orElseThrow(() -> new NotFindEntityInDataBaseException(String.format("Unable to find an entity in the \"%s\" table using the specified identifier: %s.", tableName, id)));
     }
 
     private void validateOwner(T entity) {
